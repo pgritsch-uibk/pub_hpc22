@@ -1,0 +1,220 @@
+Pi 3.141559
+Time: 0.14340s
+
+ Performance counter stats for 'mpiexec -n 64 ./monte_carlo_mpi':
+
+          1,738.39 msec task-clock:u              #    0.598 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,427      page-faults:u             #    0.017 M/sec                  
+     2,403,697,875      cycles:u                  #    1.383 GHz                      (50.56%)
+     3,209,804,410      instructions:u            #    1.34  insn per cycle           (75.63%)
+       328,384,950      branches:u                #  188.902 M/sec                    (74.78%)
+         5,483,978      branch-misses:u           #    1.67% of all branches          (74.66%)
+
+       2.908934248 seconds time elapsed
+
+       0.991974000 seconds user
+       0.759715000 seconds sys
+
+
+Pi 3.141630
+Time: 0.12505s
+
+ Performance counter stats for 'mpiexec -n 64 ./monte_carlo_mpi':
+
+          1,747.97 msec task-clock:u              #    1.113 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,438      page-faults:u             #    0.017 M/sec                  
+     2,456,731,558      cycles:u                  #    1.405 GHz                      (49.34%)
+     3,305,752,032      instructions:u            #    1.35  insn per cycle           (74.23%)
+       342,315,964      branches:u                #  195.836 M/sec                    (75.53%)
+         5,439,895      branch-misses:u           #    1.59% of all branches          (75.13%)
+
+       1.571028257 seconds time elapsed
+
+       1.002248000 seconds user
+       0.747706000 seconds sys
+
+
+Pi 3.141762
+Time: 0.15821s
+
+ Performance counter stats for 'mpiexec -n 64 ./monte_carlo_mpi':
+
+          2,008.65 msec task-clock:u              #    1.136 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,412      page-faults:u             #    0.015 M/sec                  
+     2,648,188,628      cycles:u                  #    1.318 GHz                      (48.73%)
+     3,370,726,126      instructions:u            #    1.27  insn per cycle           (73.32%)
+       337,119,272      branches:u                #  167.834 M/sec                    (75.54%)
+         5,567,475      branch-misses:u           #    1.65% of all branches          (75.73%)
+
+       1.768635154 seconds time elapsed
+
+       1.088606000 seconds user
+       1.032223000 seconds sys
+
+
+Pi 3.141559
+Time: 0.17672s
+
+ Performance counter stats for 'mpiexec -n 64 ./monte_carlo_mpi':
+
+          1,957.53 msec task-clock:u              #    1.771 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,435      page-faults:u             #    0.015 M/sec                  
+     2,590,962,842      cycles:u                  #    1.324 GHz                      (49.06%)
+     3,390,997,024      instructions:u            #    1.31  insn per cycle           (73.88%)
+       351,127,355      branches:u                #  179.373 M/sec                    (75.81%)
+         5,560,732      branch-misses:u           #    1.58% of all branches          (75.13%)
+
+       1.105622294 seconds time elapsed
+
+       1.060351000 seconds user
+       0.972336000 seconds sys
+
+
+Pi 3.141594
+Time: 0.12089s
+
+ Performance counter stats for 'mpiexec -n 64 ./monte_carlo_mpi':
+
+          1,789.73 msec task-clock:u              #    1.682 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,408      page-faults:u             #    0.016 M/sec                  
+     2,411,168,282      cycles:u                  #    1.347 GHz                      (49.70%)
+     3,230,432,064      instructions:u            #    1.34  insn per cycle           (74.70%)
+       328,310,344      branches:u                #  183.441 M/sec                    (75.51%)
+         5,294,213      branch-misses:u           #    1.61% of all branches          (74.79%)
+
+       1.064349180 seconds time elapsed
+
+       0.986748000 seconds user
+       0.809487000 seconds sys
+
+
+Pi 3.141769
+Time: 0.14696s
+
+ Performance counter stats for 'mpiexec -n 64 ./monte_carlo_mpi':
+
+          1,862.94 msec task-clock:u              #    1.708 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,408      page-faults:u             #    0.016 M/sec                  
+     2,444,017,612      cycles:u                  #    1.312 GHz                      (48.97%)
+     3,272,211,967      instructions:u            #    1.34  insn per cycle           (74.26%)
+       334,829,848      branches:u                #  179.732 M/sec                    (75.78%)
+         5,156,142      branch-misses:u           #    1.54% of all branches          (75.25%)
+
+       1.090750571 seconds time elapsed
+
+       0.969554000 seconds user
+       0.907066000 seconds sys
+
+
+Pi 3.141474
+Time: 0.12899s
+
+ Performance counter stats for 'mpiexec -n 64 ./monte_carlo_mpi':
+
+          1,988.95 msec task-clock:u              #    2.284 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,432      page-faults:u             #    0.015 M/sec                  
+     2,587,635,016      cycles:u                  #    1.301 GHz                      (50.60%)
+     3,330,622,667      instructions:u            #    1.29  insn per cycle           (74.55%)
+       349,060,031      branches:u                #  175.499 M/sec                    (74.14%)
+         5,498,761      branch-misses:u           #    1.58% of all branches          (75.27%)
+
+       0.870715986 seconds time elapsed
+
+       1.049313000 seconds user
+       0.997900000 seconds sys
+
+
+Pi 3.141516
+Time: 0.16697s
+
+ Performance counter stats for 'mpiexec -n 64 ./monte_carlo_mpi':
+
+          1,950.44 msec task-clock:u              #    1.127 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,409      page-faults:u             #    0.015 M/sec                  
+     2,529,227,988      cycles:u                  #    1.297 GHz                      (49.37%)
+     3,371,282,416      instructions:u            #    1.33  insn per cycle           (73.80%)
+       343,270,477      branches:u                #  175.996 M/sec                    (75.06%)
+         5,532,082      branch-misses:u           #    1.61% of all branches          (75.56%)
+
+       1.730315712 seconds time elapsed
+
+       1.005228000 seconds user
+       1.020793000 seconds sys
+
+
+Pi 3.141735
+Time: 0.14698s
+
+ Performance counter stats for 'mpiexec -n 64 ./monte_carlo_mpi':
+
+          1,936.94 msec task-clock:u              #    1.521 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,415      page-faults:u             #    0.015 M/sec                  
+     2,476,215,032      cycles:u                  #    1.278 GHz                      (49.18%)
+     3,294,692,708      instructions:u            #    1.33  insn per cycle           (73.86%)
+       332,541,793      branches:u                #  171.684 M/sec                    (75.49%)
+         5,480,253      branch-misses:u           #    1.65% of all branches          (75.33%)
+
+       1.273586174 seconds time elapsed
+
+       0.991109000 seconds user
+       1.016161000 seconds sys
+
+
+Pi 3.141646
+Time: 0.15376s
+
+ Performance counter stats for 'mpiexec -n 64 ./monte_carlo_mpi':
+
+          1,979.98 msec task-clock:u              #    1.528 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,427      page-faults:u             #    0.015 M/sec                  
+     2,515,360,457      cycles:u                  #    1.270 GHz                      (49.58%)
+     3,326,146,732      instructions:u            #    1.32  insn per cycle           (73.92%)
+       333,404,477      branches:u                #  168.387 M/sec                    (75.75%)
+         5,547,550      branch-misses:u           #    1.66% of all branches          (74.67%)
+
+       1.295710349 seconds time elapsed
+
+       1.020054000 seconds user
+       1.082845000 seconds sys
+
+
+Pi 3.141337
+Time: 0.13682s
+
+ Performance counter stats for 'mpiexec -n 64 ./monte_carlo_mpi':
+
+          2,004.78 msec task-clock:u              #    1.190 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,432      page-faults:u             #    0.015 M/sec                  
+     2,523,468,967      cycles:u                  #    1.259 GHz                      (48.09%)
+     3,329,463,854      instructions:u            #    1.32  insn per cycle           (72.97%)
+       328,050,696      branches:u                #  163.634 M/sec                    (75.70%)
+         5,455,453      branch-misses:u           #    1.66% of all branches          (76.21%)
+
+       1.684121150 seconds time elapsed
+
+       1.011710000 seconds user
+       1.115697000 seconds sys
+
+

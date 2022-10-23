@@ -1,0 +1,316 @@
+Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Verification: OK
+Method execution took seconds: 5.33000
+
+ Performance counter stats for './heat_stencil_1D_seq 1920':
+
+          5,334.41 msec task-clock:u              #    0.994 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               156      page-faults:u             #    0.029 K/sec                  
+    13,177,388,779      cycles:u                  #    2.470 GHz                      (49.99%)
+    38,691,506,911      instructions:u            #    2.94  insn per cycle           (75.00%)
+     7,373,653,754      branches:u                # 1382.281 M/sec                    (75.01%)
+         2,077,649      branch-misses:u           #    0.03% of all branches          (75.00%)
+
+       5.363997737 seconds time elapsed
+
+       5.333899000 seconds user
+       0.002293000 seconds sys
+
+
+Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Verification: OK
+Method execution took seconds: 5.33000
+
+ Performance counter stats for './heat_stencil_1D_seq 1920':
+
+          5,334.78 msec task-clock:u              #    0.993 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               156      page-faults:u             #    0.029 K/sec                  
+    13,166,881,481      cycles:u                  #    2.468 GHz                      (49.99%)
+    38,693,144,102      instructions:u            #    2.94  insn per cycle           (74.99%)
+     7,373,931,975      branches:u                # 1382.237 M/sec                    (75.01%)
+         2,009,333      branch-misses:u           #    0.03% of all branches          (75.00%)
+
+       5.374550472 seconds time elapsed
+
+       5.332779000 seconds user
+       0.002857000 seconds sys
+
+
+Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Verification: OK
+Method execution took seconds: 5.33000
+
+ Performance counter stats for './heat_stencil_1D_seq 1920':
+
+          5,333.61 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               156      page-faults:u             #    0.029 K/sec                  
+    13,162,259,813      cycles:u                  #    2.468 GHz                      (50.00%)
+    38,688,383,645      instructions:u            #    2.94  insn per cycle           (75.01%)
+     7,373,521,387      branches:u                # 1382.465 M/sec                    (75.01%)
+         1,969,309      branch-misses:u           #    0.03% of all branches          (75.00%)
+
+       5.335549273 seconds time elapsed
+
+       5.332461000 seconds user
+       0.002000000 seconds sys
+
+
+Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Verification: OK
+Method execution took seconds: 5.32000
+
+ Performance counter stats for './heat_stencil_1D_seq 1920':
+
+          5,328.66 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               156      page-faults:u             #    0.029 K/sec                  
+    13,162,512,057      cycles:u                  #    2.470 GHz                      (50.00%)
+    38,689,002,878      instructions:u            #    2.94  insn per cycle           (75.00%)
+     7,373,806,817      branches:u                # 1383.802 M/sec                    (75.00%)
+         1,985,537      branch-misses:u           #    0.03% of all branches          (75.00%)
+
+       5.330322551 seconds time elapsed
+
+       5.327730000 seconds user
+       0.002592000 seconds sys
+
+
+Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Verification: OK
+Method execution took seconds: 5.34000
+
+ Performance counter stats for './heat_stencil_1D_seq 1920':
+
+          5,341.93 msec task-clock:u              #    0.999 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               155      page-faults:u             #    0.029 K/sec                  
+    13,196,364,823      cycles:u                  #    2.470 GHz                      (49.99%)
+    38,690,809,072      instructions:u            #    2.93  insn per cycle           (75.00%)
+     7,373,909,410      branches:u                # 1380.383 M/sec                    (75.01%)
+         2,190,668      branch-misses:u           #    0.03% of all branches          (75.00%)
+
+       5.344634756 seconds time elapsed
+
+       5.340790000 seconds user
+       0.001999000 seconds sys
+
+
+Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Verification: OK
+Method execution took seconds: 58.10000
+
+ Performance counter stats for './heat_stencil_1D_seq 4096':
+
+         58,104.07 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               166      page-faults:u             #    0.003 K/sec                  
+   143,551,268,540      cycles:u                  #    2.471 GHz                      (50.00%)
+   176,101,896,434      instructions:u            #    1.23  insn per cycle           (75.00%)
+    33,558,314,826      branches:u                #  577.555 M/sec                    (75.00%)
+         4,201,672      branch-misses:u           #    0.01% of all branches          (75.00%)
+
+      58.105895468 seconds time elapsed
+
+      58.102741000 seconds user
+       0.001999000 seconds sys
+
+
+Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Verification: OK
+Method execution took seconds: 58.09000
+
+ Performance counter stats for './heat_stencil_1D_seq 4096':
+
+         58,092.65 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               166      page-faults:u             #    0.003 K/sec                  
+   143,544,261,722      cycles:u                  #    2.471 GHz                      (50.00%)
+   176,099,367,760      instructions:u            #    1.23  insn per cycle           (75.00%)
+    33,558,620,830      branches:u                #  577.674 M/sec                    (75.00%)
+         4,146,067      branch-misses:u           #    0.01% of all branches          (75.00%)
+
+      58.095138900 seconds time elapsed
+
+      58.091555000 seconds user
+       0.001999000 seconds sys
+
+
+Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Verification: OK
+Method execution took seconds: 58.12000
+
+ Performance counter stats for './heat_stencil_1D_seq 4096':
+
+         58,129.92 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               166      page-faults:u             #    0.003 K/sec                  
+   143,576,620,915      cycles:u                  #    2.470 GHz                      (50.00%)
+   176,114,893,516      instructions:u            #    1.23  insn per cycle           (75.00%)
+    33,557,923,963      branches:u                #  577.292 M/sec                    (75.00%)
+         4,120,312      branch-misses:u           #    0.01% of all branches          (75.00%)
+
+      58.132321734 seconds time elapsed
+
+      58.127797000 seconds user
+       0.002911000 seconds sys
+
+
+Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Verification: OK
+Method execution took seconds: 58.09000
+
+ Performance counter stats for './heat_stencil_1D_seq 4096':
+
+         58,097.97 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               166      page-faults:u             #    0.003 K/sec                  
+   143,549,149,393      cycles:u                  #    2.471 GHz                      (50.00%)
+   176,105,258,186      instructions:u            #    1.23  insn per cycle           (75.00%)
+    33,558,384,456      branches:u                #  577.617 M/sec                    (75.00%)
+         4,181,613      branch-misses:u           #    0.01% of all branches          (75.00%)
+
+      58.103786045 seconds time elapsed
+
+      58.097379000 seconds user
+       0.001491000 seconds sys
+
+
+Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Verification: OK
+Method execution took seconds: 58.10000
+
+ Performance counter stats for './heat_stencil_1D_seq 4096':
+
+         58,110.87 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               165      page-faults:u             #    0.003 K/sec                  
+   143,562,246,494      cycles:u                  #    2.470 GHz                      (50.00%)
+   176,099,427,731      instructions:u            #    1.23  insn per cycle           (75.00%)
+    33,557,658,978      branches:u                #  577.476 M/sec                    (75.00%)
+         4,186,593      branch-misses:u           #    0.01% of all branches          (75.00%)
+
+      58.112968219 seconds time elapsed
+
+      58.110210000 seconds user
+       0.001474000 seconds sys
+
+
+Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Verification: OK
+Method execution took seconds: 233.07001
+
+ Performance counter stats for './heat_stencil_1D_seq 8192':
+
+        233,081.47 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               182      page-faults:u             #    0.001 K/sec                  
+   575,949,381,485      cycles:u                  #    2.471 GHz                      (50.00%)
+   704,438,967,019      instructions:u            #    1.22  insn per cycle           (75.00%)
+   134,230,285,473      branches:u                #  575.894 M/sec                    (75.00%)
+         8,209,224      branch-misses:u           #    0.01% of all branches          (75.00%)
+
+     233.084421178 seconds time elapsed
+
+     233.079929000 seconds user
+       0.001999000 seconds sys
+
+
+Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Verification: OK
+Method execution took seconds: 233.13000
+
+ Performance counter stats for './heat_stencil_1D_seq 8192':
+
+        233,140.21 msec task-clock:u              #    0.997 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               182      page-faults:u             #    0.001 K/sec                  
+   575,944,550,775      cycles:u                  #    2.470 GHz                      (50.00%)
+   704,447,225,520      instructions:u            #    1.22  insn per cycle           (75.00%)
+   134,227,291,143      branches:u                #  575.736 M/sec                    (75.00%)
+         8,228,985      branch-misses:u           #    0.01% of all branches          (75.00%)
+
+     233.747966388 seconds time elapsed
+
+     233.139185000 seconds user
+       0.001999000 seconds sys
+
+
+Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Verification: OK
+Method execution took seconds: 233.07001
+
+ Performance counter stats for './heat_stencil_1D_seq 8192':
+
+        233,074.54 msec task-clock:u              #    0.998 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               182      page-faults:u             #    0.001 K/sec                  
+   575,930,755,219      cycles:u                  #    2.471 GHz                      (50.00%)
+   704,432,184,254      instructions:u            #    1.22  insn per cycle           (75.00%)
+   134,229,495,131      branches:u                #  575.908 M/sec                    (75.00%)
+         8,257,837      branch-misses:u           #    0.01% of all branches          (75.00%)
+
+     233.490052665 seconds time elapsed
+
+     233.073626000 seconds user
+       0.002077000 seconds sys
+
+
+Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Verification: OK
+Method execution took seconds: 233.12000
+
+ Performance counter stats for './heat_stencil_1D_seq 8192':
+
+        233,132.25 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               182      page-faults:u             #    0.001 K/sec                  
+   576,021,356,506      cycles:u                  #    2.471 GHz                      (50.00%)
+   704,440,527,137      instructions:u            #    1.22  insn per cycle           (75.00%)
+   134,227,968,676      branches:u                #  575.759 M/sec                    (75.00%)
+         8,279,690      branch-misses:u           #    0.01% of all branches          (75.00%)
+
+     233.135164560 seconds time elapsed
+
+     233.129611000 seconds user
+       0.003999000 seconds sys
+
+
+Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Verification: OK
+Method execution took seconds: 233.08000
+
+ Performance counter stats for './heat_stencil_1D_seq 8192':
+
+        233,089.40 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               182      page-faults:u             #    0.001 K/sec                  
+   575,964,236,892      cycles:u                  #    2.471 GHz                      (50.00%)
+   704,441,421,397      instructions:u            #    1.22  insn per cycle           (75.00%)
+   134,231,287,998      branches:u                #  575.879 M/sec                    (75.00%)
+         8,266,823      branch-misses:u           #    0.01% of all branches          (75.00%)
+
+     233.093005212 seconds time elapsed
+
+     233.088286000 seconds user
+       0.001999000 seconds sys
+
+
+

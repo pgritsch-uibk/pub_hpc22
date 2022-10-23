@@ -1,0 +1,220 @@
+Pi 3.141614
+Time: 6.97000s
+
+ Performance counter stats for './monte_carlo_seq':
+
+          6,972.79 msec task-clock:u              #    0.998 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               136      page-faults:u             #    0.020 K/sec                  
+    17,237,631,807      cycles:u                  #    2.472 GHz                      (50.00%)
+    24,992,555,499      instructions:u            #    1.45  insn per cycle           (75.00%)
+     1,000,028,288      branches:u                #  143.419 M/sec                    (75.00%)
+             2,967      branch-misses:u           #    0.00% of all branches          (75.00%)
+
+       6.985750931 seconds time elapsed
+
+       6.972223000 seconds user
+       0.001485000 seconds sys
+
+
+Pi 3.141614
+Time: 6.97000s
+
+ Performance counter stats for './monte_carlo_seq':
+
+          6,972.79 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               136      page-faults:u             #    0.020 K/sec                  
+    17,236,531,103      cycles:u                  #    2.472 GHz                      (50.00%)
+    24,992,455,890      instructions:u            #    1.45  insn per cycle           (75.01%)
+     1,000,031,991      branches:u                #  143.419 M/sec                    (75.00%)
+             2,003      branch-misses:u           #    0.00% of all branches          (75.00%)
+
+       6.974807891 seconds time elapsed
+
+       6.972154000 seconds user
+       0.001554000 seconds sys
+
+
+Pi 3.141614
+Time: 6.97000s
+
+ Performance counter stats for './monte_carlo_seq':
+
+          6,973.41 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               136      page-faults:u             #    0.020 K/sec                  
+    17,236,287,831      cycles:u                  #    2.472 GHz                      (50.00%)
+    24,992,093,667      instructions:u            #    1.45  insn per cycle           (75.01%)
+     1,000,038,571      branches:u                #  143.407 M/sec                    (75.01%)
+             2,276      branch-misses:u           #    0.00% of all branches          (75.00%)
+
+       6.975006038 seconds time elapsed
+
+       6.972736000 seconds user
+       0.001493000 seconds sys
+
+
+Pi 3.141614
+Time: 6.97000s
+
+ Performance counter stats for './monte_carlo_seq':
+
+          6,972.49 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               136      page-faults:u             #    0.020 K/sec                  
+    17,234,190,590      cycles:u                  #    2.472 GHz                      (50.01%)
+    24,992,401,380      instructions:u            #    1.45  insn per cycle           (75.00%)
+     1,000,066,044      branches:u                #  143.430 M/sec                    (75.00%)
+             1,360      branch-misses:u           #    0.00% of all branches          (75.00%)
+
+       6.974407091 seconds time elapsed
+
+       6.971888000 seconds user
+       0.001460000 seconds sys
+
+
+Pi 3.141614
+Time: 6.97000s
+
+ Performance counter stats for './monte_carlo_seq':
+
+          6,973.33 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               136      page-faults:u             #    0.020 K/sec                  
+    17,235,250,313      cycles:u                  #    2.472 GHz                      (50.00%)
+    24,992,541,570      instructions:u            #    1.45  insn per cycle           (75.00%)
+     1,000,078,095      branches:u                #  143.415 M/sec                    (75.01%)
+               371      branch-misses:u           #    0.00% of all branches          (75.00%)
+
+       6.975657538 seconds time elapsed
+
+       6.972867000 seconds user
+       0.001280000 seconds sys
+
+
+Pi 3.141614
+Time: 6.97000s
+
+ Performance counter stats for './monte_carlo_seq':
+
+          6,973.05 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               136      page-faults:u             #    0.020 K/sec                  
+    17,236,108,905      cycles:u                  #    2.472 GHz                      (50.00%)
+    24,992,506,383      instructions:u            #    1.45  insn per cycle           (75.01%)
+     1,000,030,450      branches:u                #  143.414 M/sec                    (75.00%)
+             1,988      branch-misses:u           #    0.00% of all branches          (75.00%)
+
+       6.974798820 seconds time elapsed
+
+       6.972449000 seconds user
+       0.001416000 seconds sys
+
+
+Pi 3.141614
+Time: 6.97000s
+
+ Performance counter stats for './monte_carlo_seq':
+
+          6,973.02 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               136      page-faults:u             #    0.020 K/sec                  
+    17,233,378,723      cycles:u                  #    2.471 GHz                      (50.01%)
+    24,992,302,003      instructions:u            #    1.45  insn per cycle           (75.00%)
+     1,000,048,563      branches:u                #  143.417 M/sec                    (75.00%)
+                 0      branch-misses:u           #    0.00% of all branches          (74.99%)
+
+       6.974635523 seconds time elapsed
+
+       6.972473000 seconds user
+       0.001327000 seconds sys
+
+
+Pi 3.141614
+Time: 6.97000s
+
+ Performance counter stats for './monte_carlo_seq':
+
+          6,972.89 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               136      page-faults:u             #    0.020 K/sec                  
+    17,234,882,495      cycles:u                  #    2.472 GHz                      (50.00%)
+    24,992,384,146      instructions:u            #    1.45  insn per cycle           (75.00%)
+     1,000,047,791      branches:u                #  143.419 M/sec                    (75.00%)
+               623      branch-misses:u           #    0.00% of all branches          (74.99%)
+
+       6.974816510 seconds time elapsed
+
+       6.971706000 seconds user
+       0.001999000 seconds sys
+
+
+Pi 3.141614
+Time: 6.97000s
+
+ Performance counter stats for './monte_carlo_seq':
+
+          6,973.04 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               136      page-faults:u             #    0.020 K/sec                  
+    17,234,612,092      cycles:u                  #    2.472 GHz                      (50.00%)
+    24,993,354,822      instructions:u            #    1.45  insn per cycle           (75.00%)
+     1,000,042,199      branches:u                #  143.416 M/sec                    (75.01%)
+                 0      branch-misses:u           #    0.00% of all branches          (74.99%)
+
+       6.974665557 seconds time elapsed
+
+       6.972422000 seconds user
+       0.001455000 seconds sys
+
+
+Pi 3.141614
+Time: 6.97000s
+
+ Performance counter stats for './monte_carlo_seq':
+
+          6,972.56 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               135      page-faults:u             #    0.019 K/sec                  
+    17,236,396,975      cycles:u                  #    2.472 GHz                      (50.00%)
+    24,992,332,702      instructions:u            #    1.45  insn per cycle           (75.00%)
+     1,000,039,436      branches:u                #  143.425 M/sec                    (75.00%)
+             2,303      branch-misses:u           #    0.00% of all branches          (75.00%)
+
+       6.974672668 seconds time elapsed
+
+       6.971939000 seconds user
+       0.001522000 seconds sys
+
+
+Pi 3.141614
+Time: 6.98000s
+
+ Performance counter stats for './monte_carlo_seq':
+
+          6,982.37 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+               136      page-faults:u             #    0.019 K/sec                  
+    17,233,939,125      cycles:u                  #    2.468 GHz                      (50.00%)
+    24,992,836,645      instructions:u            #    1.45  insn per cycle           (75.00%)
+     1,000,099,366      branches:u                #  143.232 M/sec                    (75.00%)
+               664      branch-misses:u           #    0.00% of all branches          (75.00%)
+
+       6.983918619 seconds time elapsed
+
+       6.981436000 seconds user
+       0.001707000 seconds sys
+
+

@@ -1,0 +1,632 @@
+Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Method execution took seconds: 12.27343
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 1920':
+
+         99,051.78 msec task-clock:u              #    6.457 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,551      page-faults:u             #    0.298 K/sec                  
+   241,960,423,328      cycles:u                  #    2.443 GHz                      (49.99%)
+   288,345,434,060      instructions:u            #    1.19  insn per cycle           (74.98%)
+    54,350,565,327      branches:u                #  548.709 M/sec                    (75.01%)
+       114,013,419      branch-misses:u           #    0.21% of all branches          (75.00%)
+
+      15.341206318 seconds time elapsed
+
+      98.249481000 seconds user
+       0.864996000 seconds sys
+
+
+Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Method execution took seconds: 10.25269
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 1920':
+
+         82,837.03 msec task-clock:u              #    7.263 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,565      page-faults:u             #    0.357 K/sec                  
+   202,198,548,833      cycles:u                  #    2.441 GHz                      (49.99%)
+   235,825,674,611      instructions:u            #    1.17  insn per cycle           (74.99%)
+    44,463,287,901      branches:u                #  536.756 M/sec                    (75.00%)
+       112,791,366      branch-misses:u           #    0.25% of all branches          (75.01%)
+
+      11.405664327 seconds time elapsed
+
+      82.028901000 seconds user
+       0.819590000 seconds sys
+
+
+Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Method execution took seconds: 10.27261
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 1920':
+
+         83,126.35 msec task-clock:u              #    6.803 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,541      page-faults:u             #    0.355 K/sec                  
+   202,340,253,393      cycles:u                  #    2.434 GHz                      (49.96%)
+   240,308,435,133      instructions:u            #    1.19  insn per cycle           (74.95%)
+    45,239,847,874      branches:u                #  544.230 M/sec                    (75.02%)
+        99,840,654      branch-misses:u           #    0.22% of all branches          (75.02%)
+
+      12.219377304 seconds time elapsed
+
+      82.058210000 seconds user
+       1.247645000 seconds sys
+
+
+Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Method execution took seconds: 12.36170
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 1920':
+
+         99,731.14 msec task-clock:u              #    6.974 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,597      page-faults:u             #    0.297 K/sec                  
+   243,762,255,399      cycles:u                  #    2.444 GHz                      (50.00%)
+   290,781,559,678      instructions:u            #    1.19  insn per cycle           (74.99%)
+    54,837,683,031      branches:u                #  549.855 M/sec                    (75.00%)
+       149,809,656      branch-misses:u           #    0.27% of all branches          (75.00%)
+
+      14.301216799 seconds time elapsed
+
+      98.904562000 seconds user
+       0.891468000 seconds sys
+
+
+Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Method execution took seconds: 15.66285
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 1920':
+
+        126,046.65 msec task-clock:u              #    7.330 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,551      page-faults:u             #    0.234 K/sec                  
+   308,926,427,998      cycles:u                  #    2.451 GHz                      (50.00%)
+   371,202,390,191      instructions:u            #    1.20  insn per cycle           (75.00%)
+    70,049,538,300      branches:u                #  555.743 M/sec                    (75.00%)
+       168,987,439      branch-misses:u           #    0.24% of all branches          (74.99%)
+
+      17.195209052 seconds time elapsed
+
+     125.225772000 seconds user
+       0.831626000 seconds sys
+
+
+Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Method execution took seconds: 28.55436
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 4096':
+
+        227,399.32 msec task-clock:u              #    6.792 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,584      page-faults:u             #    0.130 K/sec                  
+   557,637,906,664      cycles:u                  #    2.452 GHz                      (49.97%)
+   667,668,555,827      instructions:u            #    1.20  insn per cycle           (74.94%)
+   125,697,749,579      branches:u                #  552.762 M/sec                    (75.02%)
+       248,831,772      branch-misses:u           #    0.20% of all branches          (75.01%)
+
+      33.478355102 seconds time elapsed
+
+     226.441576000 seconds user
+       1.349188000 seconds sys
+
+
+Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Method execution took seconds: 22.09156
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 4096':
+
+        177,345.28 msec task-clock:u              #    7.432 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,589      page-faults:u             #    0.167 K/sec                  
+   435,484,404,894      cycles:u                  #    2.456 GHz                      (49.99%)
+   507,917,503,207      instructions:u            #    1.17  insn per cycle           (74.99%)
+    95,581,176,534      branches:u                #  538.955 M/sec                    (75.01%)
+       211,313,938      branch-misses:u           #    0.22% of all branches          (75.00%)
+
+      23.863343606 seconds time elapsed
+
+     176.540235000 seconds user
+       0.870552000 seconds sys
+
+
+Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Method execution took seconds: 27.78451
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 4096':
+
+        221,481.13 msec task-clock:u              #    7.352 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,588      page-faults:u             #    0.134 K/sec                  
+   543,352,079,027      cycles:u                  #    2.453 GHz                      (49.99%)
+   643,104,661,297      instructions:u            #    1.18  insn per cycle           (74.97%)
+   121,131,328,038      branches:u                #  546.915 M/sec                    (75.01%)
+       259,030,437      branch-misses:u           #    0.21% of all branches          (75.00%)
+
+      30.125037604 seconds time elapsed
+
+     220.600324000 seconds user
+       1.013143000 seconds sys
+
+
+Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Method execution took seconds: 29.46189
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 4096':
+
+        236,589.20 msec task-clock:u              #    7.176 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,591      page-faults:u             #    0.125 K/sec                  
+   580,919,579,835      cycles:u                  #    2.455 GHz                      (49.99%)
+   705,938,279,522      instructions:u            #    1.22  insn per cycle           (74.98%)
+   132,943,601,070      branches:u                #  561.917 M/sec                    (75.01%)
+       271,512,813      branch-misses:u           #    0.20% of all branches          (75.01%)
+
+      32.971154987 seconds time elapsed
+
+     235.744938000 seconds user
+       0.958696000 seconds sys
+
+
+Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Method execution took seconds: 25.94164
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 4096':
+
+        208,505.49 msec task-clock:u              #    7.321 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,597      page-faults:u             #    0.142 K/sec                  
+   512,234,348,229      cycles:u                  #    2.457 GHz                      (49.97%)
+   619,939,691,086      instructions:u            #    1.21  insn per cycle           (74.96%)
+   116,719,744,469      branches:u                #  559.792 M/sec                    (75.02%)
+       245,141,179      branch-misses:u           #    0.21% of all branches          (75.01%)
+
+      28.480373886 seconds time elapsed
+
+     207.656711000 seconds user
+       1.022575000 seconds sys
+
+
+Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Method execution took seconds: 52.49385
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 8192':
+
+        420,326.26 msec task-clock:u              #    7.482 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,595      page-faults:u             #    0.070 K/sec                  
+ 1,034,450,184,694      cycles:u                  #    2.461 GHz                      (50.00%)
+ 1,231,200,508,872      instructions:u            #    1.19  insn per cycle           (75.00%)
+   231,581,409,248      branches:u                #  550.956 M/sec                    (75.00%)
+       478,506,266      branch-misses:u           #    0.21% of all branches          (75.00%)
+
+      56.180717447 seconds time elapsed
+
+     419.481982000 seconds user
+       0.916025000 seconds sys
+
+
+Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Method execution took seconds: 53.59514
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 8192':
+
+        426,836.16 msec task-clock:u              #    7.770 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,610      page-faults:u             #    0.069 K/sec                  
+ 1,049,664,683,285      cycles:u                  #    2.459 GHz                      (50.00%)
+ 1,234,998,497,216      instructions:u            #    1.18  insn per cycle           (74.99%)
+   232,277,489,034      branches:u                #  544.184 M/sec                    (75.00%)
+       648,648,931      branch-misses:u           #    0.28% of all branches          (75.00%)
+
+      54.931146946 seconds time elapsed
+
+     425.957213000 seconds user
+       0.966308000 seconds sys
+
+
+Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Method execution took seconds: 52.28765
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 8192':
+
+        416,740.97 msec task-clock:u              #    7.364 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,611      page-faults:u             #    0.071 K/sec                  
+ 1,025,065,996,077      cycles:u                  #    2.460 GHz                      (49.99%)
+ 1,214,657,666,044      instructions:u            #    1.18  insn per cycle           (74.99%)
+   228,434,027,556      branches:u                #  548.144 M/sec                    (75.01%)
+       601,773,974      branch-misses:u           #    0.26% of all branches          (75.00%)
+
+      56.593001970 seconds time elapsed
+
+     415.906382000 seconds user
+       0.921071000 seconds sys
+
+
+Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Method execution took seconds: 56.52437
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 8192':
+
+        450,830.70 msec task-clock:u              #    7.655 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,606      page-faults:u             #    0.066 K/sec                  
+ 1,108,844,327,327      cycles:u                  #    2.460 GHz                      (49.98%)
+ 1,329,283,233,293      instructions:u            #    1.20  insn per cycle           (74.97%)
+   249,949,865,943      branches:u                #  554.421 M/sec                    (75.01%)
+       580,244,668      branch-misses:u           #    0.23% of all branches          (75.01%)
+
+      58.891974479 seconds time elapsed
+
+     449.871973000 seconds user
+       1.245451000 seconds sys
+
+
+Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Method execution took seconds: 55.34385
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 8192':
+
+        443,700.35 msec task-clock:u              #    7.490 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,612      page-faults:u             #    0.067 K/sec                  
+ 1,091,661,371,538      cycles:u                  #    2.460 GHz                      (49.99%)
+ 1,327,767,505,661      instructions:u            #    1.22  insn per cycle           (74.99%)
+   249,687,864,161      branches:u                #  562.740 M/sec                    (75.00%)
+       489,095,859      branch-misses:u           #    0.20% of all branches          (75.00%)
+
+      59.237331462 seconds time elapsed
+
+     442.774013000 seconds user
+       0.997046000 seconds sys
+
+
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpiexec detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[2675,1],40]
+  Exit code:    1
+--------------------------------------------------------------------------
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16348':
+
+          1,135.82 msec task-clock:u              #    0.184 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,232      page-faults:u             #    0.026 M/sec                  
+       807,454,604      cycles:u                  #    0.711 GHz                      (50.16%)
+       617,533,003      instructions:u            #    0.76  insn per cycle           (74.38%)
+       132,213,312      branches:u                #  116.404 M/sec                    (75.40%)
+         5,371,690      branch-misses:u           #    4.06% of all branches          (74.44%)
+
+       6.159790409 seconds time elapsed
+
+       0.300277000 seconds user
+       0.883639000 seconds sys
+
+
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpiexec detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[2595,1],32]
+  Exit code:    1
+--------------------------------------------------------------------------
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16348':
+
+          1,113.36 msec task-clock:u              #    0.157 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,263      page-faults:u             #    0.026 M/sec                  
+       768,962,977      cycles:u                  #    0.691 GHz                      (48.85%)
+       604,088,264      instructions:u            #    0.79  insn per cycle           (73.46%)
+       134,409,390      branches:u                #  120.724 M/sec                    (76.01%)
+         5,239,005      branch-misses:u           #    3.90% of all branches          (75.14%)
+
+       7.076196963 seconds time elapsed
+
+       0.303391000 seconds user
+       0.862292000 seconds sys
+
+
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpiexec detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[2707,1],4]
+  Exit code:    1
+--------------------------------------------------------------------------
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16348':
+
+          1,182.30 msec task-clock:u              #    0.186 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,237      page-faults:u             #    0.025 M/sec                  
+       753,408,707      cycles:u                  #    0.637 GHz                      (48.45%)
+       608,227,194      instructions:u            #    0.81  insn per cycle           (74.15%)
+       137,857,863      branches:u                #  116.601 M/sec                    (75.28%)
+         5,333,405      branch-misses:u           #    3.87% of all branches          (76.27%)
+
+       6.342899399 seconds time elapsed
+
+       0.340488000 seconds user
+       0.894049000 seconds sys
+
+
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpiexec detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[2371,1],36]
+  Exit code:    1
+--------------------------------------------------------------------------
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16348':
+
+          1,212.89 msec task-clock:u              #    0.211 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,236      page-faults:u             #    0.024 M/sec                  
+       789,862,204      cycles:u                  #    0.651 GHz                      (48.86%)
+       621,451,212      instructions:u            #    0.79  insn per cycle           (74.09%)
+       134,782,026      branches:u                #  111.124 M/sec                    (75.96%)
+         5,192,321      branch-misses:u           #    3.85% of all branches          (75.18%)
+
+       5.742496161 seconds time elapsed
+
+       0.318990000 seconds user
+       0.939282000 seconds sys
+
+
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpiexec detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[30685,1],3]
+  Exit code:    1
+--------------------------------------------------------------------------
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16348':
+
+          1,093.24 msec task-clock:u              #    0.205 CPUs utilized          
+                 0      context-switches:u        #    0.000 K/sec                  
+                 0      cpu-migrations:u          #    0.000 K/sec                  
+            29,250      page-faults:u             #    0.027 M/sec                  
+       775,175,662      cycles:u                  #    0.709 GHz                      (48.75%)
+       617,975,941      instructions:u            #    0.80  insn per cycle           (72.91%)
+       134,646,168      branches:u                #  123.163 M/sec                    (76.13%)
+         5,273,984      branch-misses:u           #    3.92% of all branches          (75.12%)
+
+       5.345502177 seconds time elapsed
+
+       0.324796000 seconds user
+       0.816272000 seconds sys
+
+
+Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+slurmstepd: error: *** JOB 47311 ON n002 CANCELLED AT 2022-10-23T21:34:38 ***
+
+
+
+Computing heat-distribution for room size N=16384 for T=8192000 timesteps
+Method execution took seconds: 100.18961
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16384':
+
+        799,676.13 msec task-clock:u              #    7.823 CPUs utilized
+                 0      context-switches:u        #    0.000 K/sec
+                 0      cpu-migrations:u          #    0.000 K/sec
+            29,679      page-faults:u             #    0.037 K/sec
+ 1,968,834,988,132      cycles:u                  #    2.462 GHz                      (49.99%)
+ 2,117,854,034,089      instructions:u            #    1.08  insn per cycle           (74.99%)
+   396,564,877,064      branches:u                #  495.907 M/sec                    (75.00%)
+     1,099,427,445      branch-misses:u           #    0.28% of all branches          (75.00%)
+
+     102.218385906 seconds time elapsed
+
+     798.805437000 seconds user
+       0.971104000 seconds sys
+
+
+Computing heat-distribution for room size N=16384 for T=8192000 timesteps
+Method execution took seconds: 116.09791
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16384':
+
+        927,143.89 msec task-clock:u              #    7.787 CPUs utilized
+                 0      context-switches:u        #    0.000 K/sec
+                 0      cpu-migrations:u          #    0.000 K/sec
+            29,675      page-faults:u             #    0.032 K/sec
+ 2,283,455,207,486      cycles:u                  #    2.463 GHz                      (50.00%)
+ 2,492,331,004,380      instructions:u            #    1.09  insn per cycle           (75.00%)
+   467,486,084,208      branches:u                #  504.222 M/sec                    (75.00%)
+     1,286,881,122      branch-misses:u           #    0.28% of all branches          (75.00%)
+
+     119.062653942 seconds time elapsed
+
+     926.332620000 seconds user
+       0.843084000 seconds sys
+
+
+Computing heat-distribution for room size N=16384 for T=8192000 timesteps
+Method execution took seconds: 105.94592
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16384':
+
+        843,522.13 msec task-clock:u              #    7.747 CPUs utilized
+                 0      context-switches:u        #    0.000 K/sec
+                 0      cpu-migrations:u          #    0.000 K/sec
+            29,690      page-faults:u             #    0.035 K/sec
+ 2,075,728,109,069      cycles:u                  #    2.461 GHz                      (49.99%)
+ 2,259,973,015,259      instructions:u            #    1.09  insn per cycle           (74.99%)
+   423,407,751,332      branches:u                #  501.952 M/sec                    (75.00%)
+     1,033,005,171      branch-misses:u           #    0.24% of all branches          (75.00%)
+
+     108.889942255 seconds time elapsed
+
+     842.579912000 seconds user
+       1.110948000 seconds sys
+
+
+Computing heat-distribution for room size N=16384 for T=8192000 timesteps
+Method execution took seconds: 108.88316
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16384':
+
+        866,922.79 msec task-clock:u              #    7.777 CPUs utilized
+                 0      context-switches:u        #    0.000 K/sec
+                 0      cpu-migrations:u          #    0.000 K/sec
+            29,694      page-faults:u             #    0.034 K/sec
+ 2,134,293,935,226      cycles:u                  #    2.462 GHz                      (50.00%)
+ 2,273,197,190,662      instructions:u            #    1.07  insn per cycle           (75.00%)
+   425,942,807,401      branches:u                #  491.327 M/sec                    (75.00%)
+     1,096,553,370      branch-misses:u           #    0.26% of all branches          (75.00%)
+
+     111.470550286 seconds time elapsed
+
+     866.167606000 seconds user
+       0.799437000 seconds sys
+
+
+Computing heat-distribution for room size N=16384 for T=8192000 timesteps
+Method execution took seconds: 107.98785
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16384':
+
+        864,320.70 msec task-clock:u              #    7.846 CPUs utilized
+                 0      context-switches:u        #    0.000 K/sec
+                 0      cpu-migrations:u          #    0.000 K/sec
+            29,668      page-faults:u             #    0.034 K/sec
+ 2,127,592,723,788      cycles:u                  #    2.462 GHz                      (50.00%)
+ 2,330,314,788,464      instructions:u            #    1.10  insn per cycle           (75.00%)
+   436,789,936,732      branches:u                #  505.356 M/sec                    (75.00%)
+     1,163,706,663      branch-misses:u           #    0.27% of all branches          (75.00%)
+
+     110.165651589 seconds time elapsed
+
+     863.457531000 seconds user
+       0.946695000 seconds sys
+
+
+Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+Method execution took seconds: 268.34897
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 32768':
+
+      2,140,561.62 msec task-clock:u              #    7.884 CPUs utilized
+                 0      context-switches:u        #    0.000 K/sec
+                 0      cpu-migrations:u          #    0.000 K/sec
+            29,692      page-faults:u             #    0.014 K/sec
+ 5,274,406,110,833      cycles:u                  #    2.464 GHz                      (50.00%)
+ 5,445,724,198,362      instructions:u            #    1.03  insn per cycle           (75.00%)
+ 1,016,037,753,432      branches:u                #  474.659 M/sec                    (75.00%)
+     2,837,507,191      branch-misses:u           #    0.28% of all branches          (75.00%)
+
+     271.501357247 seconds time elapsed
+
+    2139.723147000 seconds user
+       1.011050000 seconds sys
+
+
+Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+Method execution took seconds: 265.29820
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 32768':
+
+      2,117,585.78 msec task-clock:u              #    7.874 CPUs utilized
+                 0      context-switches:u        #    0.000 K/sec
+                 0      cpu-migrations:u          #    0.000 K/sec
+            29,698      page-faults:u             #    0.014 K/sec
+ 5,215,625,611,042      cycles:u                  #    2.463 GHz                      (50.00%)
+ 5,451,790,543,538      instructions:u            #    1.05  insn per cycle           (75.00%)
+ 1,017,740,689,813      branches:u                #  480.614 M/sec                    (75.00%)
+     2,280,990,784      branch-misses:u           #    0.22% of all branches          (75.00%)
+
+     268.936915738 seconds time elapsed
+
+    2116.728551000 seconds user
+       1.023665000 seconds sys
+
+
+Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+Method execution took seconds: 266.82794
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 32768':
+
+      2,130,161.03 msec task-clock:u              #    7.884 CPUs utilized
+                 0      context-switches:u        #    0.000 K/sec
+                 0      cpu-migrations:u          #    0.000 K/sec
+            29,686      page-faults:u             #    0.014 K/sec
+ 5,248,268,397,243      cycles:u                  #    2.464 GHz                      (50.00%)
+ 5,423,998,575,645      instructions:u            #    1.03  insn per cycle           (75.00%)
+ 1,012,665,262,835      branches:u                #  475.394 M/sec                    (75.00%)
+     2,580,296,211      branch-misses:u           #    0.25% of all branches          (75.00%)
+
+     270.191299468 seconds time elapsed
+
+    2129.392234000 seconds user
+       0.837399000 seconds sys
+
+
+Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+Method execution took seconds: 264.16434
+
+ Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 32768':
+
+      2,106,754.39 msec task-clock:u              #    7.839 CPUs utilized
+                 0      context-switches:u        #    0.000 K/sec
+                 0      cpu-migrations:u          #    0.000 K/sec
+            29,711      page-faults:u             #    0.014 K/sec
+ 5,187,755,847,560      cycles:u                  #    2.462 GHz                      (50.00%)
+ 5,344,553,385,330      instructions:u            #    1.03  insn per cycle           (75.00%)
+   997,594,569,657      branches:u                #  473.522 M/sec                    (75.00%)
+     2,451,009,513      branch-misses:u           #    0.25% of all branches          (75.00%)
+
+     268.742122150 seconds time elapsed
+
+    2105.833038000 seconds user
+       1.063012000 seconds sys
+
+
+Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+slurmstepd: error: *** JOB 47331 ON n002 CANCELLED AT 2022-10-23T22:24:03 DUE TO TIME LIMIT ***
