@@ -2,6 +2,7 @@
 #define XORSHIFTSSE_H
 
 #include <stdint.h>
+#include <unistd.h>
 #include <fcntl.h>
 
 // SSE intrinsics
