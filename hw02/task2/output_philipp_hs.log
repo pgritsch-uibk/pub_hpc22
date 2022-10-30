@@ -1,4 +1,4 @@
-Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Computing heat-distribution for room size size=1920 for T=960000 timesteps
 Verification: OK
 Method execution took seconds: 5.33000
 
@@ -19,7 +19,7 @@ Method execution took seconds: 5.33000
        0.002293000 seconds sys
 
 
-Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Computing heat-distribution for room size size=1920 for T=960000 timesteps
 Verification: OK
 Method execution took seconds: 5.33000
 
@@ -40,7 +40,7 @@ Method execution took seconds: 5.33000
        0.002857000 seconds sys
 
 
-Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Computing heat-distribution for room size size=1920 for T=960000 timesteps
 Verification: OK
 Method execution took seconds: 5.33000
 
@@ -61,7 +61,7 @@ Method execution took seconds: 5.33000
        0.002000000 seconds sys
 
 
-Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Computing heat-distribution for room size size=1920 for T=960000 timesteps
 Verification: OK
 Method execution took seconds: 5.32000
 
@@ -82,7 +82,7 @@ Method execution took seconds: 5.32000
        0.002592000 seconds sys
 
 
-Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Computing heat-distribution for room size size=1920 for T=960000 timesteps
 Verification: OK
 Method execution took seconds: 5.34000
 
@@ -103,7 +103,7 @@ Method execution took seconds: 5.34000
        0.001999000 seconds sys
 
 
-Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Computing heat-distribution for room size size=4096 for T=2048000 timesteps
 Verification: OK
 Method execution took seconds: 58.10000
 
@@ -124,7 +124,7 @@ Method execution took seconds: 58.10000
        0.001999000 seconds sys
 
 
-Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Computing heat-distribution for room size size=4096 for T=2048000 timesteps
 Verification: OK
 Method execution took seconds: 58.09000
 
@@ -145,7 +145,7 @@ Method execution took seconds: 58.09000
        0.001999000 seconds sys
 
 
-Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Computing heat-distribution for room size size=4096 for T=2048000 timesteps
 Verification: OK
 Method execution took seconds: 58.12000
 
@@ -166,7 +166,7 @@ Method execution took seconds: 58.12000
        0.002911000 seconds sys
 
 
-Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Computing heat-distribution for room size size=4096 for T=2048000 timesteps
 Verification: OK
 Method execution took seconds: 58.09000
 
@@ -187,7 +187,7 @@ Method execution took seconds: 58.09000
        0.001491000 seconds sys
 
 
-Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Computing heat-distribution for room size size=4096 for T=2048000 timesteps
 Verification: OK
 Method execution took seconds: 58.10000
 
@@ -208,7 +208,7 @@ Method execution took seconds: 58.10000
        0.001474000 seconds sys
 
 
-Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Computing heat-distribution for room size size=8192 for T=4096000 timesteps
 Verification: OK
 Method execution took seconds: 233.07001
 
@@ -229,7 +229,7 @@ Method execution took seconds: 233.07001
        0.001999000 seconds sys
 
 
-Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Computing heat-distribution for room size size=8192 for T=4096000 timesteps
 Verification: OK
 Method execution took seconds: 233.13000
 
@@ -250,7 +250,7 @@ Method execution took seconds: 233.13000
        0.001999000 seconds sys
 
 
-Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Computing heat-distribution for room size size=8192 for T=4096000 timesteps
 Verification: OK
 Method execution took seconds: 233.07001
 
@@ -271,7 +271,7 @@ Method execution took seconds: 233.07001
        0.002077000 seconds sys
 
 
-Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Computing heat-distribution for room size size=8192 for T=4096000 timesteps
 Verification: OK
 Method execution took seconds: 233.12000
 
@@ -292,7 +292,7 @@ Method execution took seconds: 233.12000
        0.003999000 seconds sys
 
 
-Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Computing heat-distribution for room size size=8192 for T=4096000 timesteps
 Verification: OK
 Method execution took seconds: 233.08000
 

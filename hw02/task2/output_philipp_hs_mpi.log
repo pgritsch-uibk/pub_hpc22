@@ -1,4 +1,4 @@
-Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Computing heat-distribution for room size size=1920 for T=960000 timesteps
 Method execution took seconds: 12.27343
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 1920':
@@ -18,7 +18,7 @@ Method execution took seconds: 12.27343
        0.864996000 seconds sys
 
 
-Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Computing heat-distribution for room size size=1920 for T=960000 timesteps
 Method execution took seconds: 10.25269
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 1920':
@@ -38,7 +38,7 @@ Method execution took seconds: 10.25269
        0.819590000 seconds sys
 
 
-Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Computing heat-distribution for room size size=1920 for T=960000 timesteps
 Method execution took seconds: 10.27261
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 1920':
@@ -58,7 +58,7 @@ Method execution took seconds: 10.27261
        1.247645000 seconds sys
 
 
-Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Computing heat-distribution for room size size=1920 for T=960000 timesteps
 Method execution took seconds: 12.36170
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 1920':
@@ -78,7 +78,7 @@ Method execution took seconds: 12.36170
        0.891468000 seconds sys
 
 
-Computing heat-distribution for room size N=1920 for T=960000 timesteps
+Computing heat-distribution for room size size=1920 for T=960000 timesteps
 Method execution took seconds: 15.66285
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 1920':
@@ -98,7 +98,7 @@ Method execution took seconds: 15.66285
        0.831626000 seconds sys
 
 
-Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Computing heat-distribution for room size size=4096 for T=2048000 timesteps
 Method execution took seconds: 28.55436
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 4096':
@@ -118,7 +118,7 @@ Method execution took seconds: 28.55436
        1.349188000 seconds sys
 
 
-Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Computing heat-distribution for room size size=4096 for T=2048000 timesteps
 Method execution took seconds: 22.09156
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 4096':
@@ -138,7 +138,7 @@ Method execution took seconds: 22.09156
        0.870552000 seconds sys
 
 
-Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Computing heat-distribution for room size size=4096 for T=2048000 timesteps
 Method execution took seconds: 27.78451
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 4096':
@@ -158,7 +158,7 @@ Method execution took seconds: 27.78451
        1.013143000 seconds sys
 
 
-Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Computing heat-distribution for room size size=4096 for T=2048000 timesteps
 Method execution took seconds: 29.46189
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 4096':
@@ -178,7 +178,7 @@ Method execution took seconds: 29.46189
        0.958696000 seconds sys
 
 
-Computing heat-distribution for room size N=4096 for T=2048000 timesteps
+Computing heat-distribution for room size size=4096 for T=2048000 timesteps
 Method execution took seconds: 25.94164
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 4096':
@@ -198,7 +198,7 @@ Method execution took seconds: 25.94164
        1.022575000 seconds sys
 
 
-Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Computing heat-distribution for room size size=8192 for T=4096000 timesteps
 Method execution took seconds: 52.49385
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 8192':
@@ -218,7 +218,7 @@ Method execution took seconds: 52.49385
        0.916025000 seconds sys
 
 
-Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Computing heat-distribution for room size size=8192 for T=4096000 timesteps
 Method execution took seconds: 53.59514
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 8192':
@@ -238,7 +238,7 @@ Method execution took seconds: 53.59514
        0.966308000 seconds sys
 
 
-Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Computing heat-distribution for room size size=8192 for T=4096000 timesteps
 Method execution took seconds: 52.28765
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 8192':
@@ -258,7 +258,7 @@ Method execution took seconds: 52.28765
        0.921071000 seconds sys
 
 
-Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Computing heat-distribution for room size size=8192 for T=4096000 timesteps
 Method execution took seconds: 56.52437
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 8192':
@@ -278,7 +278,7 @@ Method execution took seconds: 56.52437
        1.245451000 seconds sys
 
 
-Computing heat-distribution for room size N=8192 for T=4096000 timesteps
+Computing heat-distribution for room size size=8192 for T=4096000 timesteps
 Method execution took seconds: 55.34385
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 8192':
@@ -443,12 +443,12 @@ the job to be terminated. The first process to do so was:
        0.816272000 seconds sys
 
 
-Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+Computing heat-distribution for room size size=32768 for T=16384000 timesteps
 slurmstepd: error: *** JOB 47311 ON n002 CANCELLED AT 2022-10-23T21:34:38 ***
 
 
 
-Computing heat-distribution for room size N=16384 for T=8192000 timesteps
+Computing heat-distribution for room size size=16384 for T=8192000 timesteps
 Method execution took seconds: 100.18961
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16384':
@@ -468,7 +468,7 @@ Method execution took seconds: 100.18961
        0.971104000 seconds sys
 
 
-Computing heat-distribution for room size N=16384 for T=8192000 timesteps
+Computing heat-distribution for room size size=16384 for T=8192000 timesteps
 Method execution took seconds: 116.09791
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16384':
@@ -488,7 +488,7 @@ Method execution took seconds: 116.09791
        0.843084000 seconds sys
 
 
-Computing heat-distribution for room size N=16384 for T=8192000 timesteps
+Computing heat-distribution for room size size=16384 for T=8192000 timesteps
 Method execution took seconds: 105.94592
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16384':
@@ -508,7 +508,7 @@ Method execution took seconds: 105.94592
        1.110948000 seconds sys
 
 
-Computing heat-distribution for room size N=16384 for T=8192000 timesteps
+Computing heat-distribution for room size size=16384 for T=8192000 timesteps
 Method execution took seconds: 108.88316
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16384':
@@ -528,7 +528,7 @@ Method execution took seconds: 108.88316
        0.799437000 seconds sys
 
 
-Computing heat-distribution for room size N=16384 for T=8192000 timesteps
+Computing heat-distribution for room size size=16384 for T=8192000 timesteps
 Method execution took seconds: 107.98785
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 16384':
@@ -548,7 +548,7 @@ Method execution took seconds: 107.98785
        0.946695000 seconds sys
 
 
-Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+Computing heat-distribution for room size size=32768 for T=16384000 timesteps
 Method execution took seconds: 268.34897
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 32768':
@@ -568,7 +568,7 @@ Method execution took seconds: 268.34897
        1.011050000 seconds sys
 
 
-Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+Computing heat-distribution for room size size=32768 for T=16384000 timesteps
 Method execution took seconds: 265.29820
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 32768':
@@ -588,7 +588,7 @@ Method execution took seconds: 265.29820
        1.023665000 seconds sys
 
 
-Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+Computing heat-distribution for room size size=32768 for T=16384000 timesteps
 Method execution took seconds: 266.82794
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 32768':
@@ -608,7 +608,7 @@ Method execution took seconds: 266.82794
        0.837399000 seconds sys
 
 
-Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+Computing heat-distribution for room size size=32768 for T=16384000 timesteps
 Method execution took seconds: 264.16434
 
  Performance counter stats for 'mpiexec -n 64 ./heat_stencil_1D_par 32768':
@@ -628,5 +628,5 @@ Method execution took seconds: 264.16434
        1.063012000 seconds sys
 
 
-Computing heat-distribution for room size N=32768 for T=16384000 timesteps
+Computing heat-distribution for room size size=32768 for T=16384000 timesteps
 slurmstepd: error: *** JOB 47331 ON n002 CANCELLED AT 2022-10-23T22:24:03 DUE TO TIME LIMIT ***

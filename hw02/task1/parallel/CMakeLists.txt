@@ -1,6 +1,6 @@
 find_package(MPI REQUIRED)
 
-add_compile_options(-msse4.1 -march=native -mtune=native)
+add_compile_options(-O3 -msse4.1 -march=native -mtune=native)
 
 add_executable(monte_carlo_mpi monte_carlo_mpi.c xorshiftSSE.h xorshiftSSE.c)
 
