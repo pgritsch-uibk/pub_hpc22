@@ -6,63 +6,11 @@
 #include <omp.h>
 #include <string>
 #include <vector>
+#include "Matrix2D.h"
 
 #define RESOLUTION_WIDTH 50
 #define RESOLUTION_HEIGHT 50
 
-
-// -- vector utilities --
-struct Matrix2D {
-
-  private:
-
-	int internal_size;
-
-	inline float* get(size_t x, size_t y) {
-		return &(this->vec[x * internal_size + y]);
-	}
-
-  public:
-
-	int size;
-
-	std::vector<float> vec;
-
-	Matrix2D(int size, float initial_value) {
-		std::vector<float> temp((size + 2) * (size + 2), initial_value);
-		std::swap(this->vec, temp);
-		this->size = size;
-		this->internal_size = size + 2;
-	}
-
-	inline float* getBottomLeft() {
-		return this->get(internal_size - 1, 0);
-	}
-
-	inline float* getTopLeft() {
-		return this->get(0, 0);
-	}
-
-	inline float* getTopRight() {
-		return this->get(0, internal_size - 1);
-	}
-
-	inline float* getInnerBottomLeft() {
-		return this->get(size, 1);
-	}
-
-	inline float* getInnerTopLeft() {
-		return this->get(1, 1);
-	}
-
-	inline float* getInnerTopRight() {
-		return this->get(1, size);
-	}
-
-	inline float& operator()(size_t x, size_t y) {
-		return this->vec[(x+1) * this->internal_size + y + 1];
-	}
-};
 
 void printTemperature(Matrix2D& temperature);
 
