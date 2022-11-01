@@ -1,38 +1,15 @@
-#include <cstdio>
 #include <cstdlib>
-#include <cstring>
-#include <fstream>
-#include <iomanip>
-#include <omp.h>
 #include <string>
 #include <vector>
 #include <mpi.h>
 #include <cmath>
-
-#define RESOLUTION_WIDTH 50
-#define RESOLUTION_HEIGHT 50
+#include "../Matrix2D.h"
 
 #define DIMENSIONS 2
 
-// -- vector utilities --
-struct Matrix2D {
-
-	int size;
-
-	std::vector<float> vec;
-
-	Matrix2D(int size, float initial_value) {
-		std::vector<float> temp(size * size, initial_value);
-		std::swap(this->vec, temp);
-		this->size = size;
-	}
-
-	float& operator()(int i, int j) { return this->vec[i * this->size + j]; }
-};
-
-void writeTemperatureToFile(Matrix2D& temperature, std::string filename);
-
-// -- simulation code ---
+inline std::string getCoords(int dims[DIMENSIONS]) {
+	return "(" + std::to_string(dims[0]) + ", " + std::to_string(dims[1]) + ")";
+}
 
 int main(int argc, char** argv) {
 	int myRank, numProcs;
@@ -52,7 +29,7 @@ int main(int argc, char** argv) {
 	int T = N * 500;
 
 	if (myRank == 0) {
-		printf("Computing heat-distribution for room size %dX%d for T=%d timesteps\n", N, N, T);
+		std::cout << "Computing heat-distribution for room size " << N << "X" << N << " for T=" << T << " timesteps" << std::endl;
 	}
 
 	// ---------- setup initial data ----------
@@ -80,12 +57,11 @@ int main(int argc, char** argv) {
 	MPI_Type_commit(&horizontalGhostCells);
 
 	MPI_Datatype verticalGhostCells;
-	MPI_Type_vector(subSize, 1, subSize, MPI_FLOAT, &verticalGhostCells);
+	MPI_Type_vector(subSize, 1, subSize + 2, MPI_FLOAT, &verticalGhostCells);
 	MPI_Type_commit(&verticalGhostCells);
 
 	auto A = Matrix2D(subSize, 273.0);
 	auto B = Matrix2D(subSize, 273.0);
-
 
 	int source_x = -1;
 	int source_y = -1;
@@ -102,24 +78,57 @@ int main(int argc, char** argv) {
 
 	for(int t = 0; t < T; t++) {
 
-		std::vector<float> ghostsNorth(subSize, 273.0);
-		std::vector<float> ghostsSouth(subSize, 273.0);
-		std::vector<float> ghostsWest(subSize, 273.0);
-		std::vector<float> ghostsEast(subSize, 273.0);
+		int sourceSendingToMe, targetToWhichISend;
+		MPI_Cart_shift(cartesianCommunicator, 1, 1, &sourceSendingToMe, &targetToWhichISend);
+		int sourceSendingToMeCoords[DIMENSIONS];
+		int targetToWhichISendCoords[DIMENSIONS];
 
-		if (myCoords[0] % 2) {
-			//receive left
-			// send right
+		if (targetToWhichISend != MPI_PROC_NULL) {
+			for (int i = 0; i < subSize; i++) {
+				A(i, subSize - 1) = (float) i;
+			}
 
-			//receive right
-			//send left
+			MPI_Cart_coords(cartesianCommunicator, targetToWhichISend, DIMENSIONS, targetToWhichISendCoords);
+			std::cout << "My coordinates are " << getCoords(myCoords)
+			          << " and I send my EAST to " << getCoords(targetToWhichISendCoords) << std::endl;
 
-		} else {
-			//send right
-			//receive left
+			MPI_Sendrecv(A.getInnerEast(), 1, verticalGhostCells, targetToWhichISend,
+			             0, A.getOuterWest(), 1, verticalGhostCells, myRank, MPI_ANY_TAG, cartesianCommunicator,
+			             MPI_STATUS_IGNORE);
+
+			for (int i = 0; i < subSize; i++) {
+				printf("%f\n", A.vec.at(i * (A.size + 2) + 1));
+			}
+
 		}
 
-		MPI_Sendrecv(&A.vec[subSize - 1], 1, verticalGhostCells, )
+
+
+		if (true) break;
+/*
+		MPI_Cart_shift(cartesianCommunicator, 0, 1, &sourceSendingToMe, &targetToWhichISend);
+
+		if (targetToWhichISend != MPI_PROC_NULL) {
+			MPI_Cart_coords(cartesianCommunicator, targetToWhichISend, DIMENSIONS, targetToWhichISendCoords);
+			std::cout << "My coordinates are " << getCoords(myCoords)
+			          << " and I send my EAST to " << getCoords(targetToWhichISendCoords) << std::endl;
+
+			MPI_Sendrecv(A.getInnerSouth(), 1, verticalGhostCells, targetToWhichISend,
+			             0, A.getOuterNorth(), subSize, MPI_FLOAT, myRank, MPI_ANY_TAG, cartesianCommunicator,
+			             MPI_STATUS_IGNORE);
+		}*/
+
+/*
+		if (sourceSendingToMe != MPI_PROC_NULL) {
+			MPI_Cart_coords(cartesianCommunicator, sourceSendingToMe, DIMENSIONS, sourceSendingToMeCoords);
+			std::cout << "My coordinates are " << getCoords(myCoords)
+			          << " and I send my WEST to " << getCoords(sourceSendingToMeCoords) << std::endl;
+
+			MPI_Sendrecv(A.getInnerWest(), 1, verticalGhostCells, sourceSendingToMe,
+			             0, A.getOuterEast(), subSize, MPI_FLOAT, myRank, MPI_ANY_TAG, cartesianCommunicator,
+			             MPI_STATUS_IGNORE);
+		}
+*/
 
 		for(int i = 0; i < A.size; ++i) {
 			for(int j = 0; j < A.size; ++j) {
@@ -141,12 +150,12 @@ int main(int argc, char** argv) {
 
 	// ---------- check ----------
 
-	printf("Elapsed: %f \n", end - start);
+	std::cout << "Elapsed: " << end - start << std::endl;
 
 	// simple verification if nowhere the heat is more then the heat source
 	int success = 1;
-	for(long long i = 0; i < N; i++) {
-		for(long long j = 0; j < N; j++) {
+	for(long long i = 0; i < subSize; i++) {
+		for(long long j = 0; j < subSize; j++) {
 			double temp = A(i, j);
 			if(273 <= temp && temp <= 273 + 60) continue;
 			success = 0;
@@ -154,19 +163,16 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	printf("Verification: %s\n", (success) ? "OK" : "FAILED");
-
-	return (success) ? EXIT_SUCCESS : EXIT_FAILURE;
-}
-
-void writeTemperatureToFile(Matrix2D& temperature, std::string filename) {
-
-	std::ofstream file;
-	file.open(filename);
-
-	for (auto& val : temperature.vec) {
-		file << std::setw(2) << val << std::endl;
+	if (myRank == 0) {
+		A.printHeatMap();
 	}
 
-	file.close();
+	MPI_Comm_free(&cartesianCommunicator);
+	MPI_Type_free(&horizontalGhostCells);
+	MPI_Type_free(&verticalGhostCells);
+	MPI_Finalize();
+
+	std::cout << "Verification: " << (success ? "OK" : "FAILED") << std::endl;
+
+	return (success) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

@@ -1,10 +1,13 @@
-//
-// Created by philipp on 31.10.22.
-//
-
 #ifndef HPC22_MATRIX2D_H
 #define HPC22_MATRIX2D_H
 
+#include <cstdlib>
+#include <string>
+#include <vector>
+#include <ostream>
+
+#define HEAT_MAP_RESOLUTION_WIDTH 50
+#define HEAT_MAP_RESOLUTION_HEIGHT 50
 
 class Matrix2D {
 
@@ -12,7 +15,7 @@ private:
 
     int internal_size;
 
-    inline float *get(size_t x, size_t y) {
+    inline float *get(std::size_t x, std::size_t y) {
         return &(this->vec[x * internal_size + y]);
     }
 
@@ -58,13 +61,16 @@ public:
     }
 
     inline float *getInnerEast() {
-        retun
-        this->get(1, internal_size - 2);
+        return this->get(1, internal_size - 2);
     }
 
     inline float &operator()(size_t x, size_t y) {
         return this->vec[(x + 1) * this->internal_size + y + 1];
     }
+
+	void writeToFile(std::string filename);
+
+	void printHeatMap();
 };
 
 
