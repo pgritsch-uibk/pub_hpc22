@@ -13,17 +13,17 @@ class Matrix2D {
 
 private:
 
-    int internal_size;
+  	std::vector<float> vec;
+
+	int internal_size;
+
+	int size;
 
     inline float *get(std::size_t x, std::size_t y) {
-        return &(this->vec[x * internal_size + y]);
+        return this->vec.data() + (x * internal_size) + y;
     }
 
 public:
-
-    int size;
-
-    std::vector<float> vec;
 
     Matrix2D(int size, float initial_value) {
         std::vector<float> temp((size + 2) * (size + 2), initial_value);
@@ -31,6 +31,10 @@ public:
         this->size = size;
         this->internal_size = size + 2;
     }
+
+	[[nodiscard]] inline int getSize() const {
+		return this->size;
+	}
 
     inline float *getOuterNorth() {
         return this->get(0, 1);

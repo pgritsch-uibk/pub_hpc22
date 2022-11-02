@@ -7,10 +7,6 @@
 
 #define DIMENSIONS 2
 
-inline std::string getCoords(int dims[DIMENSIONS]) {
-	return "(" + std::to_string(dims[0]) + ", " + std::to_string(dims[1]) + ")";
-}
-
 int main(int argc, char** argv) {
 	int myRank, numProcs;
 	MPI_Init(&argc, &argv);
@@ -67,78 +63,50 @@ int main(int argc, char** argv) {
 	int source_y = -1;
 	if (myCoords[0] == 0 && myCoords[1] == 0) {
 		// and there is a heat source
-		source_x = 0;
-		source_y = 0;
+		source_x = subSize / 2;
+		source_y = subSize / 2;
 		A(source_x, source_y) = 273 + 60;
 	}
 
 	double start = MPI_Wtime();
 
-	// ---------- compute ----------
-
+	int toTheWest, toTheEast, toTheNorth, toTheSouth;
+	MPI_Cart_shift(cartesianCommunicator, 1, 1, &toTheWest, &toTheEast);
+	MPI_Cart_shift(cartesianCommunicator, 0, 1, &toTheNorth, &toTheSouth);
 	for(int t = 0; t < T; t++) {
 
-		int sourceSendingToMe, targetToWhichISend;
-		MPI_Cart_shift(cartesianCommunicator, 1, 1, &sourceSendingToMe, &targetToWhichISend);
-		int sourceSendingToMeCoords[DIMENSIONS];
-		int targetToWhichISendCoords[DIMENSIONS];
+		// sending EAST to WEST
+		MPI_Sendrecv(A.getInnerEast(), 1, verticalGhostCells, toTheEast, 0,
+		             A.getOuterWest(), 1, verticalGhostCells, toTheWest, MPI_ANY_TAG,
+		             cartesianCommunicator, MPI_STATUS_IGNORE);
 
-		if (targetToWhichISend != MPI_PROC_NULL) {
-			for (int i = 0; i < subSize; i++) {
-				A(i, subSize - 1) = (float) i;
-			}
+		// sending WEST to EAST
+		MPI_Sendrecv(A.getInnerWest(), 1, verticalGhostCells, toTheWest, 0,
+		             A.getOuterEast(), 1, verticalGhostCells, toTheEast, MPI_ANY_TAG,
+		             cartesianCommunicator, MPI_STATUS_IGNORE);
 
-			MPI_Cart_coords(cartesianCommunicator, targetToWhichISend, DIMENSIONS, targetToWhichISendCoords);
-			std::cout << "My coordinates are " << getCoords(myCoords)
-			          << " and I send my EAST to " << getCoords(targetToWhichISendCoords) << std::endl;
+		// sending SOUTH to NORTH
+		MPI_Sendrecv(A.getInnerSouth(), 1, horizontalGhostCells, toTheSouth, 0,
+		             A.getOuterNorth(), 1, horizontalGhostCells, toTheNorth, MPI_ANY_TAG,
+		             cartesianCommunicator, MPI_STATUS_IGNORE);
 
-			MPI_Sendrecv(A.getInnerEast(), 1, verticalGhostCells, targetToWhichISend,
-			             0, A.getOuterWest(), 1, verticalGhostCells, myRank, MPI_ANY_TAG, cartesianCommunicator,
-			             MPI_STATUS_IGNORE);
-
-			for (int i = 0; i < subSize; i++) {
-				printf("%f\n", A.vec.at(i * (A.size + 2) + 1));
-			}
-
-		}
+		// sending NORTH to SOUTH
+		MPI_Sendrecv(A.getInnerNorth(), 1, horizontalGhostCells, toTheNorth, 0,
+		             A.getOuterSouth(), 1, horizontalGhostCells, toTheSouth, MPI_ANY_TAG,
+		             cartesianCommunicator, MPI_STATUS_IGNORE);
 
 
-
-		if (true) break;
-/*
-		MPI_Cart_shift(cartesianCommunicator, 0, 1, &sourceSendingToMe, &targetToWhichISend);
-
-		if (targetToWhichISend != MPI_PROC_NULL) {
-			MPI_Cart_coords(cartesianCommunicator, targetToWhichISend, DIMENSIONS, targetToWhichISendCoords);
-			std::cout << "My coordinates are " << getCoords(myCoords)
-			          << " and I send my EAST to " << getCoords(targetToWhichISendCoords) << std::endl;
-
-			MPI_Sendrecv(A.getInnerSouth(), 1, verticalGhostCells, targetToWhichISend,
-			             0, A.getOuterNorth(), subSize, MPI_FLOAT, myRank, MPI_ANY_TAG, cartesianCommunicator,
-			             MPI_STATUS_IGNORE);
-		}*/
-
-/*
-		if (sourceSendingToMe != MPI_PROC_NULL) {
-			MPI_Cart_coords(cartesianCommunicator, sourceSendingToMe, DIMENSIONS, sourceSendingToMeCoords);
-			std::cout << "My coordinates are " << getCoords(myCoords)
-			          << " and I send my WEST to " << getCoords(sourceSendingToMeCoords) << std::endl;
-
-			MPI_Sendrecv(A.getInnerWest(), 1, verticalGhostCells, sourceSendingToMe,
-			             0, A.getOuterEast(), subSize, MPI_FLOAT, myRank, MPI_ANY_TAG, cartesianCommunicator,
-			             MPI_STATUS_IGNORE);
-		}
-*/
-
-		for(int i = 0; i < A.size; ++i) {
-			for(int j = 0; j < A.size; ++j) {
+		for(int i = 0; i < A.getSize(); ++i) {
+			for(int j = 0; j < A.getSize(); ++j) {
 				if((i == source_x && j == source_y)) {
 					B(i, j) = A(i, j);
 				} else {
 					B(i, j) =
-					    A(i, j) + 0.01 * (-4.0 * A(i, j) + A(i == 0 ? i : i - 1, j) +
-					                      A(i == N - 1 ? i : i + 1, j) + A(i, j == 0 ? j : j - 1) +
-					                      A(i, j == N - 1 ? j : j + 1));
+					    A(i, j) + 0.2 * (-4.0 * A(i, j) +
+					                     A(i - 1, j) +
+					                     A(i + 1, j) +
+					                     A(i, j - 1) +
+					                     A(i, j + 1));
 				}
 			}
 		}
@@ -150,12 +118,15 @@ int main(int argc, char** argv) {
 
 	// ---------- check ----------
 
-	std::cout << "Elapsed: " << end - start << std::endl;
+	if (myRank == 0) {
+		std::cout << "Elapsed: " << end - start << std::endl;
+		A.printHeatMap();
+	}
 
 	// simple verification if nowhere the heat is more then the heat source
 	int success = 1;
-	for(long long i = 0; i < subSize; i++) {
-		for(long long j = 0; j < subSize; j++) {
+	for(long long i = 0; i < A.getSize(); i++) {
+		for(long long j = 0; j < A.getSize(); j++) {
 			double temp = A(i, j);
 			if(273 <= temp && temp <= 273 + 60) continue;
 			success = 0;
@@ -163,16 +134,21 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	int total_success = 0;
+	MPI_Reduce(&success, &total_success, 1, MPI_INT, MPI_SUM, 0, cartesianCommunicator);
+
 	if (myRank == 0) {
-		A.printHeatMap();
+		success = total_success == numProcs;
+		std::cout << "Method execution took seconds: " <<  end - start << std::endl;
 	}
+
+	A.~Matrix2D();
+	B.~Matrix2D();
 
 	MPI_Comm_free(&cartesianCommunicator);
 	MPI_Type_free(&horizontalGhostCells);
 	MPI_Type_free(&verticalGhostCells);
 	MPI_Finalize();
-
-	std::cout << "Verification: " << (success ? "OK" : "FAILED") << std::endl;
 
 	return (success) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
