@@ -1,4 +1,5 @@
 #include "../Matrix2D.h"
+#include <array>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -31,7 +32,7 @@ int main(int argc, char** argv) {
 	}
 
 	// ---------- setup initial data ----------
-	double sqrtProcs = sqrt(numProcs);
+	double sqrtProcs = std::sqrt(numProcs);
 	if(std::abs(pow(sqrtProcs, 2) - numProcs) > 000.1) {
 		perror("Processors must give a sqrt of 2");
 		MPI_Finalize();
@@ -40,17 +41,18 @@ int main(int argc, char** argv) {
 
 	int success = 1;
 
-	int dims[] = { 0, 0 };
-	int periods[] = { false, false };
-	MPI_Dims_create(numProcs, DIMENSIONS, dims);
+	std::array<int, 2> dims = { 0, 0 };
+	std::array<int, 2> periods = { false, false };
+	MPI_Dims_create(numProcs, DIMENSIONS, dims.begin());
 	MPI_Comm cartesianCommunicator;
-	MPI_Cart_create(MPI_COMM_WORLD, DIMENSIONS, dims, periods, true, &cartesianCommunicator);
+	MPI_Cart_create(MPI_COMM_WORLD, DIMENSIONS, dims.begin(), periods.begin(), true,
+	                &cartesianCommunicator);
 
 	MPI_Comm_rank(cartesianCommunicator, &myRank);
-	int myCoords[DIMENSIONS];
-	MPI_Cart_coords(cartesianCommunicator, myRank, DIMENSIONS, myCoords);
+	std::array<int, DIMENSIONS> myCoords;
+	MPI_Cart_coords(cartesianCommunicator, myRank, DIMENSIONS, myCoords.begin());
 
-	int subSize = N / (int)round(sqrtProcs);
+	int subSize = N / (int)std::round(sqrtProcs);
 
 	MPI_Datatype horizontalGhostCells;
 	MPI_Type_vector(subSize, subSize, subSize + 2, MPI_FLOAT, &horizontalGhostCells);
@@ -78,7 +80,6 @@ int main(int argc, char** argv) {
 		MPI_Cart_shift(cartesianCommunicator, 1, 1, &toTheWest, &toTheEast);
 		MPI_Cart_shift(cartesianCommunicator, 0, 1, &toTheNorth, &toTheSouth);
 		for(int t = 0; t < T; t++) {
-
 			// sending EAST to WEST
 			MPI_Sendrecv(A.getInnerEast(), 1, verticalGhostCells, toTheEast, 0, A.getOuterWest(), 1,
 			             verticalGhostCells, toTheWest, MPI_ANY_TAG, cartesianCommunicator,
@@ -98,6 +99,7 @@ int main(int argc, char** argv) {
 			MPI_Sendrecv(A.getInnerNorth(), 1, horizontalGhostCells, toTheNorth, 0,
 			             A.getOuterSouth(), 1, horizontalGhostCells, toTheSouth, MPI_ANY_TAG,
 			             cartesianCommunicator, MPI_STATUS_IGNORE);
+			// std::cout << "haha" << std::endl;
 
 			for(int i = 0; i < A.size; ++i) {
 				for(int j = 0; j < A.size; ++j) {
