@@ -1,6 +1,7 @@
 #ifndef HPC22_MATRIX2D_H
 #define HPC22_MATRIX2D_H
 
+#include "MPIVectorConfig.h"
 #include <cstdlib>
 #include <iostream>
 #include <ostream>
@@ -17,7 +18,7 @@ class Matrix2D {
 	int internal_size;
 
 	inline float* get(std::size_t x, std::size_t y) {
-		return this->vec.data() + (x * internal_size) + y;
+		return vec.data() + (x * internal_size) + y;
 	}
 
   public:
@@ -31,24 +32,24 @@ class Matrix2D {
 #endif
 	}
 
-	inline float* getOuterNorth() { return this->get(0, 1); }
+	inline float* getOuterNorth() { return get(0, 1); }
 
-	inline float* getOuterWest() { return this->get(1, 0); }
+	inline float* getOuterWest() { return get(1, 0); }
 
-	inline float* getOuterEast() { return this->get(1, internal_size - 1); }
+	inline float* getOuterEast() { return get(1, internal_size - 1); }
 
-	inline float* getOuterSouth() { return this->get(internal_size - 1, 1); }
+	inline float* getOuterSouth() { return get(internal_size - 1, 1); }
 
-	inline float* getInnerNorth() { return this->get(1, 1); }
+	inline float* getInnerNorth() { return get(1, 1); }
 
-	inline float* getInnerWest() { return this->get(1, 1); }
+	inline float* getInnerWest() { return get(1, 1); }
 
-	inline float* getInnerSouth() { return this->get(internal_size - 2, 1); }
+	inline float* getInnerSouth() { return get(internal_size - 2, 1); }
 
-	inline float* getInnerEast() { return this->get(1, internal_size - 2); }
+	inline float* getInnerEast() { return get(1, internal_size - 2); }
 
 	inline float& operator()(size_t x, size_t y) {
-		return this->vec[(x + 1) * this->internal_size + y + 1];
+		return vec[(x + 1) * internal_size + y + 1];
 	}
 
 	void writeToFile(std::string filename);
@@ -56,6 +57,10 @@ class Matrix2D {
 	void printHeatMap();
 
 	void swap(Matrix2D& matrix);
+
+	MPIVectorConfig getHorizontalGhostCellsConfig() const;
+
+	MPIVectorConfig getVerticalGhostCellsConfig() const;
 };
 
 #endif // HPC22_MATRIX2D_H

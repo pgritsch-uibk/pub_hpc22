@@ -74,3 +74,11 @@ void Matrix2D::printHeatMap() {
 void Matrix2D::swap(Matrix2D& matrix) {
 	std::swap(this->vec, matrix.vec);
 }
+
+MPIVectorConfig Matrix2D::getHorizontalGhostCellsConfig() const {
+	return MPIVectorConfig{1, size, internal_size};
+}
+
+MPIVectorConfig Matrix2D::getVerticalGhostCellsConfig() const {
+	return MPIVectorConfig{size, 1, internal_size};
+}

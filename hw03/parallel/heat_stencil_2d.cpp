@@ -1,3 +1,4 @@
+#include "../MPIVectorConfig.h"
 #include "../Matrix2D.h"
 #include <array>
 #include <cmath>
@@ -5,7 +6,6 @@
 #include <iostream>
 #include <mpi.h>
 #include <string>
-#include <vector>
 
 #define DIMENSIONS 2
 
@@ -41,8 +41,8 @@ int main(int argc, char** argv) {
 
 	int success = 1;
 
-	std::array<int, 2> dims = { 0, 0 };
-	std::array<int, 2> periods = { false, false };
+	std::array<int, DIMENSIONS> dims = { 0, 0 };
+	std::array<int, DIMENSIONS> periods = { false, false };
 	MPI_Dims_create(numProcs, DIMENSIONS, dims.begin());
 	MPI_Comm cartesianCommunicator;
 	MPI_Cart_create(MPI_COMM_WORLD, DIMENSIONS, dims.begin(), periods.begin(), true,
@@ -53,17 +53,19 @@ int main(int argc, char** argv) {
 	MPI_Cart_coords(cartesianCommunicator, myRank, DIMENSIONS, myCoords.begin());
 
 	int subSize = N / (int)std::round(sqrtProcs);
-
-	MPI_Datatype horizontalGhostCells;
-	MPI_Type_vector(subSize, subSize, subSize + 2, MPI_FLOAT, &horizontalGhostCells);
-	MPI_Type_commit(&horizontalGhostCells);
-
-	MPI_Datatype verticalGhostCells;
-	MPI_Type_vector(subSize, 1, subSize + 2, MPI_FLOAT, &verticalGhostCells);
-	MPI_Type_commit(&verticalGhostCells);
 	{
 		auto A = Matrix2D(subSize, 273.0);
 		auto B = Matrix2D(subSize, 273.0);
+
+		MPIVectorConfig hConfig = A.getHorizontalGhostCellsConfig();
+		MPI_Datatype horizontalGhostCells;
+		MPI_Type_vector(hConfig.nBlocks, hConfig.blockSize, hConfig.stride, MPI_FLOAT, &horizontalGhostCells);
+		MPI_Type_commit(&horizontalGhostCells);
+
+		MPIVectorConfig vConfig = A.getVerticalGhostCellsConfig();
+		MPI_Datatype verticalGhostCells;
+		MPI_Type_vector(vConfig.nBlocks, vConfig.blockSize, vConfig.stride, MPI_FLOAT, &verticalGhostCells);
+		MPI_Type_commit(&verticalGhostCells);
 
 		int source_x = -1;
 		int source_y = -1;
@@ -77,8 +79,10 @@ int main(int argc, char** argv) {
 		double start = MPI_Wtime();
 
 		int toTheWest, toTheEast, toTheNorth, toTheSouth;
+		// east is at coordinates (i, j + 1); south at (i + 1, j)
 		MPI_Cart_shift(cartesianCommunicator, 1, 1, &toTheWest, &toTheEast);
 		MPI_Cart_shift(cartesianCommunicator, 0, 1, &toTheNorth, &toTheSouth);
+
 		for(int t = 0; t < T; t++) {
 			// sending EAST to WEST
 			MPI_Sendrecv(A.getInnerEast(), 1, verticalGhostCells, toTheEast, 0, A.getOuterWest(), 1,
@@ -99,7 +103,6 @@ int main(int argc, char** argv) {
 			MPI_Sendrecv(A.getInnerNorth(), 1, horizontalGhostCells, toTheNorth, 0,
 			             A.getOuterSouth(), 1, horizontalGhostCells, toTheSouth, MPI_ANY_TAG,
 			             cartesianCommunicator, MPI_STATUS_IGNORE);
-			// std::cout << "haha" << std::endl;
 
 			for(int i = 0; i < A.size; ++i) {
 				for(int j = 0; j < A.size; ++j) {
@@ -147,10 +150,12 @@ int main(int argc, char** argv) {
 			success = total_success == numProcs;
 			std::cout << "Method execution took seconds: " << end - start << std::endl;
 		}
+
+		MPI_Type_free(&horizontalGhostCells);
+		MPI_Type_free(&verticalGhostCells);
 	}
+
 	MPI_Comm_free(&cartesianCommunicator);
-	MPI_Type_free(&horizontalGhostCells);
-	MPI_Type_free(&verticalGhostCells);
 	MPI_Finalize();
 
 	return (success) ? EXIT_SUCCESS : EXIT_FAILURE;
