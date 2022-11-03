@@ -9,7 +9,7 @@ void Matrix2D::writeToFile(std::string filename) {
 	std::ofstream file;
 	file.open(filename);
 
-	for (auto& val : this->vec) {
+	for(auto& val : this->vec) {
 		file << std::setw(2) << val << std::endl;
 	}
 
@@ -69,4 +69,8 @@ void Matrix2D::printHeatMap() {
 		std::cout << "X";
 	}
 	std::cout << std::endl;
+}
+
+void Matrix2D::swap(Matrix2D& matrix) {
+	std::swap(this->vec, matrix.vec);
 }

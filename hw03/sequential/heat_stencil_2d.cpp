@@ -17,16 +17,16 @@ int main(int argc, char** argv) {
 	}
 	int T = N * 500;
 
-	std::cout << "Computing heat-distribution for room size " << N << "X" << N << " for T=" << T << " timesteps" << std::endl;
+	std::cout << "Computing heat-distribution for room size " << N << "X" << N << " for T=" << T
+	          << " timesteps" << std::endl;
 	// ---------- setup initial data ----------
 	auto A = Matrix2D(N, 273.0);
 	auto B = Matrix2D(N, 273.0);
 
 	// and there is a heat source
-	int source_x = N/4;
-	int source_y = N/4;
+	int source_x = N / 4;
+	int source_y = N / 4;
 	A(source_x, source_y) = 273 + 60;
-
 
 	double start = omp_get_wtime();
 #ifdef DEBUG
@@ -43,17 +43,13 @@ int main(int argc, char** argv) {
 				if((i == source_x && j == source_y)) {
 					B(i, j) = A(i, j);
 				} else {
-					B(i, j) =
-					    A(i, j) + 0.2 * (-4.0 * A(i, j) +
-					                      A(i - 1, j) +
-					                      A(i + 1, j) +
-					                      A(i, j - 1) +
-					                      A(i, j + 1));
+					B(i, j) = A(i, j) + 0.2 * (-4.0 * A(i, j) + A(i - 1, j) + A(i + 1, j) +
+					                           A(i, j - 1) + A(i, j + 1));
 				}
 			}
 		}
 
-		std::swap(A, B);
+		A.swap(B);
 
 #ifdef DEBUG
 		// every 1000 steps show intermediate step
@@ -70,7 +66,7 @@ int main(int argc, char** argv) {
 	// ---------- check ----------
 
 	std::cout << "Final:" << std::endl;
-	A.printHeatMap() ;
+	A.printHeatMap();
 	std::cout << "Elapsed: " << end - start << std::endl;
 
 	A.writeToFile(fileName);

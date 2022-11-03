@@ -5,3 +5,5 @@ cmake-build-debug/
 CMakeCache.txt
 Makefile
 cmake_install.cmake
+*build.nosync
+*.vscode/
