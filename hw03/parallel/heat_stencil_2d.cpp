@@ -145,7 +145,7 @@ int main(int argc, char** argv) {
 		auto GATHERED = Matrix2D(N, 273.0, false);
 		MPI_Datatype sendSubMatrix;
 
-		MPISendReceiveConfig sendConfig = A.getSendConfig();
+		MPISendReceiveConfig<DIMENSIONS> sendConfig = A.getSendConfig();
 
 		MPI_Type_create_subarray(2, sendConfig.sizes.begin(), sendConfig.subSizes.begin(),
 		                         sendConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT, &sendSubMatrix);
@@ -153,7 +153,7 @@ int main(int argc, char** argv) {
 
 		MPI_Datatype receiveSubMatrix, receiveOneLineBlock;
 
-		MPISendReceiveConfig receiveConfig = GATHERED.getReceiveConfig(A);
+		MPISendReceiveConfig<DIMENSIONS> receiveConfig = GATHERED.getReceiveConfig(A);
 		MPI_Type_create_subarray(DIMENSIONS, receiveConfig.sizes.begin(), receiveConfig.subSizes.begin(),
 		                         receiveConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT,
 		                         &receiveSubMatrix);
