@@ -9,8 +9,10 @@ void Matrix2D::writeToFile(std::string filename) {
 	std::ofstream file;
 	file.open(filename);
 
-	for(auto& val : this->vec) {
-		file << std::setw(2) << val << std::endl;
+	for (int i = 0; i < size; ++i) {
+		for (int j = 0; j < size; ++j) {
+			file << std::setw(2) << operator()(i, j) << std::endl;
+		}
 	}
 
 	file.close();

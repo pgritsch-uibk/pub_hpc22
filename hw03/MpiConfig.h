@@ -12,7 +12,7 @@ struct MPIVectorConfig {
 	const int stride;
 };
 
-struct MPISendReciveConfig {
+struct MPISendReceiveConfig {
 	const std::array<int, 2> sizes;
 	const std::array<int, 2> subSizes;
 	const std::array<int, 2> coords;
