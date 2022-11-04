@@ -58,9 +58,18 @@ class Matrix2D {
 
 	void swap(Matrix2D& matrix);
 
-	MPIVectorConfig getHorizontalGhostCellsConfig() const;
+	static MPIVectorConfig getHorizontalGhostCellsConfig(int size) {
+		return MPIVectorConfig{1, size, size + 2};
+	}
 
-	MPIVectorConfig getVerticalGhostCellsConfig() const;
+	static MPIVectorConfig getVerticalGhostCellsConfig(int size) {
+		return MPIVectorConfig{size, 1, size + 2};
+	}
+
+	static MPIVectorConfig getSubMatrixConfig(int size) {
+		return MPIVectorConfig{size, size, size + 2};
+	}
+
 };
 
 #endif // HPC22_MATRIX2D_H
