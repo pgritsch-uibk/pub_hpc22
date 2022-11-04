@@ -1,7 +1,7 @@
 #ifndef HPC22_MATRIX2D_H
 #define HPC22_MATRIX2D_H
 
-#include "MPIVectorConfig.h"
+#include "MpiConfig.h"
 #include <cstdlib>
 #include <iostream>
 #include <ostream>
@@ -17,9 +17,7 @@ class Matrix2D {
 
 	int internal_size;
 
-	inline float* get(std::size_t x, std::size_t y) {
-		return vec.data() + (x * internal_size) + y;
-	}
+	inline float* get(std::size_t x, std::size_t y) { return vec.data() + (x * internal_size) + y; }
 
   public:
 	const int size;
@@ -48,32 +46,35 @@ class Matrix2D {
 
 	inline float* getInnerEast() { return get(1, internal_size - 2); }
 
-	inline float& operator()(size_t x, size_t y) {
-		return vec[(x + 1) * internal_size + y + 1];
-	}
+	inline float& operator()(size_t x, size_t y) { return vec[(x + 1) * internal_size + y + 1]; }
 
 	void writeToFile(std::string filename);
 
-	inline float* getOrigin() {
-		return vec.data();
-	}
+	inline float* getOrigin() { return vec.data(); }
 
 	void printHeatMap();
 
 	void swap(Matrix2D& matrix);
 
 	static MPIVectorConfig getHorizontalGhostCellsConfig(int size) {
-		return MPIVectorConfig{1, size, size + 2};
+		return MPIVectorConfig{ 1, size, size + 2 };
 	}
 
 	static MPIVectorConfig getVerticalGhostCellsConfig(int size) {
-		return MPIVectorConfig{size, 1, size + 2};
+		return MPIVectorConfig{ size, 1, size + 2 };
 	}
 
 	static MPIVectorConfig getSubMatrixConfig(int size) {
-		return MPIVectorConfig{size, size, size + 2};
+		return MPIVectorConfig{ size, size, size + 2 };
 	}
 
+	static MPISendReciveConfig getSendConfig(int N, int size) {
+		return MPISendReciveConfig{ { N + 2, N + 2 }, { size, size }, { 1, 1 } };
+	}
+
+	static MPISendReciveConfig getReciveConfig(int N, int size) {
+		return MPISendReciveConfig{ { N + 2, N + 2 }, { size, size }, { 1, 1 } };
+	}
 };
 
 #endif // HPC22_MATRIX2D_H

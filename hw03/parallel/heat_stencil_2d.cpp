@@ -1,5 +1,5 @@
-#include "../MPIVectorConfig.h"
 #include "../Matrix2D.h"
+#include "../MpiConfig.h"
 #include <array>
 #include <cmath>
 #include <cstdlib>
@@ -59,12 +59,14 @@ int main(int argc, char** argv) {
 
 		MPIVectorConfig hConfig = Matrix2D::getHorizontalGhostCellsConfig(subSize);
 		MPI_Datatype horizontalGhostCells;
-		MPI_Type_vector(hConfig.nBlocks, hConfig.blockSize, hConfig.stride, MPI_FLOAT, &horizontalGhostCells);
+		MPI_Type_vector(hConfig.nBlocks, hConfig.blockSize, hConfig.stride, MPI_FLOAT,
+		                &horizontalGhostCells);
 		MPI_Type_commit(&horizontalGhostCells);
 
 		MPIVectorConfig vConfig = Matrix2D::getVerticalGhostCellsConfig(subSize);
 		MPI_Datatype verticalGhostCells;
-		MPI_Type_vector(vConfig.nBlocks, vConfig.blockSize, vConfig.stride, MPI_FLOAT, &verticalGhostCells);
+		MPI_Type_vector(vConfig.nBlocks, vConfig.blockSize, vConfig.stride, MPI_FLOAT,
+		                &verticalGhostCells);
 		MPI_Type_commit(&verticalGhostCells);
 
 		int source_x = -1;
@@ -141,48 +143,46 @@ int main(int argc, char** argv) {
 		MPI_Reduce(&success, &total_success, 1, MPI_INT, MPI_SUM, 0, cartesianCommunicator);
 
 		auto GATHERED = Matrix2D(N, 273.0);
-		MPIVectorConfig subMatrixC = Matrix2D::getSubMatrixConfig(subSize);
+		// MPIVectorConfig subMatrixC = Matrix2D::getSubMatrixConfig(subSize);
 		MPI_Datatype sendSubMatrix;
 
-		int sendSizes[] = {subSize + 2, subSize + 2};
-		int sendSubSizes[] = {subSize, subSize};
-		int startCoords[] = {1, 1};
+		MPISendReciveConfig sendConfig = Matrix2D::getSendConfig(subSize, subSize);
 
-		MPI_Type_create_subarray(2, sendSizes, sendSubSizes, startCoords, MPI_ORDER_C, MPI_FLOAT, &sendSubMatrix);
-		//MPI_Type_vector(1, 1, 1, MPI_FLOAT, &sendSubMatrix);
+		MPI_Type_create_subarray(2, sendConfig.sizes.begin(), sendConfig.subSizes.begin(),
+		                         sendConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT, &sendSubMatrix);
+		// MPI_Type_vector(1, 1, 1, MPI_FLOAT, &sendSubMatrix);
 		MPI_Type_commit(&sendSubMatrix);
 
 		MPI_Datatype gatherSubMatrix, recvMagicBlock;
 
-		int receiveSizes[] = {N + 2, N + 2};
-		int receiveSubsizes[] = {subSize, subSize};
+		MPISendReciveConfig reciveConfig = Matrix2D::getReciveConfig(N, subSize);
 
-		MPI_Type_create_subarray(2, receiveSizes, receiveSubsizes, startCoords, MPI_ORDER_C, MPI_FLOAT,
+		MPI_Type_create_subarray(2, reciveConfig.sizes.begin(), reciveConfig.subSizes.begin(),
+		                         reciveConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT,
 		                         &gatherSubMatrix);
 		MPI_Type_create_resized(gatherSubMatrix, 0, subSize * sizeof(float), &recvMagicBlock);
 
-
-
-		//MPI_Type_vector(subSize, subSize, subSize * (sqrtProcs - 1) + 2 , MPI_FLOAT, &gatherSubMatrix);
 		MPI_Type_commit(&recvMagicBlock);
 
-		int displacements[numProcs];
+		std::vector<int> displacements(numProcs);
+
 		int index = 0;
-		for (int p_row = 0; p_row < sqrtProcs; p_row++)
-			for (int p_column = 0; p_column < sqrtProcs; p_column++)
-				displacements[index++] = p_column +  p_row * (subSize * sqrtProcs);
+		for(int p_row = 0; p_row < sqrtProcs; p_row++) {
+			for(int p_column = 0; p_column < sqrtProcs; p_column++) {
+				displacements[index++] = p_column + p_row * (subSize * sqrtProcs);
+			}
+		}
 
-		std::cout << displacements[0] << " " << displacements[1] << " " << displacements[2]
-		    << " " << displacements[3] << std::endl;
+		// std::cout << displacements[0] << " " << displacements[1] << " " << displacements[2]
+		// 		<< " " << displacements[3] << std::endl;
 
+		std::vector<int> counts(numProcs, 1);
+		MPI_Gatherv(A.getOrigin(), 1, sendSubMatrix, GATHERED.getOrigin(), counts.data(),
+		            displacements.data(), recvMagicBlock, 0, cartesianCommunicator);
 
-		int counts[] = {1, 1, 1, 1};
-		MPI_Gatherv(A.getOrigin(), 1, sendSubMatrix, GATHERED.getOrigin(),
-		            counts, displacements, recvMagicBlock, 0, cartesianCommunicator);
-
-
-		if (myRank == 0) {
-			std::cout << GATHERED(0, 0) << " " << GATHERED(0, 100) << " " << GATHERED(100, 0) << " " << GATHERED(100, 100) << std::endl;
+		if(myRank == 0) {
+			std::cout << GATHERED(0, 0) << " " << GATHERED(0, 100) << " " << GATHERED(100, 0) << " "
+			          << GATHERED(100, 100) << std::endl;
 			success = total_success == numProcs;
 			std::cout << "Elapsed: " << end - start << std::endl;
 			GATHERED.printHeatMap();
