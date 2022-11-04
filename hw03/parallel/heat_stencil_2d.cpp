@@ -71,8 +71,8 @@ int main(int argc, char** argv) {
 		int source_y = -1;
 		if(myCoords[0] == 0 && myCoords[1] == 0) {
 			// and there is a heat source
-			source_x = subSize / 2;
-			source_y = subSize / 2;
+			source_x = subSize - 1;
+			source_y = subSize - 1;
 			A(source_x, source_y) = 273 + 60;
 		}
 
@@ -140,62 +140,59 @@ int main(int argc, char** argv) {
 		int total_success = 0;
 		MPI_Reduce(&success, &total_success, 1, MPI_INT, MPI_SUM, 0, cartesianCommunicator);
 
-		auto GATHERED = Matrix2D(N, 0.0);
+		auto GATHERED = Matrix2D(N, 273.0);
 		MPIVectorConfig subMatrixC = Matrix2D::getSubMatrixConfig(subSize);
 		MPI_Datatype sendSubMatrix;
-		MPI_Type_vector(1, 1, 1, MPI_FLOAT, &sendSubMatrix);
+
+		int sendSizes[] = {subSize + 2, subSize + 2};
+		int sendSubSizes[] = {subSize, subSize};
+		int startCoords[] = {1, 1};
+
+		MPI_Type_create_subarray(2, sendSizes, sendSubSizes, startCoords, MPI_ORDER_C, MPI_FLOAT, &sendSubMatrix);
+		//MPI_Type_vector(1, 1, 1, MPI_FLOAT, &sendSubMatrix);
 		MPI_Type_commit(&sendSubMatrix);
 
 		MPI_Datatype gatherSubMatrix, recvMagicBlock;
 
-		int sizes[] = {N, N};
-		int subsizes[] = {subSize, subSize};
-		int startCoords[] = {0, 0};
-		MPI_Type_create_subarray(2, sizes, subsizes, startCoords, MPI_ORDER_C, MPI_FLOAT,
+		int receiveSizes[] = {N + 2, N + 2};
+		int receiveSubsizes[] = {subSize, subSize};
+
+		MPI_Type_create_subarray(2, receiveSizes, receiveSubsizes, startCoords, MPI_ORDER_C, MPI_FLOAT,
 		                         &gatherSubMatrix);
-		MPI_Type_create_resized(gatherSubMatrix, 0, sizeof(float), &recvMagicBlock);
+		MPI_Type_create_resized(gatherSubMatrix, 0, subSize * sizeof(float), &recvMagicBlock);
 
 
 
 		//MPI_Type_vector(subSize, subSize, subSize * (sqrtProcs - 1) + 2 , MPI_FLOAT, &gatherSubMatrix);
-		MPI_Type_commit(&gatherSubMatrix);
+		MPI_Type_commit(&recvMagicBlock);
 
-		int displacements[4] = {0, subSize, N*subSize, N*subSize + subSize};
+		int displacements[numProcs];
 		int index = 0;
-
-
-/*
 		for (int p_row = 0; p_row < sqrtProcs; p_row++)
 			for (int p_column = 0; p_column < sqrtProcs; p_column++)
-				displacements[index++] = p_column * subSize  +  p_row * (N * subSize);
-*/
+				displacements[index++] = p_column +  p_row * (subSize * sqrtProcs);
 
-		/*
-		 * | | | | |
-		 * | | | | |
-		 * | | | | |
-		 * | | | | |
-		 */
+		std::cout << displacements[0] << " " << displacements[1] << " " << displacements[2]
+		    << " " << displacements[3] << std::endl;
 
-		int debug = 1;
-		while(debug) {
-			;
-		}
 
 		int counts[] = {1, 1, 1, 1};
-		MPI_Gatherv(A.getInnerNorth(), 1, sendSubMatrix, GATHERED.getInnerNorth(),
-		            counts, displacements, MPI_FLOAT, 0, cartesianCommunicator);
+		MPI_Gatherv(A.getOrigin(), 1, sendSubMatrix, GATHERED.getOrigin(),
+		            counts, displacements, recvMagicBlock, 0, cartesianCommunicator);
+
 
 		if (myRank == 0) {
+			std::cout << GATHERED(0, 0) << " " << GATHERED(0, 100) << " " << GATHERED(100, 0) << " " << GATHERED(100, 100) << std::endl;
 			success = total_success == numProcs;
 			std::cout << "Elapsed: " << end - start << std::endl;
 			GATHERED.printHeatMap();
+			GATHERED.writeToFile("gathered.txt");
 		}
 
 		MPI_Type_free(&horizontalGhostCells);
 		MPI_Type_free(&verticalGhostCells);
 		MPI_Type_free(&sendSubMatrix);
-		MPI_Type_free(&gatherSubMatrix);
+		MPI_Type_free(&recvMagicBlock);
 	}
 
 	MPI_Comm_free(&cartesianCommunicator);

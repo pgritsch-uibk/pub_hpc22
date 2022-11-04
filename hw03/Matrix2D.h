@@ -54,6 +54,10 @@ class Matrix2D {
 
 	void writeToFile(std::string filename);
 
+	inline float* getOrigin() {
+		return vec.data();
+	}
+
 	void printHeatMap();
 
 	void swap(Matrix2D& matrix);

@@ -1,9 +1,8 @@
 #include "../Matrix2D.h"
 #include <cstdlib>
 #include <iostream>
-#include <omp.h>
 #include <string>
-#include <vector>
+#include <mpi.h>
 
 int main(int argc, char** argv) {
 	// 'parsing' optional input parameter = problem size
@@ -24,11 +23,11 @@ int main(int argc, char** argv) {
 	auto B = Matrix2D(N, 273.0);
 
 	// and there is a heat source
-	int source_x = N / 4;
-	int source_y = N / 4;
+	int source_x = 99;
+	int source_y = 99;
 	A(source_x, source_y) = 273 + 60;
 
-	double start = omp_get_wtime();
+	double start = MPI_Wtime();
 #ifdef DEBUG
 	std::cout << "Initial: " << std::endl;
 	A.printHeatMap();
@@ -61,7 +60,7 @@ int main(int argc, char** argv) {
 #endif
 	}
 
-	double end = omp_get_wtime();
+	double end = MPI_Wtime();
 
 	// ---------- check ----------
 
