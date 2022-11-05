@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 		MPI_Finalize();
 		return EXIT_FAILURE;
 	}
-
+	int procsByDim = (int) std::round(sqrtProcs);
 	int success = 1;
 
 	std::array<int, DIMENSIONS> dims = { 0, 0 };
@@ -52,18 +52,18 @@ int main(int argc, char** argv) {
 	std::array<int, DIMENSIONS> myCoords;
 	MPI_Cart_coords(cartesianCommunicator, myRank, DIMENSIONS, myCoords.begin());
 
-	int subSize = N / (int)std::round(sqrtProcs);
+	int subSize = N / procsByDim;
 	{
 		auto A = Matrix2D(subSize, 273.0);
 		auto B = Matrix2D(subSize, 273.0);
 
-		MPIVectorConfig hConfig = Matrix2D::getHorizontalGhostCellsConfig(subSize);
+		MPIVectorConfig hConfig = A.getHorizontalGhostCellsConfig();
 		MPI_Datatype horizontalGhostCells;
 		MPI_Type_vector(hConfig.nBlocks, hConfig.blockSize, hConfig.stride, MPI_FLOAT,
 		                &horizontalGhostCells);
 		MPI_Type_commit(&horizontalGhostCells);
 
-		MPIVectorConfig vConfig = Matrix2D::getVerticalGhostCellsConfig(subSize);
+		MPIVectorConfig vConfig = A.getVerticalGhostCellsConfig();
 		MPI_Datatype verticalGhostCells;
 		MPI_Type_vector(vConfig.nBlocks, vConfig.blockSize, vConfig.stride, MPI_FLOAT,
 		                &verticalGhostCells);
@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
 
 		int source_x = -1;
 		int source_y = -1;
-		if(myCoords[0] == 0 && myCoords[1] == 0) {
+		if(myCoords[0] + 1 == procsByDim / 2 && myCoords[1] + 1 == procsByDim / 2) {
 			// and there is a heat source
 			source_x = subSize - 1;
 			source_y = subSize - 1;
@@ -142,47 +142,38 @@ int main(int argc, char** argv) {
 		int total_success = 0;
 		MPI_Reduce(&success, &total_success, 1, MPI_INT, MPI_SUM, 0, cartesianCommunicator);
 
-		auto GATHERED = Matrix2D(N, 273.0);
-		// MPIVectorConfig subMatrixC = Matrix2D::getSubMatrixConfig(subSize);
+		auto GATHERED = Matrix2D(N, 273.0, false);
 		MPI_Datatype sendSubMatrix;
 
-		MPISendReciveConfig sendConfig = Matrix2D::getSendConfig(subSize, subSize);
+		MPISendReceiveConfig sendConfig = A.getSendConfig();
 
 		MPI_Type_create_subarray(2, sendConfig.sizes.begin(), sendConfig.subSizes.begin(),
 		                         sendConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT, &sendSubMatrix);
-		// MPI_Type_vector(1, 1, 1, MPI_FLOAT, &sendSubMatrix);
 		MPI_Type_commit(&sendSubMatrix);
 
-		MPI_Datatype gatherSubMatrix, recvMagicBlock;
+		MPI_Datatype receiveSubMatrix, receiveOneLineBlock;
 
-		MPISendReciveConfig reciveConfig = Matrix2D::getReciveConfig(N, subSize);
+		MPISendReceiveConfig receiveConfig = GATHERED.getReceiveConfig(A);
+		MPI_Type_create_subarray(DIMENSIONS, receiveConfig.sizes.begin(), receiveConfig.subSizes.begin(),
+		                         receiveConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT,
+		                         &receiveSubMatrix);
 
-		MPI_Type_create_subarray(2, reciveConfig.sizes.begin(), reciveConfig.subSizes.begin(),
-		                         reciveConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT,
-		                         &gatherSubMatrix);
-		MPI_Type_create_resized(gatherSubMatrix, 0, subSize * sizeof(float), &recvMagicBlock);
-
-		MPI_Type_commit(&recvMagicBlock);
+		MPI_Type_create_resized(receiveSubMatrix, 0, subSize * sizeof(float), &receiveOneLineBlock);
+		MPI_Type_commit(&receiveOneLineBlock);
 
 		std::vector<int> displacements(numProcs);
-
 		int index = 0;
-		for(int p_row = 0; p_row < sqrtProcs; p_row++) {
-			for(int p_column = 0; p_column < sqrtProcs; p_column++) {
-				displacements[index++] = p_column + p_row * (subSize * sqrtProcs);
+		for(int procRow = 0; procRow < procsByDim; procRow++) {
+			for(int procColumn = 0; procColumn < procsByDim; procColumn++) {
+				displacements[index++] = procColumn + procRow * (subSize * procsByDim);
 			}
 		}
 
-		// std::cout << displacements[0] << " " << displacements[1] << " " << displacements[2]
-		// 		<< " " << displacements[3] << std::endl;
-
 		std::vector<int> counts(numProcs, 1);
 		MPI_Gatherv(A.getOrigin(), 1, sendSubMatrix, GATHERED.getOrigin(), counts.data(),
-		            displacements.data(), recvMagicBlock, 0, cartesianCommunicator);
+		            displacements.data(), receiveOneLineBlock, 0, cartesianCommunicator);
 
 		if(myRank == 0) {
-			std::cout << GATHERED(0, 0) << " " << GATHERED(0, 100) << " " << GATHERED(100, 0) << " "
-			          << GATHERED(100, 100) << std::endl;
 			success = total_success == numProcs;
 			std::cout << "Elapsed: " << end - start << std::endl;
 			GATHERED.printHeatMap();
@@ -192,7 +183,7 @@ int main(int argc, char** argv) {
 		MPI_Type_free(&horizontalGhostCells);
 		MPI_Type_free(&verticalGhostCells);
 		MPI_Type_free(&sendSubMatrix);
-		MPI_Type_free(&recvMagicBlock);
+		MPI_Type_free(&receiveOneLineBlock);
 	}
 
 	MPI_Comm_free(&cartesianCommunicator);
