@@ -76,16 +76,16 @@ class Matrix2D {
 		return MPIVectorConfig{ size, 1, internal_size };
 	}
 
-	MPISendReceiveConfig<2> getSendConfig() {
+	MPISubarrayConfig<2> getSendConfig() {
 		int cord = isGhostCellsEnabled() ? 1 : 0;
-		return MPISendReceiveConfig<2>{ { internal_size , internal_size }, { size, size }, { cord, cord } };
+		return MPISubarrayConfig<2>{ { internal_size , internal_size }, { size, size }, { cord, cord } };
 	}
 
-	MPISendReceiveConfig<2> getReceiveConfig(Matrix2D& from) {
+	MPISubarrayConfig<2> getReceiveConfig(Matrix2D& from) {
 		if (isGhostCellsEnabled()) {
 			throw std::logic_error("Receiver should not have ghost cells");
 		}
-		return MPISendReceiveConfig<2>{ { internal_size, internal_size }, { from.size, from.size }, { 0, 0 } };
+		return MPISubarrayConfig<2>{ { internal_size, internal_size }, { from.size, from.size }, { 0, 0 } };
 	}
 };
 

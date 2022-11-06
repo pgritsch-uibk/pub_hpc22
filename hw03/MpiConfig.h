@@ -13,7 +13,7 @@ struct MPIVectorConfig {
 };
 
 template <std::size_t dim>
-struct MPISendReceiveConfig {
+struct MPISubarrayConfig {
 	const std::array<int, dim> sizes;
 	const std::array<int, dim> subSizes;
 	const std::array<int, dim> coords;

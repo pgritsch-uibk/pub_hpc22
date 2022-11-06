@@ -17,14 +17,13 @@ int main(int argc, char** argv) {
 
 	// 'parsing' optional input parameter = problem size
 	int N = 200;
-	std::string fileName = "temperature.txt";
 	if(argc > 1) {
 		std::stoi(argv[1]);
 	}
-	if(argc > 2) {
-		fileName = argv[2];
-	}
+
 	int T = N * 500;
+
+	std::string fileName = "gathered2d_seq" + std::to_string(N) + "_" + std::to_string(T);
 
 	if(myRank == 0) {
 		std::cout << "Computing heat-distribution for room size " << N << "X" << N << " for T=" << T
@@ -145,7 +144,7 @@ int main(int argc, char** argv) {
 		auto GATHERED = Matrix2D(N, 273.0, false);
 		MPI_Datatype sendSubMatrix;
 
-		MPISendReceiveConfig<DIMENSIONS> sendConfig = A.getSendConfig();
+		MPISubarrayConfig<DIMENSIONS> sendConfig = A.getSendConfig();
 
 		MPI_Type_create_subarray(2, sendConfig.sizes.begin(), sendConfig.subSizes.begin(),
 		                         sendConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT, &sendSubMatrix);
@@ -153,7 +152,7 @@ int main(int argc, char** argv) {
 
 		MPI_Datatype receiveSubMatrix, receiveOneLineBlock;
 
-		MPISendReceiveConfig<DIMENSIONS> receiveConfig = GATHERED.getReceiveConfig(A);
+		MPISubarrayConfig<DIMENSIONS> receiveConfig = GATHERED.getReceiveConfig(A);
 		MPI_Type_create_subarray(DIMENSIONS, receiveConfig.sizes.begin(), receiveConfig.subSizes.begin(),
 		                         receiveConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT,
 		                         &receiveSubMatrix);
@@ -177,7 +176,7 @@ int main(int argc, char** argv) {
 			success = total_success == numProcs;
 			std::cout << "Elapsed: " << end - start << std::endl;
 			GATHERED.printHeatMap();
-			GATHERED.writeToFile("gathered.txt");
+			GATHERED.writeToFile("gathered");
 		}
 
 		MPI_Type_free(&horizontalGhostCells);
