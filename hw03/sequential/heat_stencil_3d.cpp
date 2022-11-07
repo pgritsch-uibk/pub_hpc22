@@ -43,12 +43,11 @@ int main(int argc, char** argv) {
 						if((i == source_x && j == source_y && k == source_z)) {
 							B(i, j, k) = A(i, j, k);
 						} else {
-							float result = A(i, j, k) +
-							               0.166 * (-6.0 * A(i, j, k) +
-							                        A(i - 1, j, k) + A(i + 1, j, k) +
-							                        A(i, j - 1, k) + A(i, j + 1, k) +
-							                        A(i, j, k - 1) + A(i, j, k + 1));
-							B(i, j, k) = result;
+							B(i, j, k) = A(i, j, k) +
+							             0.166 * (-6.0 * A(i, j, k) +
+							                      A(i - 1, j, k) + A(i + 1, j, k) +
+							                      A(i, j - 1, k) + A(i, j + 1, k) +
+							                      A(i, j, k - 1) + A(i, j, k + 1));
 						}
 					}
 				}
