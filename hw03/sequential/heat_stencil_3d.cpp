@@ -27,9 +27,9 @@ int main(int argc, char** argv) {
 		auto B = Matrix3D(N, 273.0);
 
 
-		int source_x = N / 2;
-		int source_y = N / 2;
-		int source_z = N / 2;
+		int source_x = N / 2 - 1;
+		int source_y = N / 2 - 1;
+		int source_z = N / 2 - 1;
 		A(source_x, source_y, source_z) = 273 + 200;
 
 

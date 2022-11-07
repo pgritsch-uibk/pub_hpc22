@@ -41,6 +41,11 @@ int main(int argc, char** argv) {
 	}
 	int procsByDim = (int) std::round(cbrtProcs);
 	int success = 1;
+	if (N % procsByDim != 0) {
+		std::cerr << "Problem size must be divisible by processors by dimension" << std::endl;
+		MPI_Finalize();
+		return EXIT_FAILURE;
+	}
 
 	std::array<int, DIMENSIONS> dims = { 0, 0, 0 };
 	std::array<int, DIMENSIONS> periods = { false, false, false };
@@ -209,14 +214,14 @@ int main(int argc, char** argv) {
 		                         sendConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT, &sendSubMatrix);
 		MPI_Type_commit(&sendSubMatrix);
 
-		MPI_Datatype receiveSubMatrix, oneElementBlock;
+		MPI_Datatype receiveSubMatrix, subSizedLine;
 		MPISubarrayConfig<DIMENSIONS> receiveConfig = GATHERED.getReceiveConfig(A);
 		MPI_Type_create_subarray(DIMENSIONS, receiveConfig.sizes.begin(), receiveConfig.subSizes.begin(),
 		                         receiveConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT,
 		                         &receiveSubMatrix);
 
-		MPI_Type_create_resized(receiveSubMatrix, 0, subSize * sizeof(float), &oneElementBlock);
-		MPI_Type_commit(&oneElementBlock);
+		MPI_Type_create_resized(receiveSubMatrix, 0, subSize * sizeof(float), &subSizedLine);
+		MPI_Type_commit(&subSizedLine);
 
 		std::vector<int> displacements(numProcs);
 		int index = 0;
@@ -232,7 +237,7 @@ int main(int argc, char** argv) {
 
 		std::vector<int> counts(numProcs, 1);
 		MPI_Gatherv(A.getOrigin(), 1, sendSubMatrix, GATHERED.getOrigin(), counts.data(),
-		            displacements.data(), oneElementBlock, 0, cartesianCommunicator);
+		            displacements.data(), subSizedLine, 0, cartesianCommunicator);
 
 		if(myRank == 0) {
 			std::cout << std::endl;
@@ -243,7 +248,7 @@ int main(int argc, char** argv) {
 
 		std::for_each(datatypes.begin(), datatypes.end(), MPI_Type_free);
 		MPI_Type_free(&sendSubMatrix);
-		MPI_Type_free(&oneElementBlock);
+		MPI_Type_free(&subSizedLine);
 	}
 
 	MPI_Comm_free(&cartesianCommunicator);

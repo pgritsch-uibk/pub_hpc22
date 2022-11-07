@@ -23,6 +23,8 @@ class Matrix3D {
 
 	int internal_size_2;
 
+	int access_offset;
+
 	inline float* get(std::size_t x, std::size_t y, std::size_t z) {
 		return vec.data() + (x * internal_size_2) + (y * internal_size) + z;
 	}
@@ -35,12 +37,16 @@ class Matrix3D {
 	Matrix3D(int _size, float initial_value, bool _initWithGhostCells = true)
 	    : vec(std::pow(_size + (_initWithGhostCells ? 2 : 0), 3), initial_value),
 	      internal_size(_size + (_initWithGhostCells ? 2 : 0)),
-	      internal_size_2(std::pow(_size + (_initWithGhostCells ? 2 : 0), 2)), size(_size){};
+	      internal_size_2(std::pow(_size + (_initWithGhostCells ? 2 : 0), 2)),
+	      access_offset(_initWithGhostCells ? 1 : 0),
+	      size(_size){};
 
 	inline float* getOrigin() { return vec.data(); }
 
 	inline float& operator()(size_t x, size_t y, size_t z) {
-		return vec[(x + 1) * internal_size_2 + (y + 1) * internal_size + z + 1];
+		return vec[(x + access_offset) * internal_size_2 +
+		           (y + access_offset) * internal_size +
+		           z + access_offset];
 	}
 
 	void writeToFile(std::string filenameprefix);

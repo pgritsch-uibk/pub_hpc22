@@ -6,11 +6,6 @@ import pandas as pd
 resolution = 50
 
 def print_3d(data: pd.DataFrame):
-
-    data["x"] += 2
-    data["y"] += 2
-    data["z"] += 2
-
     data = data[(data.x % 10 == 0) & (data.y % 10 == 0) & (data.z % 10 == 0)]
 
     x = data["x"].to_numpy()
@@ -24,7 +19,7 @@ def print_3d(data: pd.DataFrame):
         "font.size": 15
     })
 
-    fig = plt.figure(figsize=(10, 10))
+    fig = plt.figure(figsize=(10, 12))
     ax = fig.add_subplot(111, projection='3d')
 
     norm = matplotlib.colors.PowerNorm(0.1)
@@ -41,5 +36,5 @@ def print_3d(data: pd.DataFrame):
     plt.show()
 
 if __name__ == '__main__':
-    data = pd.read_csv("gathered3d_par100_30000_heatmap_data.csv", sep=",")
+    data = pd.read_csv("gathered3d_seq100_30000_heatmap_data.csv", sep=",")
     print_3d(data)
