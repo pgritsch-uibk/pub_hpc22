@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 
 	int T = N * 500;
 
-	std::string fileName = "gathered2d_seq" + std::to_string(N) + "_" + std::to_string(T);
+	std::string fileName = "gathered2d_par" + std::to_string(N) + "_" + std::to_string(T);
 
 	if(myRank == 0) {
 		std::cout << "Computing heat-distribution for room size " << N << "X" << N << " for T=" << T
@@ -176,7 +176,7 @@ int main(int argc, char** argv) {
 			success = total_success == numProcs;
 			std::cout << "Elapsed: " << end - start << std::endl;
 			GATHERED.printHeatMap();
-			GATHERED.writeToFile("gathered");
+			GATHERED.writeToFile(fileName);
 		}
 
 		MPI_Type_free(&horizontalGhostCells);
