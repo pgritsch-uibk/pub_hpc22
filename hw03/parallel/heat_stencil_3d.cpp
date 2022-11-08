@@ -185,10 +185,6 @@ int main(int argc, char** argv) {
 			for(int j = 0; j < A.size; j++) {
 				for (int k = 0; k < A.size; k++) {
 					double temp = A(i, j, k);
-					if (myRank == 0 && A(source_x, source_y, source_z) != 273.0 + 200) {
-						success =0;
-					}
-
 					if(273 <= temp && temp <= 273 + 200) {
 						continue;
 					}
@@ -203,9 +199,6 @@ int main(int argc, char** argv) {
 		}
 
 		// gathering all information
-		int total_success = 0;
-		MPI_Reduce(&success, &total_success, 1, MPI_INT, MPI_SUM, 0, cartesianCommunicator);
-
 		auto GATHERED = Matrix3D(N, 273.0, false);
 		MPI_Datatype sendSubMatrix;
 		MPISubarrayConfig<DIMENSIONS> sendConfig = A.getSendConfig();
@@ -241,7 +234,6 @@ int main(int argc, char** argv) {
 
 		if(myRank == 0) {
 			std::cout << std::endl;
-			success = total_success == numProcs;
 			std::cout << "Elapsed: " << end - start << std::endl;
 			GATHERED.writeToFile(fileName);
 		}
