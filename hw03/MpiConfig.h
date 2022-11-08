@@ -12,10 +12,11 @@ struct MPIVectorConfig {
 	const int stride;
 };
 
-struct MPISendReceiveConfig {
-	const std::array<int, 2> sizes;
-	const std::array<int, 2> subSizes;
-	const std::array<int, 2> coords;
+template <std::size_t dim>
+struct MPISubarrayConfig {
+	const std::array<int, dim> sizes;
+	const std::array<int, dim> subSizes;
+	const std::array<int, dim> coords;
 };
 
 #endif // HPC22_MPIVECTORCONFIG_H

@@ -17,6 +17,8 @@ class Matrix2D {
 
 	int internal_size;
 
+	int access_offset;
+
 	inline float* get(std::size_t x, std::size_t y) { return vec.data() + (x * internal_size) + y; }
 
 	inline bool isGhostCellsEnabled() const {
@@ -29,6 +31,7 @@ class Matrix2D {
 	Matrix2D(int _size, float initial_value, bool _initWithGhostCells = true)
 	    : vec(((_size + (_initWithGhostCells ? 2 : 0)) * (_size + (_initWithGhostCells ? 2 : 0))), initial_value),
 	      internal_size(_size + (_initWithGhostCells ? 2 : 0)),
+	      access_offset(_initWithGhostCells ? 1 : 0),
 	      size(_size) {
 #ifdef DEBUG
 		std::for_each(vec.begin(), vec.end(), [](float& val) { std::cout << val << " " });
@@ -52,7 +55,7 @@ class Matrix2D {
 
 	inline float* getInnerEast() { return get(1, internal_size - 2); }
 
-	inline float& operator()(size_t x, size_t y) { return vec[(x + 1) * internal_size + y + 1]; }
+	inline float& operator()(size_t x, size_t y) { return vec[(x + access_offset) * internal_size + y + access_offset]; }
 
 	void writeToFile(std::string filename);
 
@@ -76,16 +79,16 @@ class Matrix2D {
 		return MPIVectorConfig{ size, 1, internal_size };
 	}
 
-	MPISendReceiveConfig getSendConfig() {
+	MPISubarrayConfig<2> getSendConfig() {
 		int cord = isGhostCellsEnabled() ? 1 : 0;
-		return MPISendReceiveConfig{ { internal_size , internal_size }, { size, size }, { cord, cord } };
+		return MPISubarrayConfig<2>{ { internal_size , internal_size }, { size, size }, { cord, cord } };
 	}
 
-	MPISendReceiveConfig getReceiveConfig(Matrix2D& from) {
+	MPISubarrayConfig<2> getReceiveConfig(Matrix2D& from) {
 		if (isGhostCellsEnabled()) {
 			throw std::logic_error("Receiver should not have ghost cells");
 		}
-		return MPISendReceiveConfig{ { internal_size, internal_size }, { from.size, from.size }, { 0, 0 } };
+		return MPISubarrayConfig<2>{ { internal_size, internal_size }, { from.size, from.size }, { 0, 0 } };
 	}
 };
 

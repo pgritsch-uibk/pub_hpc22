@@ -7,14 +7,12 @@
 int main(int argc, char** argv) {
 	// 'parsing' optional input parameter = problem size
 	int N = 200;
-	std::string fileName = "temperature.txt";
 	if(argc > 1) {
 		std::stoi(argv[1]);
 	}
-	if(argc > 2) {
-		fileName = argv[2];
-	}
+
 	int T = N * 500;
+	std::string fileName = "gathered2d_seq" + std::to_string(N) + "_" + std::to_string(T);
 
 	std::cout << "Computing heat-distribution for room size " << N << "X" << N << " for T=" << T
 	          << " timesteps" << std::endl;
