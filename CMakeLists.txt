@@ -13,5 +13,5 @@ add_compile_options(-Wall -Wextra -pedantic)
 
 # add_subdirectory(hw02/task1/sequential)
 # add_subdirectory(hw02/task1/parallel)
-# add_subdirectory(hw03/sequential)
+add_subdirectory(hw03/sequential)
 add_subdirectory(hw03/parallel)

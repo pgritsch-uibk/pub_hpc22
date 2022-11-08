@@ -1,5 +1,5 @@
-#include "../MPIVectorConfig.h"
 #include "../Matrix2D.h"
+#include "../MpiConfig.h"
 #include <array>
 #include <cmath>
 #include <cstdlib>
@@ -17,14 +17,13 @@ int main(int argc, char** argv) {
 
 	// 'parsing' optional input parameter = problem size
 	int N = 200;
-	std::string fileName = "temperature.txt";
 	if(argc > 1) {
 		std::stoi(argv[1]);
 	}
-	if(argc > 2) {
-		fileName = argv[2];
-	}
+
 	int T = N * 500;
+
+	std::string fileName = "gathered2d_par" + std::to_string(N) + "_" + std::to_string(T);
 
 	if(myRank == 0) {
 		std::cout << "Computing heat-distribution for room size " << N << "X" << N << " for T=" << T
@@ -38,7 +37,7 @@ int main(int argc, char** argv) {
 		MPI_Finalize();
 		return EXIT_FAILURE;
 	}
-
+	int procsByDim = (int) std::round(sqrtProcs);
 	int success = 1;
 
 	std::array<int, DIMENSIONS> dims = { 0, 0 };
@@ -52,27 +51,29 @@ int main(int argc, char** argv) {
 	std::array<int, DIMENSIONS> myCoords;
 	MPI_Cart_coords(cartesianCommunicator, myRank, DIMENSIONS, myCoords.begin());
 
-	int subSize = N / (int)std::round(sqrtProcs);
+	int subSize = N / procsByDim;
 	{
 		auto A = Matrix2D(subSize, 273.0);
 		auto B = Matrix2D(subSize, 273.0);
 
 		MPIVectorConfig hConfig = A.getHorizontalGhostCellsConfig();
 		MPI_Datatype horizontalGhostCells;
-		MPI_Type_vector(hConfig.nBlocks, hConfig.blockSize, hConfig.stride, MPI_FLOAT, &horizontalGhostCells);
+		MPI_Type_vector(hConfig.nBlocks, hConfig.blockSize, hConfig.stride, MPI_FLOAT,
+		                &horizontalGhostCells);
 		MPI_Type_commit(&horizontalGhostCells);
 
 		MPIVectorConfig vConfig = A.getVerticalGhostCellsConfig();
 		MPI_Datatype verticalGhostCells;
-		MPI_Type_vector(vConfig.nBlocks, vConfig.blockSize, vConfig.stride, MPI_FLOAT, &verticalGhostCells);
+		MPI_Type_vector(vConfig.nBlocks, vConfig.blockSize, vConfig.stride, MPI_FLOAT,
+		                &verticalGhostCells);
 		MPI_Type_commit(&verticalGhostCells);
 
 		int source_x = -1;
 		int source_y = -1;
-		if(myCoords[0] == 0 && myCoords[1] == 0) {
+		if(myCoords[0] + 1 == procsByDim / 2 && myCoords[1] + 1 == procsByDim / 2) {
 			// and there is a heat source
-			source_x = subSize / 2;
-			source_y = subSize / 2;
+			source_x = subSize - 1;
+			source_y = subSize - 1;
 			A(source_x, source_y) = 273 + 60;
 		}
 
@@ -120,13 +121,6 @@ int main(int argc, char** argv) {
 
 		double end = MPI_Wtime();
 
-		// ---------- check ----------
-
-		if(myRank == 0) {
-			std::cout << "Elapsed: " << end - start << std::endl;
-			A.printHeatMap();
-		}
-
 		// simple verification if nowhere the heat is more then the heat source
 		for(long long i = 0; i < A.size; i++) {
 			for(long long j = 0; j < A.size; j++) {
@@ -143,16 +137,52 @@ int main(int argc, char** argv) {
 			}
 		}
 
+		// gathering all information
 		int total_success = 0;
 		MPI_Reduce(&success, &total_success, 1, MPI_INT, MPI_SUM, 0, cartesianCommunicator);
 
+		auto GATHERED = Matrix2D(N, 273.0, false);
+		MPI_Datatype sendSubMatrix;
+
+		MPISubarrayConfig<DIMENSIONS> sendConfig = A.getSendConfig();
+
+		MPI_Type_create_subarray(2, sendConfig.sizes.begin(), sendConfig.subSizes.begin(),
+		                         sendConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT, &sendSubMatrix);
+		MPI_Type_commit(&sendSubMatrix);
+
+		MPI_Datatype receiveSubMatrix, receiveOneLineBlock;
+
+		MPISubarrayConfig<DIMENSIONS> receiveConfig = GATHERED.getReceiveConfig(A);
+		MPI_Type_create_subarray(DIMENSIONS, receiveConfig.sizes.begin(), receiveConfig.subSizes.begin(),
+		                         receiveConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT,
+		                         &receiveSubMatrix);
+
+		MPI_Type_create_resized(receiveSubMatrix, 0, subSize * sizeof(float), &receiveOneLineBlock);
+		MPI_Type_commit(&receiveOneLineBlock);
+
+		std::vector<int> displacements(numProcs);
+		int index = 0;
+		for(int procRow = 0; procRow < procsByDim; procRow++) {
+			for(int procColumn = 0; procColumn < procsByDim; procColumn++) {
+				displacements[index++] = procColumn + procRow * (subSize * procsByDim);
+			}
+		}
+
+		std::vector<int> counts(numProcs, 1);
+		MPI_Gatherv(A.getOrigin(), 1, sendSubMatrix, GATHERED.getOrigin(), counts.data(),
+		            displacements.data(), receiveOneLineBlock, 0, cartesianCommunicator);
+
 		if(myRank == 0) {
 			success = total_success == numProcs;
-			std::cout << "Method execution took seconds: " << end - start << std::endl;
+			std::cout << "Elapsed: " << end - start << std::endl;
+			GATHERED.printHeatMap();
+			GATHERED.writeToFile(fileName);
 		}
 
 		MPI_Type_free(&horizontalGhostCells);
 		MPI_Type_free(&verticalGhostCells);
+		MPI_Type_free(&sendSubMatrix);
+		MPI_Type_free(&receiveOneLineBlock);
 	}
 
 	MPI_Comm_free(&cartesianCommunicator);

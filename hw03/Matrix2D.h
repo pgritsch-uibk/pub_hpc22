@@ -1,7 +1,7 @@
 #ifndef HPC22_MATRIX2D_H
 #define HPC22_MATRIX2D_H
 
-#include "MPIVectorConfig.h"
+#include "MpiConfig.h"
 #include <cstdlib>
 #include <iostream>
 #include <ostream>
@@ -17,15 +17,22 @@ class Matrix2D {
 
 	int internal_size;
 
-	inline float* get(std::size_t x, std::size_t y) {
-		return vec.data() + (x * internal_size) + y;
+	int access_offset;
+
+	inline float* get(std::size_t x, std::size_t y) { return vec.data() + (x * internal_size) + y; }
+
+	inline bool isGhostCellsEnabled() const {
+		return internal_size != size;
 	}
 
   public:
 	const int size;
 
-	Matrix2D(int _size, float initial_value)
-	    : vec(((_size + 2) * (_size + 2)), initial_value), internal_size(_size + 2), size(_size) {
+	Matrix2D(int _size, float initial_value, bool _initWithGhostCells = true)
+	    : vec(((_size + (_initWithGhostCells ? 2 : 0)) * (_size + (_initWithGhostCells ? 2 : 0))), initial_value),
+	      internal_size(_size + (_initWithGhostCells ? 2 : 0)),
+	      access_offset(_initWithGhostCells ? 1 : 0),
+	      size(_size) {
 #ifdef DEBUG
 		std::for_each(vec.begin(), vec.end(), [](float& val) { std::cout << val << " " });
 		std::cout << std::endl;
@@ -48,19 +55,41 @@ class Matrix2D {
 
 	inline float* getInnerEast() { return get(1, internal_size - 2); }
 
-	inline float& operator()(size_t x, size_t y) {
-		return vec[(x + 1) * internal_size + y + 1];
-	}
+	inline float& operator()(size_t x, size_t y) { return vec[(x + access_offset) * internal_size + y + access_offset]; }
 
 	void writeToFile(std::string filename);
+
+	inline float* getOrigin() { return vec.data(); }
 
 	void printHeatMap();
 
 	void swap(Matrix2D& matrix);
 
-	MPIVectorConfig getHorizontalGhostCellsConfig() const;
+	MPIVectorConfig getHorizontalGhostCellsConfig() {
+		if (!isGhostCellsEnabled()) {
+			throw std::logic_error("Matrix has no ghost cells");
+		}
+		return MPIVectorConfig{ 1, size, internal_size };
+	}
 
-	MPIVectorConfig getVerticalGhostCellsConfig() const;
+	MPIVectorConfig getVerticalGhostCellsConfig() {
+		if (!isGhostCellsEnabled()) {
+			throw std::logic_error("Matrix has no ghost cells");
+		}
+		return MPIVectorConfig{ size, 1, internal_size };
+	}
+
+	MPISubarrayConfig<2> getSendConfig() {
+		int cord = isGhostCellsEnabled() ? 1 : 0;
+		return MPISubarrayConfig<2>{ { internal_size , internal_size }, { size, size }, { cord, cord } };
+	}
+
+	MPISubarrayConfig<2> getReceiveConfig(Matrix2D& from) {
+		if (isGhostCellsEnabled()) {
+			throw std::logic_error("Receiver should not have ghost cells");
+		}
+		return MPISubarrayConfig<2>{ { internal_size, internal_size }, { from.size, from.size }, { 0, 0 } };
+	}
 };
 
 #endif // HPC22_MATRIX2D_H
