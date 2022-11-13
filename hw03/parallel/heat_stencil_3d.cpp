@@ -20,10 +20,14 @@ int main(int argc, char** argv) {
 	int N = 100;
 
 	if(argc > 1) {
-		std::stoi(argv[1]);
+		N = std::stoi(argv[1]);
 	}
 
-	int T = (int) std::round(std::pow(N, 2) * 3.0);
+	int T = (int)std::round(std::pow(N, 2) * 3.0);
+
+	if(argc > 2) {
+		T = std::stoi(argv[2]);
+	}
 
 	std::string fileName = "gathered3d_par" + std::to_string(N) + "_" + std::to_string(T);
 
@@ -178,8 +182,6 @@ int main(int argc, char** argv) {
 			A.swap(B);
 		}
 
-		double end = MPI_Wtime();
-
 		// simple verification if nowhere the heat is more then the heat source
 		for(int i = 0; i < A.size; i++) {
 			for(int j = 0; j < A.size; j++) {
@@ -221,8 +223,7 @@ int main(int argc, char** argv) {
 		for(int procRow = 0; procRow < procsByDim; procRow++) {
 			for(int procColumn = 0; procColumn < procsByDim; procColumn++) {
 				for(int procDepth = 0; procDepth < procsByDim; procDepth++) {
-					displacements[index++] = procDepth +
-					                         procColumn * subSize * procsByDim +
+					displacements[index++] = procDepth + procColumn * subSize * procsByDim +
 					                         procRow * subSize * subSize * procsByDim * procsByDim;
 				}
 			}
@@ -231,6 +232,8 @@ int main(int argc, char** argv) {
 		std::vector<int> counts(numProcs, 1);
 		MPI_Gatherv(A.getOrigin(), 1, sendSubMatrix, GATHERED.getOrigin(), counts.data(),
 		            displacements.data(), subSizedLine, 0, cartesianCommunicator);
+
+		double end = MPI_Wtime();
 
 		if(myRank == 0) {
 			std::cout << std::endl;

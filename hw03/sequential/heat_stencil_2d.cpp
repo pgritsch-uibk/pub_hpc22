@@ -8,10 +8,14 @@ int main(int argc, char** argv) {
 	// 'parsing' optional input parameter = problem size
 	int N = 200;
 	if(argc > 1) {
-		std::stoi(argv[1]);
+		N = std::stoi(argv[1]);
 	}
 
 	int T = N * 500;
+	if(argc > 2) {
+		T = std::stoi(argv[2]);
+	}
+
 	std::string fileName = "gathered2d_seq" + std::to_string(N) + "_" + std::to_string(T);
 
 	std::cout << "Computing heat-distribution for room size " << N << "X" << N << " for T=" << T

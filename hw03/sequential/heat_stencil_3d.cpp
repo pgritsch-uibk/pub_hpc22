@@ -12,13 +12,17 @@ int main(int argc, char** argv) {
 	int N = 100;
 
 	if(argc > 1) {
-		std::stoi(argv[1]);
+		N = std::stoi(argv[1]);
 	}
-	int T = (int) std::round(std::pow(N, 2) * 3.0);
+	int T = (int)std::round(std::pow(N, 2) * 3.0);
+
+	if(argc > 2) {
+		T = std::stoi(argv[2]);
+	}
+
 	std::string fileName = "gathered3d_seq" + std::to_string(N) + "_" + std::to_string(T);
 	std::cout << "Computing heat-distribution for room size " << N << "X" << N << "X" << N
 	          << " for T=" << T << " timesteps" << std::endl;
-
 
 	// ---------- setup initial data ----------
 	int success = 1;
