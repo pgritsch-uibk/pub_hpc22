@@ -18,10 +18,14 @@ int main(int argc, char** argv) {
 	// 'parsing' optional input parameter = problem size
 	int N = 200;
 	if(argc > 1) {
-		std::stoi(argv[1]);
+		N = std::stoi(argv[1]);
 	}
 
 	int T = N * 500;
+
+	if(argc > 2) {
+		T = std::stoi(argv[2]);
+	}
 
 	std::string fileName = "gathered2d_par" + std::to_string(N) + "_" + std::to_string(T);
 
@@ -119,7 +123,6 @@ int main(int argc, char** argv) {
 			A.swap(B);
 		}
 
-		double end = MPI_Wtime();
 
 		// simple verification if nowhere the heat is more then the heat source
 		for(long long i = 0; i < A.size; i++) {
@@ -171,6 +174,8 @@ int main(int argc, char** argv) {
 		std::vector<int> counts(numProcs, 1);
 		MPI_Gatherv(A.getOrigin(), 1, sendSubMatrix, GATHERED.getOrigin(), counts.data(),
 		            displacements.data(), receiveOneLineBlock, 0, cartesianCommunicator);
+
+		double end = MPI_Wtime();
 
 		if(myRank == 0) {
 			success = total_success == numProcs;
