@@ -8,6 +8,7 @@
 #include <string>
 
 #define DIMENSIONS 2
+#define HEAT_SOURCE (273 + 60)
 
 int main(int argc, char** argv) {
 	int myRank, numProcs;
@@ -74,11 +75,14 @@ int main(int argc, char** argv) {
 
 		int source_x = -1;
 		int source_y = -1;
-		if(myCoords[0] + 1 == procsByDim / 2 && myCoords[1] + 1 == procsByDim / 2) {
+		bool myRankHasHeatSource =
+		    myCoords[0] + 1 == procsByDim / 2 && myCoords[1] + 1 == procsByDim / 2;
+
+		if(myRankHasHeatSource) {
 			// and there is a heat source
 			source_x = subSize - 1;
 			source_y = subSize - 1;
-			A(source_x, source_y) = 273 + 60;
+			A(source_x, source_y) = HEAT_SOURCE;
 		}
 
 		double start = MPI_Wtime();
@@ -111,18 +115,17 @@ int main(int argc, char** argv) {
 
 			for(int i = 0; i < A.size; ++i) {
 				for(int j = 0; j < A.size; ++j) {
-					if((i == source_x && j == source_y)) {
-						B(i, j) = A(i, j);
-					} else {
-						B(i, j) = A(i, j) + 0.2 * (-4.0 * A(i, j) + A(i - 1, j) + A(i + 1, j) +
-						                           A(i, j - 1) + A(i, j + 1));
-					}
+					B(i, j) = A(i, j) + 0.2 * (-4.0 * A(i, j) + A(i - 1, j) + A(i + 1, j) +
+					                           A(i, j - 1) + A(i, j + 1));
 				}
+			}
+
+			if(myRankHasHeatSource) {
+				B(source_x, source_y) = HEAT_SOURCE;
 			}
 
 			A.swap(B);
 		}
-
 
 		// simple verification if nowhere the heat is more then the heat source
 		for(long long i = 0; i < A.size; i++) {
@@ -140,10 +143,6 @@ int main(int argc, char** argv) {
 			}
 		}
 
-		// gathering all information
-		int total_success = 0;
-		MPI_Reduce(&success, &total_success, 1, MPI_INT, MPI_SUM, 0, cartesianCommunicator);
-
 		auto GATHERED = Matrix2D(N, 273.0, false);
 		MPI_Datatype sendSubMatrix;
 
@@ -154,14 +153,16 @@ int main(int argc, char** argv) {
 		MPI_Type_commit(&sendSubMatrix);
 
 		MPI_Datatype receiveSubMatrix, receiveOneLineBlock;
+		if(myRank == 0) {
+			MPISubarrayConfig<DIMENSIONS> receiveConfig = GATHERED.getReceiveConfig(A);
+			MPI_Type_create_subarray(DIMENSIONS, receiveConfig.sizes.begin(),
+			                         receiveConfig.subSizes.begin(), receiveConfig.coords.begin(),
+			                         MPI_ORDER_C, MPI_FLOAT, &receiveSubMatrix);
 
-		MPISubarrayConfig<DIMENSIONS> receiveConfig = GATHERED.getReceiveConfig(A);
-		MPI_Type_create_subarray(DIMENSIONS, receiveConfig.sizes.begin(), receiveConfig.subSizes.begin(),
-		                         receiveConfig.coords.begin(), MPI_ORDER_C, MPI_FLOAT,
-		                         &receiveSubMatrix);
-
-		MPI_Type_create_resized(receiveSubMatrix, 0, subSize * sizeof(float), &receiveOneLineBlock);
-		MPI_Type_commit(&receiveOneLineBlock);
+			MPI_Type_create_resized(receiveSubMatrix, 0, subSize * sizeof(float),
+			                        &receiveOneLineBlock);
+			MPI_Type_commit(&receiveOneLineBlock);
+		}
 
 		std::vector<int> displacements(numProcs);
 		int index = 0;
@@ -178,7 +179,10 @@ int main(int argc, char** argv) {
 		double end = MPI_Wtime();
 
 		if(myRank == 0) {
-			success = total_success == numProcs;
+			MPI_Type_free(&receiveOneLineBlock);
+		}
+
+		if(myRank == 0) {
 			std::cout << "Elapsed: " << end - start << std::endl;
 			GATHERED.printHeatMap();
 			GATHERED.writeToFile(fileName);
@@ -187,7 +191,6 @@ int main(int argc, char** argv) {
 		MPI_Type_free(&horizontalGhostCells);
 		MPI_Type_free(&verticalGhostCells);
 		MPI_Type_free(&sendSubMatrix);
-		MPI_Type_free(&receiveOneLineBlock);
 	}
 
 	MPI_Comm_free(&cartesianCommunicator);
