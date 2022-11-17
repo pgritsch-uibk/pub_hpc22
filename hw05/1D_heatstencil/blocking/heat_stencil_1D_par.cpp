@@ -9,13 +9,6 @@ typedef double value_t;
 #define RESOLUTION 120
 
 // -- vector utilities --
-
-// typedef value_t* Vector_t;
-
-// Vector_t createVector(int N);
-
-// void releaseVector(Vector_t m);
-
 void printTemperature(std::vector<double>& m, int N);
 
 // -- simulation code ---
@@ -25,7 +18,6 @@ int add(const int& lhs, const int& rhs) {
 }
 
 int main(int argc, char** argv) {
-
 	// initializing MPI
 	int myRank, numProcs;
 	boost::mpi::environment env{ argc, argv };
@@ -33,9 +25,6 @@ int main(int argc, char** argv) {
 
 	numProcs = world.size();
 	myRank = world.rank();
-	// MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
-	// MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
-	// std::cout << numProcs << " " << myRank << std::endl;
 
 	double start_time = MPI_Wtime();
 
@@ -51,8 +40,9 @@ int main(int argc, char** argv) {
 	}
 
 	int T = N * 500;
-	if(myRank == 0)
+	if(myRank == 0) {
 		printf("Computing heat-distribution for room size N=%d for T=%d timesteps\n", N, T);
+	}
 
 	int start = myRank * N / numProcs;
 	int end = (myRank + 1) * N / numProcs;
@@ -60,8 +50,6 @@ int main(int argc, char** argv) {
 	// ---------- setup ----------
 
 	// create a buffer for storing temperature fields
-	// Vector_t A = createVector(N);
-
 	std::vector<double> A(N);
 
 	// set up initial conditions in A
@@ -77,7 +65,6 @@ int main(int argc, char** argv) {
 	// ---------- compute ----------
 
 	// create a second buffer for the computation
-	// Vector_t B = createVector(N);
 	std::vector<double> B(N);
 
 	// for each time step ..
@@ -86,31 +73,21 @@ int main(int argc, char** argv) {
 		if(myRank != 0) {
 			// start is send to LEFT RANK
 			world.send(myRank - 1, 0, A[start]);
-			// MPI_Request request;
-			// MPI_Send(&A[start], 1, MPI_DOUBLE, myRank - 1, 0, MPI_COMM_WORLD);
 		}
 
 		if(myRank != numProcs - 1) {
 			// I AM LEFT RANK and receive FROM RIGHT RANK
 			world.recv(myRank + 1, 0, A[end]);
-			// MPI_Status status;
-			// MPI_Recv(&A[end], 1, MPI_DOUBLE, myRank + 1, 0, MPI_COMM_WORLD, &status);
 		}
 
 		if(myRank != numProcs - 1) {
 			// end is send to RIGHT RANK
 			world.send(myRank + 1, 0, A[end - 1]);
-			// MPI_Request request;
-			// MPI_Send(&A[end - 1], 1, MPI_DOUBLE, myRank + 1, 0, MPI_COMM_WORLD);
 		}
 
 		if(myRank != 0) {
 			// I AM RIGHT RANK and receive FROM LEFT RANK
-
 			world.recv(myRank - 1, 0, A[start - 1]);
-			// MPI_Request request;
-			// MPI_Status status;
-			// MPI_Recv(&A[start - 1], 1, MPI_DOUBLE, myRank - 1, 0, MPI_COMM_WORLD, &status);
 		}
 
 		// .. we propagate the temperature
@@ -140,46 +117,32 @@ int main(int argc, char** argv) {
 	int success = 1;
 	for(long long i = start; i < end; i++) {
 		value_t temp = A[i];
-		if (273 <= temp && temp <= 273 + 60) {
+		if(273 <= temp && temp <= 273 + 60) {
 			continue;
 		}
 		success = 0;
 		break;
 	}
 
-	// releaseVector(B);
-
-	// boost::mpi::gather(world, A[start], A, 0);
-	// MPI_Gather(&A[start], N / numProcs, MPI_DOUBLE, A, N / numProcs, MPI_DOUBLE, 0,
-	// MPI_COMM_WORLD);
-
-	int total_success = 0;
-	// MPI_Reduce(&success, &total_success, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-	boost::mpi::reduce(world, success, total_success, add, 0);
-
-	// ---------- cleanup ----------
-
-	// releaseVector(A);
-
-	if(myRank == 0) {
-		success = total_success == numProcs;
-		printf("Method execution took seconds: %.5lf\n", MPI_Wtime() - start_time);
+	if(world.rank() == 0) {
+		boost::mpi::gather(world, &A[start], N / numProcs, A, 0);
+	} else {
+		boost::mpi::gather(world, &A[start], N / numProcs, 0);
 	}
 
-	// MPI_Finalize();
+	int total_success = 0;
+	boost::mpi::reduce(world, success, total_success, std::plus<int>(), 0);
+
+	// ---------- cleanup ----------
+	if(myRank == 0) {
+		printTemperature(A, N);
+		success = total_success == numProcs;
+		printf("\nMethod execution took seconds: %.5lf\n", MPI_Wtime() - start_time);
+	}
 
 	// done
 	return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }
-
-// Vector_t createVector(int N) {
-// 	// create data and index vector
-// 	return (Vector_t)malloc(sizeof(value_t) * N);
-// }
-
-// void releaseVector(Vector_t m) {
-// 	free(m);
-// }
 
 void printTemperature(std::vector<double>& m, int N) {
 	const char* colors = " .-:=+*^X#%@";
