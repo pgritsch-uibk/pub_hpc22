@@ -1,6 +1,8 @@
-#include <mpi.h>
+#include <boost/mpi.hpp>
+#include <functional>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 typedef double value_t;
 
@@ -8,33 +10,43 @@ typedef double value_t;
 
 // -- vector utilities --
 
-typedef value_t* Vector;
+// typedef value_t* Vector_t;
 
-Vector createVector(int N);
+// Vector_t createVector(int N);
 
-void releaseVector(Vector m);
+// void releaseVector(Vector_t m);
 
-void printTemperature(Vector m, int N);
+void printTemperature(std::vector<double>& m, int N);
 
 // -- simulation code ---
 
+int add(const int& lhs, const int& rhs) {
+	return lhs + rhs;
+}
+
 int main(int argc, char** argv) {
+
 	// initializing MPI
 	int myRank, numProcs;
-	MPI_Init(&argc, &argv);
-	MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
-	MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
+	boost::mpi::environment env{ argc, argv };
+	boost::mpi::communicator world;
+
+	numProcs = world.size();
+	myRank = world.rank();
+	// MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+	// MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
+	// std::cout << numProcs << " " << myRank << std::endl;
 
 	double start_time = MPI_Wtime();
 
 	// 'parsing' optional input parameter = problem size
-	int N = 4096;
+	int N = 512;
 	if(argc > 1) {
 		N = atoi(argv[1]);
 	}
 
 	if(N % numProcs != 0) {
-		MPI_Finalize();
+		// MPI_Finalize();
 		return EXIT_FAILURE;
 	}
 
@@ -48,7 +60,9 @@ int main(int argc, char** argv) {
 	// ---------- setup ----------
 
 	// create a buffer for storing temperature fields
-	Vector A = createVector(N);
+	// Vector_t A = createVector(N);
+
+	std::vector<double> A(N);
 
 	// set up initial conditions in A
 	int source_x = N / 4;
@@ -63,30 +77,44 @@ int main(int argc, char** argv) {
 	// ---------- compute ----------
 
 	// create a second buffer for the computation
-	Vector B = createVector(N);
+	// Vector_t B = createVector(N);
+	std::vector<double> B(N);
 
 	// for each time step ..
 	for(int t = 0; t < T; t++) {
-		MPI_Request request[4];
 
 		if(myRank != 0) {
-			MPI_Isend(&A[start], 1, MPI_DOUBLE, myRank - 1, 0, MPI_COMM_WORLD, &request[0]);
+			// start is send to LEFT RANK
+			world.send(myRank - 1, 0, A[start]);
+			// MPI_Request request;
+			// MPI_Send(&A[start], 1, MPI_DOUBLE, myRank - 1, 0, MPI_COMM_WORLD);
 		}
 
 		if(myRank != numProcs - 1) {
-			MPI_Isend(&A[end - 1], 1, MPI_DOUBLE, myRank + 1, 0, MPI_COMM_WORLD, &request[1]);
+			// I AM LEFT RANK and receive FROM RIGHT RANK
+			world.recv(myRank + 1, 0, A[end]);
+			// MPI_Status status;
+			// MPI_Recv(&A[end], 1, MPI_DOUBLE, myRank + 1, 0, MPI_COMM_WORLD, &status);
 		}
 
 		if(myRank != numProcs - 1) {
-			MPI_Irecv(&A[end], 1, MPI_DOUBLE, myRank + 1, 0, MPI_COMM_WORLD, &request[2]);
+			// end is send to RIGHT RANK
+			world.send(myRank + 1, 0, A[end - 1]);
+			// MPI_Request request;
+			// MPI_Send(&A[end - 1], 1, MPI_DOUBLE, myRank + 1, 0, MPI_COMM_WORLD);
 		}
 
 		if(myRank != 0) {
-			MPI_Irecv(&A[start - 1], 1, MPI_DOUBLE, myRank - 1, 0, MPI_COMM_WORLD, &request[3]);
+			// I AM RIGHT RANK and receive FROM LEFT RANK
+
+			world.recv(myRank - 1, 0, A[start - 1]);
+			// MPI_Request request;
+			// MPI_Status status;
+			// MPI_Recv(&A[start - 1], 1, MPI_DOUBLE, myRank - 1, 0, MPI_COMM_WORLD, &status);
 		}
 
 		// .. we propagate the temperature
-		for(int i = start + 1; i < end - 1; i++) {
+		for(int i = start; i < end; i++) {
 			// center stays constant (the heat is still on)
 			if(i == source_x) {
 				B[i] = A[i];
@@ -104,81 +132,56 @@ int main(int argc, char** argv) {
 			B[i] = tc + 0.2 * (tl + tr + (-2 * tc));
 		}
 
-		if(myRank != 0) {
-			MPI_Wait(&request[0], MPI_STATUS_IGNORE);
-		}
-
-		if(myRank != numProcs - 1) {
-			MPI_Wait(&request[1], MPI_STATUS_IGNORE);
-		}
-
-		if(myRank != numProcs - 1) {
-			MPI_Wait(&request[2], MPI_STATUS_IGNORE);
-		}
-
-		if(myRank != 0) {
-			MPI_Wait(&request[3], MPI_STATUS_IGNORE);
-		}
-
-		value_t tc = A[start];
-		value_t tl = (start != 0) ? A[start - 1] : tc;
-		value_t tr = A[start + 1];
-
-		B[start] = tc + 0.2 * (tl + tr + (-2 * tc));
-
-		tc = A[end - 1];
-		tl = A[end - 2];
-		tr = ((end - 1) != N - 1) ? A[end] : tc;
-
-		B[end - 1] = tc + 0.2 * (tl + tr + (-2 * tc));
-
 		// swap matrices (just pointers, not content)
-		Vector H = A;
-		A = B;
-		B = H;
+		std::swap(A, B);
 	}
 
 	// ---------- check ----------
 	int success = 1;
 	for(long long i = start; i < end; i++) {
 		value_t temp = A[i];
-		if(273 <= temp && temp <= 273 + 60) continue;
+		if (273 <= temp && temp <= 273 + 60) {
+			continue;
+		}
 		success = 0;
 		break;
 	}
 
-	releaseVector(B);
+	// releaseVector(B);
 
-	MPI_Gather(&A[start], N / numProcs, MPI_DOUBLE, A, N / numProcs, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+	// boost::mpi::gather(world, A[start], A, 0);
+	// MPI_Gather(&A[start], N / numProcs, MPI_DOUBLE, A, N / numProcs, MPI_DOUBLE, 0,
+	// MPI_COMM_WORLD);
 
 	int total_success = 0;
-	MPI_Reduce(&success, &total_success, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+	// MPI_Reduce(&success, &total_success, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+	boost::mpi::reduce(world, success, total_success, add, 0);
 
 	// ---------- cleanup ----------
 
-	releaseVector(A);
+	// releaseVector(A);
 
 	if(myRank == 0) {
 		success = total_success == numProcs;
 		printf("Method execution took seconds: %.5lf\n", MPI_Wtime() - start_time);
 	}
 
-	MPI_Finalize();
+	// MPI_Finalize();
 
 	// done
 	return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-Vector createVector(int N) {
-	// create data and index vector
-	return malloc(sizeof(value_t) * N);
-}
+// Vector_t createVector(int N) {
+// 	// create data and index vector
+// 	return (Vector_t)malloc(sizeof(value_t) * N);
+// }
 
-void releaseVector(Vector m) {
-	free(m);
-}
+// void releaseVector(Vector_t m) {
+// 	free(m);
+// }
 
-void printTemperature(Vector m, int N) {
+void printTemperature(std::vector<double>& m, int N) {
 	const char* colors = " .-:=+*^X#%@";
 	const int numColors = 12;
 
