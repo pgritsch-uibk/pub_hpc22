@@ -1,16 +1,22 @@
 #include <boost/mpi.hpp>
 #include <functional>
 #include <stdio.h>
-#include <string>
+#include <stdlib.h>
 #include <vector>
-#define RESOLUTION 120
 
-using value_t = double;
+typedef double value_t;
+
+#define RESOLUTION 120
 
 // -- vector utilities --
 void printTemperature(std::vector<double>& m, int N);
 
 // -- simulation code ---
+
+int add(const int& lhs, const int& rhs) {
+	return lhs + rhs;
+}
+
 int main(int argc, char** argv) {
 	// initializing MPI
 	int myRank, numProcs;
@@ -25,10 +31,11 @@ int main(int argc, char** argv) {
 	// 'parsing' optional input parameter = problem size
 	int N = 512;
 	if(argc > 1) {
-		N = std::stoi(argv[1]);
+		N = atoi(argv[1]);
 	}
 
 	if(N % numProcs != 0) {
+		// MPI_Finalize();
 		return EXIT_FAILURE;
 	}
 
@@ -41,11 +48,16 @@ int main(int argc, char** argv) {
 	int end = (myRank + 1) * N / numProcs;
 
 	// ---------- setup ----------
+
+	// create a buffer for storing temperature fields
+	std::vector<double> A(N);
+
 	// set up initial conditions in A
 	int source_x = N / 4;
 
-	// create a buffer for storing temperature fields
-	std::vector<double> A(N, 273);
+	for(int i = start; i < end; i++) {
+		A[i] = 273; // temperature is 0° C everywhere (273 K)
+	}
 
 	// and there is a heat source in one corner
 	A[source_x] = 273 + 60;
@@ -57,9 +69,15 @@ int main(int argc, char** argv) {
 
 	// for each time step ..
 	for(int t = 0; t < T; t++) {
-
 		if(myRank != 0) {
 			// start is send to LEFT RANK
+
+			// MPI_Sendrecv(A.getInnerEast(), 1, verticalGhostCells, toTheEast, 0, A.getOuterWest(),
+			// 1,
+			//              verticalGhostCells, toTheWest, MPI_ANY_TAG, cartesianCommunicator,
+			//              MPI_STATUS_IGNORE);
+
+			// world.sendrecv(myRank - 1, 0, A[end], myRank + 1)
 			world.send(myRank - 1, 0, A[start]);
 		}
 
@@ -80,6 +98,12 @@ int main(int argc, char** argv) {
 
 		// .. we propagate the temperature
 		for(int i = start; i < end; i++) {
+			// center stays constant (the heat is still on)
+			if(i == source_x) {
+				B[i] = A[i];
+				continue;
+			}
+
 			// get temperature at current position
 			value_t tc = A[i];
 
@@ -90,9 +114,6 @@ int main(int argc, char** argv) {
 			// compute new temperature at current position
 			B[i] = tc + 0.2 * (tl + tr + (-2 * tc));
 		}
-
-		// center stays constant (the heat is still on)
-		B[source_x] = 273 + 60;
 
 		// swap matrices (just pointers, not content)
 		std::swap(A, B);
@@ -134,7 +155,7 @@ void printTemperature(std::vector<double>& m, int N) {
 	const int numColors = 12;
 
 	// boundaries for temperature (for simplicity hard-coded)
-	const value_t max = 273 + 60;
+	const value_t max = 273 + 30;
 	const value_t min = 273 + 0;
 
 	// set the 'render' resolution
@@ -145,7 +166,7 @@ void printTemperature(std::vector<double>& m, int N) {
 
 	// room
 	// left wall
-	std::cout << "X";
+	printf("X");
 	// actual room
 	for(int i = 0; i < W; i++) {
 		// get max temperature in this tile
@@ -160,8 +181,8 @@ void printTemperature(std::vector<double>& m, int N) {
 		c = (c >= numColors) ? numColors - 1 : ((c < 0) ? 0 : c);
 
 		// print the average temperature
-		std::cout << colors[c];
+		printf("%c", colors[c]);
 	}
 	// right wall
-	std::cout << "X" << std::endl;
+	printf("X");
 }
