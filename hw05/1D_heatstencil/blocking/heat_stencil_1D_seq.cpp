@@ -20,7 +20,7 @@ void printTemperature(Vector m, int N);
 
 int main(int argc, char** argv) {
 	// 'parsing' optional input parameter = problem size
-	int N = 4096;
+	int N = 512;
 	if(argc > 1) {
 		N = atoi(argv[1]);
 	}
@@ -87,7 +87,9 @@ int main(int argc, char** argv) {
 		break;
 	}
 
-	printf("Verification: %s\n", (success) ? "OK" : "FAILED");
+	printTemperature(A, N);
+
+	printf("\n Verification: %s\n", (success) ? "OK" : "FAILED");
 	printf("Method execution took seconds: %.5lf\n", (float)(clock() - start) / CLOCKS_PER_SEC);
 	// ---------- cleanup ----------
 
