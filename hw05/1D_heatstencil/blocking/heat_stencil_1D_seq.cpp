@@ -1,3 +1,4 @@
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -89,7 +90,7 @@ int main(int argc, char** argv) {
 
 	printTemperature(A, N);
 
-	printf("\n Verification: %s\n", (success) ? "OK" : "FAILED");
+	printf("\nVerification: %s\n", (success) ? "OK" : "FAILED");
 	printf("Method execution took seconds: %.5lf\n", (float)(clock() - start) / CLOCKS_PER_SEC);
 	// ---------- cleanup ----------
 
@@ -113,7 +114,7 @@ void printTemperature(Vector m, int N) {
 	const int numColors = 12;
 
 	// boundaries for temperature (for simplicity hard-coded)
-	const value_t max = 273 + 30;
+	const value_t max = 273 + 60;
 	const value_t min = 273 + 0;
 
 	// set the 'render' resolution
@@ -124,7 +125,7 @@ void printTemperature(Vector m, int N) {
 
 	// room
 	// left wall
-	printf("X");
+	std::cout << "X";
 	// actual room
 	for(int i = 0; i < W; i++) {
 		// get max temperature in this tile
@@ -139,8 +140,8 @@ void printTemperature(Vector m, int N) {
 		c = (c >= numColors) ? numColors - 1 : ((c < 0) ? 0 : c);
 
 		// print the average temperature
-		printf("%c", colors[c]);
+		std::cout << colors[c];
 	}
 	// right wall
-	printf("X");
+	std::cout << "X" << std::endl;
 }
