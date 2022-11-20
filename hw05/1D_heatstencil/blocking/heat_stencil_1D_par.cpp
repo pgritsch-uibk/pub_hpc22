@@ -9,7 +9,7 @@
 using value_t = double;
 
 // -- vector utilities --
-void printTemperature(std::vector<double>& m, int N);
+void printTemperature(std::vector<value_t>& m, int N);
 
 // -- simulation code ---
 int main(int argc, char** argv) {
@@ -20,8 +20,6 @@ int main(int argc, char** argv) {
 
 	numProcs = world.size();
 	myRank = world.rank();
-
-	boost::mpi::timer timer;
 
 	// 'parsing' optional input parameter = problem size
 	int N = 512;
@@ -46,7 +44,7 @@ int main(int argc, char** argv) {
 	int source_x = N / 4;
 
 	// create a buffer for storing temperature fields
-	std::vector<double> A(N, 273);
+	std::vector<value_t> A(N, 273);
 
 	// and there is a heat source in one corner
 	A[source_x] = 273 + 60;
@@ -54,8 +52,9 @@ int main(int argc, char** argv) {
 	// ---------- compute ----------
 
 	// create a second buffer for the computation
-	std::vector<double> B(N);
+	std::vector<value_t> B(N);
 
+	boost::mpi::timer timer;
 	// for each time step ..
 	for(int t = 0; t < T; t++) {
 
@@ -98,6 +97,9 @@ int main(int argc, char** argv) {
 		// swap matrices (just pointers, not content)
 		std::swap(A, B);
 	}
+	if(myRank == 0) {
+		std::cout << "\nMethod execution took seconds: " << timer.elapsed() << std::endl;
+	}
 
 	// ---------- check ----------
 	int success = 1;
@@ -123,14 +125,13 @@ int main(int argc, char** argv) {
 	if(myRank == 0) {
 		printTemperature(A, N);
 		success = total_success == numProcs;
-		printf("\nMethod execution took seconds: %.5lf\n", timer.elapsed());
 	}
 
 	// done
 	return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-void printTemperature(std::vector<double>& m, int N) {
+void printTemperature(std::vector<value_t>& m, int N) {
 	const char* colors = " .-:=+*^X#%@";
 	const int numColors = 12;
 

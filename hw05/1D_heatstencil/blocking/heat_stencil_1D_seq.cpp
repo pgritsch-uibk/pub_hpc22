@@ -1,54 +1,43 @@
-#include <iostream>
+#include <algorithm>
+#include <boost/mpi.hpp>
+#include <functional>
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-typedef double value_t;
-
+#include <string>
+#include <vector>
 #define RESOLUTION 120
 
+using value_t = double;
+
 // -- vector utilities --
-
-typedef value_t* Vector;
-
-Vector createVector(int N);
-
-void releaseVector(Vector m);
-
-void printTemperature(Vector m, int N);
+void printTemperature(std::vector<value_t>& m, int N);
 
 // -- simulation code ---
-
 int main(int argc, char** argv) {
 	// 'parsing' optional input parameter = problem size
 	int N = 512;
 	if(argc > 1) {
-		N = atoi(argv[1]);
+		N = std::stoi(argv[1]);
 	}
-	clock_t start = clock();
 
 	int T = N * 500;
 	printf("Computing heat-distribution for room size N=%d for T=%d timesteps\n", N, T);
 
 	// ---------- setup ----------
+	// set up initial conditions in A
+	int source_x = N / 4;
 
 	// create a buffer for storing temperature fields
-	Vector A = createVector(N);
-
-	// set up initial conditions in A
-	for(int i = 0; i < N; i++) {
-		A[i] = 273; // temperature is 0° C everywhere (273 K)
-	}
+	std::vector<value_t> A(N, 273);
 
 	// and there is a heat source in one corner
-	int source_x = N / 4;
 	A[source_x] = 273 + 60;
 
 	// ---------- compute ----------
 
 	// create a second buffer for the computation
-	Vector B = createVector(N);
+	std::vector<value_t> B(N);
 
+	boost::mpi::timer timer;
 	// for each time step ..
 	for(int t = 0; t < T; t++) {
 		// .. we propagate the temperature
@@ -71,51 +60,35 @@ int main(int argc, char** argv) {
 		}
 
 		// swap matrices (just pointers, not content)
-		Vector H = A;
-		A = B;
-		B = H;
+		std::swap(A, B);
 	}
-
-	releaseVector(B);
+	std::cout << "\nMethod execution took seconds: " << timer.elapsed() << std::endl;
 
 	// ---------- check ----------
-
 	int success = 1;
 	for(long long i = 0; i < N; i++) {
 		value_t temp = A[i];
-		if(273 <= temp && temp <= 273 + 60) continue;
+		if(273 <= temp && temp <= 273 + 60) {
+			continue;
+		}
 		success = 0;
 		break;
 	}
 
 	printTemperature(A, N);
 
-	printf("\nVerification: %s\n", (success) ? "OK" : "FAILED");
-	printf("Method execution took seconds: %.5lf\n", (float)(clock() - start) / CLOCKS_PER_SEC);
-	// ---------- cleanup ----------
-
-	releaseVector(A);
+	std::cout << "\nVerification: " << ((success) ? "OK" : "FAILED") << std::endl;
 
 	// done
 	return (success) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-Vector createVector(int N) {
-	// create data and index vector
-	return (Vector)malloc(sizeof(value_t) * N);
-}
-
-void releaseVector(Vector m) {
-	free(m);
-}
-
-void printTemperature(Vector m, int N) {
+void printTemperature(std::vector<value_t>& m, int N) {
 	const char* colors = " .-:=+*^X#%@";
 	const int numColors = 12;
 
 	// boundaries for temperature (for simplicity hard-coded)
-	const value_t max = 273 + 60;
-	const value_t min = 273 + 0;
+	const auto [min, max] = std::minmax_element(m.begin(), m.end());
 
 	// set the 'render' resolution
 	int W = RESOLUTION;
@@ -129,14 +102,10 @@ void printTemperature(Vector m, int N) {
 	// actual room
 	for(int i = 0; i < W; i++) {
 		// get max temperature in this tile
-		value_t max_t = 0;
-		for(int x = sW * i; x < sW * i + sW; x++) {
-			max_t = (max_t < m[x]) ? m[x] : max_t;
-		}
-		value_t temp = max_t;
+		value_t temp = *max_element(m.begin() + i * sW, m.begin() + (i * sW) + sW);
 
 		// pick the 'color'
-		int c = ((temp - min) / (max - min)) * numColors;
+		int c = ((temp - *min) / (*max - *min)) * numColors;
 		c = (c >= numColors) ? numColors - 1 : ((c < 0) ? 0 : c);
 
 		// print the average temperature
