@@ -62,25 +62,21 @@ int main(int argc, char** argv) {
 		if(myRank != 0) {
 			// start is send to LEFT RANK
 			reqs[0] = world.isend(myRank - 1, 0, A[start]);
-			// world.send(myRank - 1, 0, A[start]);
 		}
 
 		if(myRank != numProcs - 1) {
 			// I AM LEFT RANK and receive FROM RIGHT RANK
 			reqs[1] = world.irecv(myRank + 1, 0, A[end]);
-			// world.recv(myRank + 1, 0, A[end]);
 		}
 
 		if(myRank != numProcs - 1) {
 			// end is send to RIGHT RANK
 			reqs[2] = world.isend(myRank + 1, 0, A[end - 1]);
-			// world.send(myRank + 1, 0, A[end - 1]);
 		}
 
 		if(myRank != 0) {
 			// I AM RIGHT RANK and receive FROM LEFT RANK
 			reqs[3] = world.irecv(myRank - 1, 0, A[start - 1]);
-			// world.recv(myRank - 1, 0, A[start - 1]);
 		}
 
 		// .. we propagate the temperature
@@ -98,22 +94,18 @@ int main(int argc, char** argv) {
 
 		if(myRank != 0) {
 			reqs[0].wait();
-			// MPI_Wait(&request[0], MPI_STATUS_IGNORE);
 		}
 
 		if(myRank != numProcs - 1) {
 			reqs[1].wait();
-			// MPI_Wait(&request[1], MPI_STATUS_IGNORE);
 		}
 
 		if(myRank != numProcs - 1) {
 			reqs[2].wait();
-			// MPI_Wait(&request[2], MPI_STATUS_IGNORE);
 		}
 
 		if(myRank != 0) {
 			reqs[3].wait();
-			// MPI_Wait(&request[3], MPI_STATUS_IGNORE);
 		}
 
 		value_t tc = A[start];
