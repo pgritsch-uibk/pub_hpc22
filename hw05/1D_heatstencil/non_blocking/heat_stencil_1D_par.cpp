@@ -9,7 +9,7 @@
 using value_t = double;
 
 // -- vector utilities --
-void printTemperature(std::vector<double>& m, int N);
+void printTemperature(std::vector<value_t>& m, int N);
 
 // -- simulation code ---
 int main(int argc, char** argv) {
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 	int source_x = N / 4;
 
 	// create a buffer for storing temperature fields
-	std::vector<double> A(N, 273);
+	std::vector<value_t> A(N, 273);
 
 	// and there is a heat source in one corner
 	A[source_x] = 273 + 60;
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 	// ---------- compute ----------
 
 	// create a second buffer for the computation
-	std::vector<double> B(N);
+	std::vector<value_t> B(N);
 
 	// for each time step ..
 	for(int t = 0; t < T; t++) {
@@ -158,7 +158,7 @@ int main(int argc, char** argv) {
 	return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-void printTemperature(std::vector<double>& m, int N) {
+void printTemperature(std::vector<value_t>& m, int N) {
 	const char* colors = " .-:=+*^X#%@";
 	const int numColors = 12;
 
