@@ -21,8 +21,6 @@ int main(int argc, char** argv) {
 	numProcs = world.size();
 	myRank = world.rank();
 
-	boost::mpi::timer timer;
-
 	// 'parsing' optional input parameter = problem size
 	int N = 512;
 	if(argc > 1) {
@@ -56,6 +54,7 @@ int main(int argc, char** argv) {
 	// create a second buffer for the computation
 	std::vector<value_t> B(N);
 
+	boost::mpi::timer timer;
 	// for each time step ..
 	for(int t = 0; t < T; t++) {
 		boost::mpi::request reqs[4];
@@ -126,6 +125,9 @@ int main(int argc, char** argv) {
 		// swap matrices (just pointers, not content)
 		std::swap(A, B);
 	}
+	if(world.rank() == 0) {
+		std::cout << "\nElapsed: " << timer.elapsed() << std::endl;
+	}
 
 	// ---------- check ----------
 	int success = 1;
@@ -151,7 +153,6 @@ int main(int argc, char** argv) {
 	if(myRank == 0) {
 		printTemperature(A, N);
 		success = total_success == numProcs;
-		printf("\nMethod execution took seconds: %.5lf\n", timer.elapsed());
 	}
 
 	// done

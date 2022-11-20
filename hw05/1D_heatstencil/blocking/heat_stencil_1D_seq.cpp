@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
 		// swap matrices (just pointers, not content)
 		std::swap(A, B);
 	}
-	std::cout << "\nMethod execution took seconds: " << timer.elapsed() << std::endl;
+	std::cout << "\nElapsed: " << timer.elapsed() << std::endl;
 
 	// ---------- check ----------
 	int success = 1;

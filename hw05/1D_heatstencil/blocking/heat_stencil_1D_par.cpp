@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
 		std::swap(A, B);
 	}
 	if(myRank == 0) {
-		std::cout << "\nMethod execution took seconds: " << timer.elapsed() << std::endl;
+		std::cout << "\nElapsed: " << timer.elapsed() << std::endl;
 	}
 
 	// ---------- check ----------
@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
 		boost::mpi::gather(world, &A[start], N / numProcs, 0);
 	}
 
-	int total_success = 0;
+	int total_success = 1;
 	boost::mpi::reduce(world, success, total_success, std::plus<int>(), 0);
 
 	// ---------- cleanup ----------
