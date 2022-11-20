@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <boost/mpi.hpp>
 #include <functional>
 #include <stdio.h>
@@ -20,7 +21,7 @@ int main(int argc, char** argv) {
 	numProcs = world.size();
 	myRank = world.rank();
 
-	double start_time = MPI_Wtime();
+	boost::mpi::timer timer;
 
 	// 'parsing' optional input parameter = problem size
 	int N = 512;
@@ -122,7 +123,7 @@ int main(int argc, char** argv) {
 	if(myRank == 0) {
 		printTemperature(A, N);
 		success = total_success == numProcs;
-		printf("\nMethod execution took seconds: %.5lf\n", MPI_Wtime() - start_time);
+		printf("\nMethod execution took seconds: %.5lf\n", timer.elapsed());
 	}
 
 	// done
@@ -134,8 +135,7 @@ void printTemperature(std::vector<double>& m, int N) {
 	const int numColors = 12;
 
 	// boundaries for temperature (for simplicity hard-coded)
-	const value_t max = 273 + 60;
-	const value_t min = 273 + 0;
+	const auto [min, max] = std::minmax_element(m.begin(), m.end());
 
 	// set the 'render' resolution
 	int W = RESOLUTION;
@@ -149,14 +149,10 @@ void printTemperature(std::vector<double>& m, int N) {
 	// actual room
 	for(int i = 0; i < W; i++) {
 		// get max temperature in this tile
-		value_t max_t = 0;
-		for(int x = sW * i; x < sW * i + sW; x++) {
-			max_t = (max_t < m[x]) ? m[x] : max_t;
-		}
-		value_t temp = max_t;
+		value_t temp = *max_element(m.begin() + i * sW, m.begin() + (i * sW) + sW);
 
 		// pick the 'color'
-		int c = ((temp - min) / (max - min)) * numColors;
+		int c = ((temp - *min) / (*max - *min)) * numColors;
 		c = (c >= numColors) ? numColors - 1 : ((c < 0) ? 0 : c);
 
 		// print the average temperature
