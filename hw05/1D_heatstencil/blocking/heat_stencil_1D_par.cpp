@@ -14,12 +14,11 @@ void printTemperature(std::vector<value_t>& m, int N);
 // -- simulation code ---
 int main(int argc, char** argv) {
 	// initializing MPI
-	int myRank, numProcs;
 	boost::mpi::environment env{ argc, argv };
 	boost::mpi::communicator world;
 
-	numProcs = world.size();
-	myRank = world.rank();
+	int numProcs = world.size();
+	int myRank = world.rank();
 
 	// 'parsing' optional input parameter = problem size
 	int N = 512;
