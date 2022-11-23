@@ -1,9 +1,9 @@
 #!/bin/bash
 
-export Boost_INCLUDE_DIR=${BOOST_INC}
-export Boost_LIBRARIES=${BOOST_LIB}
-export LCC2=TRUE
+# export Boost_INCLUDE_DIR=${BOOST_INC}
+# export Boost_LIBRARIES=${BOOST_LIB}
+# export LCC2=TRUE
 
 cd ./build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Release
 make
