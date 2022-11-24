@@ -24,13 +24,11 @@ struct Vector3D {
 
 	// TODO: include Vector3 for when raylib is included
 
-	// check if raylib is included
-
 	// convert from Vector3 to Position constexpr
 	Vector3D(const raylib::Vector3& vector) : x(vector.x), y(vector.y), z(vector.z) {}
 
 	// convert from Position to Vector3
-	operator raylib::Vector3() const { return ::Vector3{ x, y, z }; }
+	operator raylib::Vector3() const { return raylib::Vector3{ x, y, z }; }
 
 	// Vector3D& operator=(const raylib::Vector3& position) {
 	// 	x = position.x;
@@ -158,7 +156,7 @@ struct Vector3D {
 	Vector3D operator--(int) { return Vector3D(x--, y--, z--); }
 
 	// calculate length
-	float length() const { return std::sqrt(x * x + y * y + z * z); }
+	float length() const { return std::sqrt((x * x) + (y * y) + (z * z)); }
 
 	// calculate distance
 	float distance(const Vector3D& position) const {
@@ -175,8 +173,8 @@ struct Vector3D {
 	// calculate direction vector
 	Vector3D direction(const Vector3D& position) const {
 		float distance = this->distance(position);
-		return Vector3D((position.x - x) / distance, (position.y - y) / distance,
-		                (position.z - z) / distance);
+		return Vector3D((x - position.x) / distance, (y - position.y) / distance,
+		                (z - position.z) / distance);
 	}
 
 	// generate random vector between min and max

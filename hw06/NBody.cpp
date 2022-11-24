@@ -1,15 +1,18 @@
 #include "NBody.hpp"
 
 #include <iostream>
+#include <random>
 
 NBody::NBody(int maxBodies) : particles(maxBodies) {
-	std::for_each(particles.begin(), particles.end(), [](Particle& particle) {
-		particle = Particle(Vector3D::random(-20, 20), 0.001f, 0.0001f);
+	std::default_random_engine rng(std::random_device{}());
+	std::uniform_real_distribution<float> dist(0.0001f, 0.001f);
+
+	std::uniform_real_distribution<float> dist_two(-15.0f, 15.0f);
+
+	std::for_each(particles.begin(), particles.end(), [&](Particle& particle) {
+		auto rnd = dist(rng);
+		particle = Particle(Vector3D::random(-15, 15), rnd, rnd);
 	});
-	// std::for_each(particles.begin(), particles.end(), [](Particle& particle) {
-	// 	std::cout << "x: " << particle.position.x << " y: " << particle.position.y
-	// 	          << " z: " << particle.position.z << std::endl;
-	// });
 }
 
 NBody::~NBody() = default;
@@ -21,34 +24,28 @@ void NBody::update() {
 }
 
 void NBody::updatePositions() {
-	for(auto& particle : particles) {
-		particle.position += particle.velocity;
-	}
+	std::for_each(particles.begin(), particles.end(),
+	              [&](Particle& particle) { particle.position += particle.velocity; });
 }
 
 void NBody::updateVelocities() {
-	for(auto& particle : particles) {
-		particle.velocity += particle.force / particle.mass;
-	}
+	std::for_each(particles.begin(), particles.end(),
+	              [&](Particle& particle) { particle.velocity += particle.force / particle.mass; });
 }
 
 void NBody::updateForces() {
 	std::for_each(particles.begin(), particles.end(),
-	              [](Particle& particle) { particle.force = Vector3D(); });
+	              [](Particle& particle) { particle.force = {}; });
 
 	std::for_each(particles.begin(), particles.end(), [&](Particle& particle) {
 		std::for_each(particles.begin(), particles.end(), [&](Particle& other) {
 			if(!(particle == other)) {
-				Vector3D direction = other.position - particle.position;
+				Vector3D direction = other.position.direction(particle.position);
 
 				float distance = direction.length();
 				float force = (particle.mass * other.mass) / (distance * distance);
 
 				particle.force += direction.normalize() * force;
-
-				// float distance = particle.position.distance(other.position);
-
-				// particle.force += particle.mass * other.mass / (distance * distance);
 			}
 		});
 	});

@@ -3,15 +3,16 @@ if (ENV{USER} STREQUAL "philipp")
 endif ()
 
 
-if (APPLE) 
+if (APPLE)
     set(CMAKE_C_COMPILER /usr/bin/clang)
     set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 endif ()
 
+include(FetchContent)
+
 # raylib
 find_package(raylib QUIET)
 if (NOT raylib_FOUND)
-    include(FetchContent)
     FetchContent_Declare(
         raylib
         GIT_REPOSITORY https://github.com/raysan5/raylib.git
@@ -23,7 +24,6 @@ endif()
 # raylib-cpp
 find_package(raylib_cpp QUIET)
 if (NOT raylib_cpp_FOUND)
-    include(FetchContent)
     FetchContent_Declare(
         raylib_cpp
         GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
@@ -37,7 +37,6 @@ if (APPLE)
 else()
     add_compile_options(-O2 -march=native -mtune=native)
 endif()
-
 
 # link_directories(../../boost/lib)
 # include_directories(../../boost/include)

@@ -2,7 +2,7 @@
 #include <iostream>
 
 Game::Game(int width, int height, const std::string& title, int capFPS)
-    : window(width, height, title), nbody(500) {
+    : window(width, height, title), nbody(1000) {
 	camera = raylib::Camera3D(position,            // position
 	                          target,              // target
 	                          up,                  // up
@@ -71,10 +71,11 @@ void Game::render() {
 
 		camera.BeginMode();
 		{
-			DrawGrid(10, 5.0f);
-			std::for_each(
-			    nbody.particles.begin(), nbody.particles.end(),
-			    [](const Particle& particle) { DrawSphere(particle.position, 0.5, RED); });
+			// DrawGrid(10, 5.0f);
+			std::for_each(nbody.particles.begin(), nbody.particles.end(),
+			              [](const Particle& particle) {
+				              DrawSphere(particle.position, particle.radius * 1000, RED);
+			              });
 		}
 		camera.EndMode();
 	}
