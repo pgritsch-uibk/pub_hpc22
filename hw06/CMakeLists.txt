@@ -2,12 +2,6 @@ if (ENV{USER} STREQUAL "philipp")
     FIND_PACKAGE(Boost REQUIRED)
 endif ()
 
-
-if (APPLE)
-    set(CMAKE_C_COMPILER /usr/bin/clang)
-    set(CMAKE_CXX_COMPILER /usr/bin/clang++)
-endif ()
-
 include(FetchContent)
 
 # raylib
@@ -41,7 +35,7 @@ endif()
 # link_directories(../../boost/lib)
 # include_directories(../../boost/include)
 
-add_executable(main main.cpp Game.hpp Game.cpp NBody.hpp NBody.cpp Particle.hpp Vector3D.hpp)
+add_executable(main main.cpp Game.hpp Game.cpp NBody.hpp NBody.cpp Particle.hpp Vector3D.hpp Utility.hpp)
 target_link_libraries(main PUBLIC raylib raylib_cpp)
 
 

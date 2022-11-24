@@ -27,7 +27,7 @@ struct Particle {
 		return *this;
 	}
 
-	bool operator==(const Particle& particle) {
+	bool operator==(const Particle& particle) const {
 		return position == particle.position && velocity == particle.velocity &&
 		       mass == particle.mass && radius == particle.radius;
 	}

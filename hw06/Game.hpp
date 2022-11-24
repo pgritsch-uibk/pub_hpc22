@@ -2,6 +2,7 @@
 
 #include "NBody.hpp"
 #include <raylib-cpp.hpp>
+#include <random>
 
 class Game {
   private:
@@ -15,7 +16,13 @@ class Game {
 	raylib::Vector3 target = { 0.0f, 0.0f, 0.0f };
 	raylib::Vector3 up = { 0.0f, 1.0f, 0.0f };
 
-	NBody nbody;
+//	std::vector<raylib::Color> color;
+	std::vector<raylib::Mesh> meshes;
+	std::vector<raylib::Material> materials;
+	NBody nBody;
+
+	std::default_random_engine rng{std::random_device{}()};
+	std::uniform_real_distribution<float> dist{0.0f, 360.0f};
 
   public:
 	Game(int width, int height, const std::string& title, int capFPS);
