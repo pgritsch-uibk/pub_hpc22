@@ -35,7 +35,7 @@ endif()
 # link_directories(../../boost/lib)
 # include_directories(../../boost/include)
 
-add_executable(main main.cpp Game.hpp Game.cpp NBody.hpp NBody.cpp Particle.hpp Vector3D.hpp Utility.hpp)
+add_executable(main main.cpp Game.hpp Game.cpp NBody.hpp NBody.cpp Particle.hpp Vector3D.hpp Utility.hpp Sphere.cpp Sphere.hpp)
 target_link_libraries(main PUBLIC raylib raylib_cpp)
 
 

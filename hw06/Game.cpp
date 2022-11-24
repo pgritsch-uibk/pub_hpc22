@@ -3,18 +3,16 @@
 #include "Utility.hpp"
 
 Game::Game(int width, int height, const std::string& title, int capFPS)
-    : window(width, height, title), nBody(5000), meshes() {
-	camera = raylib::Camera3D(position,            // position
-	                          target,              // target
-	                          up,                  // up
-	                          45.0f,               // fovy
-	                          CAMERA_PERSPECTIVE); // type
+    : window(width, height, title), nBody(5000) {
+	camera = raylib::Camera3D(position,
+	                          target,
+	                          up,
+	                          45.0f,
+	                          CAMERA_PERSPECTIVE);
 
 	std::for_each(nBody.particles.begin(), nBody.particles.end(), [&](Particle& particle) {
 		raylib::Color color_new = raylib::Color::FromHSV(dist(rng), 1.0f, 1.0f);
-		meshes.emplace_back(raylib::Mesh::Sphere(Utility::map(particle.radius, 0.0001f, 0.001f, 0.1f, 0.5f), 16, 16));
-		materials.emplace_back();
-		materials.back().maps[MATERIAL_MAP_DIFFUSE].color = color_new;
+		spheres.emplace_back(particle.radius, color_new);
 	});
 
 	camera.SetMode(CAMERA_CUSTOM); // Set a first person camera mode
@@ -89,7 +87,7 @@ void Game::render() {
 
 			for(std::size_t i = 0; i < nBody.particles.size(); ++i) {
 				Particle& p = nBody.particles[i];
-				DrawMesh(meshes[i], materials[i], MatrixMultiply(MatrixIdentity(), MatrixTranslate(p.position.x, p.position.y, p.position.z)));
+				spheres[i].draw(p.position);
 			}
 		}
 		camera.EndMode();

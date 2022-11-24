@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Sphere.hpp"
 #include "NBody.hpp"
 #include <raylib-cpp.hpp>
 #include <random>
@@ -16,9 +17,9 @@ class Game {
 	raylib::Vector3 target = { 0.0f, 0.0f, 0.0f };
 	raylib::Vector3 up = { 0.0f, 1.0f, 0.0f };
 
-//	std::vector<raylib::Color> color;
-	std::vector<raylib::Mesh> meshes;
-	std::vector<raylib::Material> materials;
+	std::vector<Sphere> spheres;
+//	std::vector<raylib::Mesh> meshes;
+//	std::vector<raylib::Material> materials;
 	NBody nBody;
 
 	std::default_random_engine rng{std::random_device{}()};
