@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <random>
+#include <fstream>
 
 NBody::NBody(int maxBodies) : particles(maxBodies) {
 	std::default_random_engine rng(std::random_device{}());
@@ -49,4 +50,17 @@ void NBody::updateForces() {
 			}
 		});
 	});
+}
+
+void NBody::exportToFile(const std::string& filename) {
+	std::ofstream file(filename, std::ios_base::app);
+
+	std::for_each(particles.begin(), particles.end(), [&](Particle& particle) {
+		file << particle.position.x << " " << particle.position.y << " " << particle.position.z << std::endl;
+	});
+
+	file << std::endl;
+	file << std::endl;
+
+	file.close();
 }

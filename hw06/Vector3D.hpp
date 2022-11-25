@@ -3,7 +3,9 @@
 #include <cmath>
 #include <random>
 
+#if __has_include(<raylib-cpp.hpp>)
 #include <raylib-cpp.hpp>
+#endif
 
 struct Vector3D {
   private:
@@ -17,18 +19,21 @@ struct Vector3D {
 
 	// TODO: include Vector3 for when raylib is included
 
+#if __has_include(<raylib-cpp.hpp>)
 	// convert from Vector3 to Position constexpr
 	Vector3D(const raylib::Vector3& vector) : x(vector.x), y(vector.y), z(vector.z) {}
 
 	// convert from Position to Vector3
 	operator raylib::Vector3() const { return { x, y, z }; }
 
-	// Vector3D& operator=(const raylib::Vector3& position) {
-	// 	x = position.x;
-	// 	y = position.y;
-	// 	z = position.z;
-	// 	return *this;
-	// }
+//	 Vector3D& operator=(const raylib::Vector3& position) {
+//	 	x = position.x;
+//	 	y = position.y;
+//	 	z = position.z;
+//	 	return *this;
+//	 }
+#endif
+
 
 	Vector3D& operator+=(const Vector3D& position) {
 		x += position.x;

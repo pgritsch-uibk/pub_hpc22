@@ -16,5 +16,7 @@ class NBody {
 	void updateVelocities();
 	void updateForces();
 
+	void exportToFile(const std::string& filename);
+
 	std::vector<Particle> particles;
 };
