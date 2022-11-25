@@ -1,6 +1,6 @@
 #include "NBody.hpp"
 
-#include <iostream>
+#include <algorithm>
 #include <random>
 
 NBody::NBody(int maxBodies) : particles(maxBodies) {

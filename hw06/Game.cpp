@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "Utility.hpp"
+#include <algorithm>
 #include <iostream>
 
 constexpr int GLSL_VERSION = 330;
