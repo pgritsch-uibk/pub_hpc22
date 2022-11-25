@@ -10,3 +10,5 @@ cmake_install.cmake
 *.pdf
 *build
 *.DS_Store
+*cmake_build_release/*
+*cmake_build_debugnogui/*
