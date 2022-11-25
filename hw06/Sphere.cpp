@@ -2,7 +2,7 @@
 
 #include "Utility.hpp"
 
-Sphere::Sphere(float radius, raylib::Color color) : mesh(raylib::Mesh::Sphere(Utility::map(radius, 0.0001f, 0.001f, 0.1f, 0.5f), 16, 16)), material() {
+Sphere::Sphere(float radius, raylib::Color color) : mesh(raylib::Mesh::Sphere(Utility::map(radius, 0.0001f, 0.001f, 0.05f, 0.5f), 8, 16)), material() {
 	material.maps[MATERIAL_MAP_DIFFUSE].color = color;
 }
 

@@ -5,6 +5,8 @@
 #include <raylib-cpp.hpp>
 #include <random>
 
+#include "rlights.hpp"
+
 class Game {
   private:
 	raylib::Window window;
@@ -18,8 +20,10 @@ class Game {
 	raylib::Vector3 up = { 0.0f, 1.0f, 0.0f };
 
 	std::vector<Sphere> spheres;
-//	std::vector<raylib::Mesh> meshes;
-//	std::vector<raylib::Material> materials;
+
+	Shader shader;
+	Light light;
+
 	NBody nBody;
 
 	std::default_random_engine rng{std::random_device{}()};

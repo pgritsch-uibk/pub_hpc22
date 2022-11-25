@@ -4,9 +4,10 @@
 
 class Sphere {
 	raylib::Mesh mesh;
-	raylib::Material material;
 
   public:
+	raylib::Material material;
+
 	Sphere(float radius, raylib::Color color);
 
 	Sphere(Sphere&& sphere);
