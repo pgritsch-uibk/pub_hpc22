@@ -5,27 +5,26 @@
 
 constexpr int GLSL_VERSION = 330;
 
-
 Game::Game(int width, int height, const std::string& title, int capFPS)
-    : window(width, height, title), nBody(5000) {
+    : window(width, height, title), nBody(5000),
+      shader("./shader/lighting.vs", "./shader/lighting.fs"),
+      light(LightType::LIGHT_POINT, true, { 20, 20, 20 }, raylib::Vector3::Zero(), WHITE, 0.0f) {
 	camera = raylib::Camera3D(position, target, up, 45.0f, CAMERA_PERSPECTIVE);
 
-	shader = LoadShader("./shader/lighting.vs", "./shader/lighting.fs");
-	shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(shader, "viewPos");
+	shader.locs[SHADER_LOC_VECTOR_VIEW] = shader.GetLocation("viewPos");
 
-	int ambientLoc = GetShaderLocation(shader, "ambient");
-	SetShaderValue(shader, ambientLoc, (float[4]){ 0.0f, 0.0f, 0.0f, 1.0f }, SHADER_UNIFORM_VEC4);
+	int ambientLoc = shader.GetLocation("ambient");
+	shader.SetValue(ambientLoc, &ambientColor, SHADER_UNIFORM_VEC4);
 
 	std::for_each(nBody.particles.begin(), nBody.particles.end(), [&](Particle& particle) {
 		raylib::Color color_new = raylib::Color::FromHSV(0.0f, 1.0f, 1.0f);
 		spheres.emplace_back(particle.radius, color_new);
 	});
 
-	std::for_each(spheres.begin(), spheres.end(), [&](Sphere& sphere) {
-		sphere.material.shader = shader;
-	});
+	std::for_each(spheres.begin(), spheres.end(),
+	              [&](Sphere& sphere) { sphere.material.shader = shader; });
 
-	light = CreateLight(LIGHT_POINT, (Vector3){ 20, 20, 20 }, Vector3Zero(), WHITE, shader);
+	light.defineShader(shader);
 
 	camera.SetMode(CAMERA_CUSTOM);
 
@@ -83,15 +82,13 @@ void Game::update() {
 		nBody.update();
 	}
 
-	SetShaderValue(shader, shader.locs[SHADER_LOC_VECTOR_VIEW], (float[3]){ position.x, position.y, position.z }, SHADER_UNIFORM_VEC3);
-//	UpdateLightValues(shader, light);
+	shader.SetValue(shader.locs[SHADER_LOC_VECTOR_VIEW], &position, SHADER_UNIFORM_VEC3);
 }
 
 void Game::render() {
 	BeginDrawing();
 	{
 		window.ClearBackground(BLACK);
-
 
 		if(debug) {
 			DrawFPS(10, 10);

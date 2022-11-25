@@ -5,7 +5,8 @@
 #include <raylib-cpp.hpp>
 #include <random>
 
-#include "rlights.hpp"
+//#include "rlights.hpp"
+#include "Light.hpp"
 
 class Game {
   private:
@@ -21,13 +22,16 @@ class Game {
 
 	std::vector<Sphere> spheres;
 
-	Shader shader;
-	Light light;
+	raylib::Vector4 ambientColor = {0.0f, 0.0f, 0.0f, 1.0f};
 
 	NBody nBody;
 
-	std::default_random_engine rng{std::random_device{}()};
-	std::uniform_real_distribution<float> dist{0.0f, 360.0f};
+	raylib::Material material;
+	raylib::Shader shader;
+	Light light;
+
+//	std::default_random_engine rng{std::random_device{}()};
+//	std::uniform_real_distribution<float> dist{0.0f, 360.0f};
 
   public:
 	Game(int width, int height, const std::string& title, int capFPS);
