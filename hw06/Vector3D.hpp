@@ -170,8 +170,7 @@ struct Vector3D {
 
 	// calculate direction vector
 	Vector3D direction(const Vector3D& position) const {
-		float distance = this->distance(position);
-		return {(x - position.x) / distance, (y - position.y) / distance, (z - position.z) / distance};
+		return { x - position.x, y - position.y, z - position.z };
 	}
 
 	// generate random vector between min and max
