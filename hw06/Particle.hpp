@@ -15,6 +15,10 @@ struct Particle {
 	Particle(Vector3D position, float mass, float radius)
 	    : position(position), velocity(), mass(mass), radius(radius) {}
 
+	explicit Particle(Particle* particle)
+	    : position(particle->position), velocity(particle->velocity), mass(particle->mass),
+	      radius(particle->radius) {}
+
 	~Particle() = default;
 
 	Particle() : position(), velocity(), mass(0), radius(0) {}

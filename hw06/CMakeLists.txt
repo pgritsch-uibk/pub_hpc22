@@ -1,9 +1,5 @@
-if (ENV{USER} STREQUAL "philipp")
-    FIND_PACKAGE(Boost REQUIRED)
-endif ()
-
-set(SRC_HEADER NBody.hpp Vector3D.hpp Particle.hpp)
-set(SRC_SOURCE NBody.cpp)
+set(SRC_HEADER NBody.hpp Vector3D.hpp Particle.hpp Octree/Octree.h)
+set(SRC_SOURCE NBody.cpp Octree/Octree.cpp)
 
 option(COMPILE_WITH_GRAPHICS "Compiles the graphical User Interface" ON)
 option(PERFORMANCE_TEST "Compiles for performance test" OFF)
@@ -47,7 +43,7 @@ endif ()
 if (APPLE)
     add_compile_options(-O2)
 else()
-    add_compile_options(-O2 -march=native -mtune=native)
+    add_compile_options(-O2 -g -march=native -mtune=native)
 endif()
 
 # link_directories(../../boost/lib)

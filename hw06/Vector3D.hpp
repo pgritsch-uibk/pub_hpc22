@@ -124,19 +124,23 @@ struct Vector3D {
 	}
 
 	bool operator<(const Vector3D& position) const {
-		return x < position.x && y < position.y && z < position.z;
+		return (x - position.x) < 0 && (y - position.y) < 0 && (z - position.z) < 0;
+		// return x < position.x && y < position.y && z < position.z;
 	}
 
 	bool operator>(const Vector3D& position) const {
-		return x > position.x && y > position.y && z > position.z;
+		return (x - position.x) > 0 && (y - position.y) > 0 && (z - position.z) > 0;
+		// return x > position.x && y > position.y && z > position.z;
 	}
 
 	bool operator<=(const Vector3D& position) const {
-		return x <= position.x && y <= position.y && z <= position.z;
+		return (x - position.x) <= 0 && (y - position.y) <= 0 && (z - position.z) <= 0;
+		// return x <= position.x && y <= position.y && z <= position.z;
 	}
 
 	bool operator>=(const Vector3D& position) const {
-		return x >= position.x && y >= position.y && z >= position.z;
+		return (x - position.x) >= 0 && (y - position.y) >= 0 && (z - position.z) >= 0;
+		// return x >= position.x && y >= position.y && z >= position.z;
 	}
 
 	Vector3D operator-() const { return {-x, -y, -z}; }

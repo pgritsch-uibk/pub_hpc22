@@ -1,8 +1,9 @@
 #include "NBody.hpp"
 
+#include "Octree/Octree.h"
 #include <algorithm>
-#include <random>
 #include <fstream>
+#include <random>
 
 NBody::NBody(int maxBodies) : particles(maxBodies) {
 	std::default_random_engine rng(std::random_device{}());
@@ -37,6 +38,17 @@ void NBody::updateVelocities() {
 }
 
 void NBody::updateForces() {
+	Vector3D domainFrom = { -500.f, -500.f, -500.f };
+	Vector3D domainTo = { 500.f, 500.f, 500.f };
+	std::remove_if(particles.begin(), particles.end(), [domainFrom, domainTo](Particle& p) {
+		return (!(domainFrom < p.position) || !(domainTo > p.position));
+	});
+	OctreeNode root(domainFrom, domainTo);
+
+	for(auto& p : particles) {
+		root.insert(&p);
+	}
+
 	std::for_each(particles.begin(), particles.end(),
 	              [](Particle& particle) { particle.force = {}; });
 
