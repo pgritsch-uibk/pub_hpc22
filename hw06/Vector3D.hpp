@@ -155,22 +155,26 @@ struct Vector3D {
 
 	// calculate length
 	float length() const { return std::sqrt((x * x) + (y * y) + (z * z)); }
+	float lengthNSqrt() const { return (x * x) + (y * y) + (z * z); }
 
 	// calculate distance
 	float distance(const Vector3D& position) const {
-		return std::sqrt((x - position.x) * (x - position.x) + (y - position.y) * (y - position.y) +
-		                 (z - position.z) * (z - position.z));
+		float tempX = x - position.x;
+		float tempY = y - position.y;
+		float tempZ = z - position.z;
+
+		return std::sqrt((tempX * tempX) + (tempY * tempY) + (tempZ * tempZ));
 	}
 
 	// calculate normalized vector
 	Vector3D normalize() const {
 		float length = this->length();
-		return {x / length, y / length, z / length};
+		return *this / length;
 	}
 
 	// calculate direction vector
 	Vector3D direction(const Vector3D& position) const {
-		return { x - position.x, y - position.y, z - position.z };
+		return *this - position;
 	}
 
 	// generate random vector between min and max
