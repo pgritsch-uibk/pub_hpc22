@@ -11,7 +11,7 @@ set(CMAKE_BUILD_TYPE "Debug")
 #set(CMAKE_CXX_COMPILER mpic++)
 
 #set(CMAKE_C_STANDARD 14)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED TRUE)
 add_compile_options(-Wall -Wextra -pedantic)
 

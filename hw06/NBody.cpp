@@ -45,7 +45,9 @@ void NBody::updateForces() {
 
 		return !((domainFrom < p.position) && (domainTo > p.position));
 	});
-	OctreeNode root(domainFrom, domainTo);
+	OctreeNode::resetNodePool();
+	OctreeNode root;
+	root.initialize(domainFrom, domainTo);
 
 	for(auto& p : particles) {
 		root.insert(&p);
