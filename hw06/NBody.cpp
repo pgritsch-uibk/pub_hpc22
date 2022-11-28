@@ -41,7 +41,9 @@ void NBody::updateForces() {
 	Vector3D domainFrom = { -500.f, -500.f, -500.f };
 	Vector3D domainTo = { 500.f, 500.f, 500.f };
 	std::remove_if(particles.begin(), particles.end(), [domainFrom, domainTo](Particle& p) {
-		return (!(domainFrom < p.position) || !(domainTo > p.position));
+		domainFrom < p.position && domainTo > p.position;
+
+		return !((domainFrom < p.position) && (domainTo > p.position));
 	});
 	OctreeNode root(domainFrom, domainTo);
 

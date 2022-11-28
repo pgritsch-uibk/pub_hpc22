@@ -10,6 +10,8 @@ class OctreeNode {
   private:
 	float mass;
 
+	bool isVirtual;
+
 	Particle* particle;
 
   public:
@@ -27,7 +29,7 @@ class OctreeNode {
 	Vector3D center;
 
 	OctreeNode(Vector3D _domainFrom, Vector3D _domainTo)
-	    : particle(nullptr), p000(nullptr), p001(nullptr), p010(nullptr), p011(nullptr),
+	    : mass(0.f), isVirtual(false), particle(nullptr), p000(nullptr), p001(nullptr), p010(nullptr), p011(nullptr),
 	      p100(nullptr), p101(nullptr), p110(nullptr), p111(nullptr), domainFrom(_domainFrom),
 	      domainTo(_domainTo), center(_domainFrom.x + std::abs(domainTo.x - domainFrom.x) / 2.f,
 	                                  _domainFrom.y + std::abs(domainTo.y - domainFrom.y) / 2.f,
@@ -43,16 +45,18 @@ class OctreeNode {
 
 		if(p000 == nullptr) {
 			initializeOctants();
-			Particle* previousParticle = particle;
-			particle = nullptr;
-			// todo throws segv: getQuadrant(previousParticle)->insert(previousParticle);
+		}
+
+		if (!isVirtual) {
+			isVirtual = true;
+			getQuadrant(particle)->insert(particle);
 		}
 
 		getQuadrant(_particle)->insert(_particle);
 	}
 
 	Particle getParticle() {
-		return this->particle != nullptr ? *particle : Particle(center, mass, 0.f);
+		return isVirtual ? *particle : Particle(center, mass, 0.f);
 	}
 
 	void initializeOctants() {
