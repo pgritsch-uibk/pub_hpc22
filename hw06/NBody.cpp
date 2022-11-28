@@ -6,12 +6,16 @@
 
 NBody::NBody(int maxBodies) : particles(maxBodies) {
 	std::default_random_engine rng(std::random_device{}());
-	std::uniform_real_distribution<float> dist(0.0001f, 0.001f);
+	std::uniform_real_distribution<float> radius(0.0001f, 0.001f);
+	std::uniform_real_distribution<float> mass(0.0001f, 0.001f);
 
 	std::for_each(particles.begin(), particles.end(), [&](Particle& particle) {
-		auto rnd = dist(rng);
-		particle = Particle(Vector3D::random(-20, 20), rnd, rnd);
+		auto rrnd = radius(rng);
+//	  	auto mrnd = mass(rng);
+		particle = Particle(Vector3D::random(-20, 20), rrnd, rrnd);
 	});
+
+//	particles[0] = Particle(Vector3D(0, 0, 0), 100, 0.01f);
 }
 
 NBody::~NBody() = default;

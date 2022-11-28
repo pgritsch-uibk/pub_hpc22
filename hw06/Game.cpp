@@ -98,6 +98,10 @@ void Game::render() {
 		{
 			DrawGrid(10, 5.0f);
 
+			if (debug) {
+				light.draw();
+			}
+
 			for(std::size_t i = 0; i < nBody.particles.size(); ++i) {
 				Particle& p = nBody.particles[i];
 				spheres[i].draw(p.position);

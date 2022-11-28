@@ -28,3 +28,11 @@ void Light::defineShader(raylib::Shader& shader) {
 
 	updateLightValues(shader);
 }
+
+void Light::draw() const {
+	DrawSphere(position, 0.2f, color);
+
+	if (type == static_cast<int>(LightType::LIGHT_DIRECTIONAL)) {
+		DrawLine3D(position, target, color);
+	}
+}

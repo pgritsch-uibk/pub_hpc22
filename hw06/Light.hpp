@@ -20,6 +20,8 @@ struct Light {
 	int colorLoc{};
 	int attenuationLoc{};
 
+	void draw() const;
+
 	void updateLightValues(raylib::Shader& shader);
 
 	void defineShader(raylib::Shader& shader);
