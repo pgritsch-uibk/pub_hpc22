@@ -1,10 +1,12 @@
 #include <iostream>
 
 #include "NBody.hpp"
+#include "misc.h"
 #include <chrono>
 
 int main() {
-	NBody nBody(5000);
+	//increaseStackSize();
+	NBody nBody(5);
 #ifndef PERFORMANCE_TEST
 	const std::string filename = "output.txt";
 #endif

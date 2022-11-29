@@ -3,7 +3,9 @@
 
 #include "../Particle.hpp"
 #include <array>
+#include <iostream>
 #include <memory>
+#include <stdexcept>
 #include <vector>
 
 class OctreeNode {
@@ -13,15 +15,15 @@ class OctreeNode {
 
 	static OctreeNode* getOne() {
 		if(current + 1 >= nodes.size()) {
+			std::cout << "hi" << std::endl;
 			throw std::logic_error("vector too small");
-			nodes.resize(nodes.size() + nodes.size(), OctreeNode{});
 		}
 		return &nodes[current++];
 	}
 
-	static inline void reset() {
+	static void reset() {
 		if(nodes.size() == 0) {
-			nodes.resize(100000, OctreeNode{});
+			nodes.resize(10, OctreeNode{});
 		}
 		current = 0;
 	}
@@ -52,6 +54,20 @@ class OctreeNode {
 	static void resetNodePool() { reset(); }
 
 	void initialize(Vector3D _domainFrom, Vector3D _domainTo) {
+
+		children = 0;
+		mass = 0;
+		particle = nullptr;
+		isVirtual = false;
+
+		p000 = nullptr;
+		p001 = nullptr;
+		p010 = nullptr;
+		p011 = nullptr;
+		p100 = nullptr;
+		p101 = nullptr;
+		p110 = nullptr;
+		p111 = nullptr;
 		domainFrom = _domainFrom;
 		domainTo = _domainTo;
 		center = { _domainFrom.x + ((domainTo.x - domainFrom.x) / 2.f),
@@ -60,7 +76,8 @@ class OctreeNode {
 		com = center;
 	}
 
-	void insert(Particle* _particle) {
+
+	void insert(Particle* _particle, int depth = 0) {
 		mass += _particle->mass;
 		children++;
 
@@ -68,11 +85,20 @@ class OctreeNode {
 			particle = _particle;
 			return;
 		}
+		/*else {
+			if (p000 == nullptr) {
+				p000 = getOne();
+				p000->initialize(domainFrom, domainTo);
+			}
+			p000->insert(_particle, depth+1);
+		} */
 
 		if(!isVirtual) {
 			isVirtual = true;
-			// getQuadrant(particle)->insert(particle);
+			getQuadrant(particle)->insert(particle);
 		}
+
+		getQuadrant(_particle)->insert(_particle);
 
 		/*		if(p000 == nullptr) {
 		            // initializeOctants();
@@ -80,7 +106,7 @@ class OctreeNode {
 		            // particle = nullptr;
 		        }*/
 
-		getQuadrant(_particle)->insert(_particle);
+
 	}
 
 	Particle getParticle() {
@@ -149,9 +175,9 @@ class OctreeNode {
 	OctreeNode* getQuadrant(Particle* _particle) {
 		bool particleIsInsideBoundary =
 		    domainFrom <= _particle->position && domainTo >= _particle->position;
-		/*		if(!particleIsInsideBoundary) {
+				if(!particleIsInsideBoundary) {
 		            throw std::logic_error("particle outside of boundaries");
-		        }*/
+		        }
 
 		bool fromXIsNearer = (_particle->position.x - center.x) <= 0;
 
@@ -160,6 +186,10 @@ class OctreeNode {
 		bool fromZIsNearer = (_particle->position.z - center.z) <= 0;
 
 		OctreeNode* quadrant;
+		if (current > 8) {
+			std::cout << "hiallo" << std::endl;
+		}
+
 		if(fromXIsNearer && fromYIsNearer && fromZIsNearer) {
 			if(p000 == nullptr) {
 				p000 = getOne();
