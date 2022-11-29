@@ -5,8 +5,8 @@
 #include <chrono>
 
 int main() {
-	//increaseStackSize();
-	NBody nBody(5);
+	increaseStackSize();
+	NBody nBody(5000);
 #ifndef PERFORMANCE_TEST
 	const std::string filename = "output.txt";
 #endif

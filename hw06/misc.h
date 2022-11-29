@@ -5,7 +5,7 @@
 #include <exception>
 
 void increaseStackSize() {
-	const rlim_t kStackSize = 1024 * 1024 * 1024; // min stack size = 16 MB
+	const rlim_t kStackSize = 1024 * 1024; // min stack size = 16 MB
 	struct rlimit rl {};
 	int result;
 

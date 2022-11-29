@@ -12,6 +12,7 @@ class OctreeNode {
   private:
 	static inline std::vector<OctreeNode> nodes;
 	static inline int current;
+	static int count;
 
 	static OctreeNode* getOne() {
 		if(current + 1 >= nodes.size()) {
@@ -23,7 +24,7 @@ class OctreeNode {
 
 	static void reset() {
 		if(nodes.size() == 0) {
-			nodes.resize(10, OctreeNode{});
+			nodes.resize(1000*1000*100, OctreeNode{});
 		}
 		current = 0;
 	}
@@ -186,9 +187,6 @@ class OctreeNode {
 		bool fromZIsNearer = (_particle->position.z - center.z) <= 0;
 
 		OctreeNode* quadrant;
-		if (current > 8) {
-			std::cout << "hiallo" << std::endl;
-		}
 
 		if(fromXIsNearer && fromYIsNearer && fromZIsNearer) {
 			if(p000 == nullptr) {
