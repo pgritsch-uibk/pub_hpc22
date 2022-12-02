@@ -43,7 +43,7 @@ endif ()
 if (APPLE)
     add_compile_options(-O2)
 else()
-    add_compile_options(-O2 -g -march=native -mtune=native)
+    add_compile_options(-O0 -g -march=native -mtune=native)
 endif()
 
 # link_directories(../../boost/lib)

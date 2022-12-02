@@ -87,19 +87,19 @@ class OctreeNode {
 			return;
 		}
 		/*else {
-			if (p000 == nullptr) {
-				p000 = getOne();
-				p000->initialize(domainFrom, domainTo);
-			}
-			p000->insert(_particle, depth+1);
+		    if (p000 == nullptr) {
+		        p000 = getOne();
+		        p000->initialize(domainFrom, domainTo);
+		    }
+		    p000->insert(_particle, depth+1);
 		} */
 
 		if(!isVirtual) {
 			isVirtual = true;
-			getQuadrant(particle)->insert(particle);
+			getQuadrant(particle)->insert(particle, depth + 1);
 		}
 
-		getQuadrant(_particle)->insert(_particle);
+		getQuadrant(_particle)->insert(_particle, depth + 1);
 
 		/*		if(p000 == nullptr) {
 		            // initializeOctants();

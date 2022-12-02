@@ -41,8 +41,6 @@ void NBody::updateForces() {
 	Vector3D domainFrom = { -500.f, -500.f, -500.f };
 	Vector3D domainTo = { 500.f, 500.f, 500.f };
 	std::remove_if(particles.begin(), particles.end(), [domainFrom, domainTo](Particle& p) {
-		domainFrom < p.position && domainTo > p.position;
-
 		return !((domainFrom < p.position) && (domainTo > p.position));
 	});
 	OctreeNode::resetNodePool();
@@ -64,7 +62,21 @@ void NBody::updateForces() {
 				float lengthNSqrt = direction.lengthNSqrt();
 				float force = (particle.mass * other.mass) / (direction.lengthNSqrt());
 
+<<<<<<< HEAD
 				particle.force += direction / std::sqrt(lengthNSqrt) * force;
+=======
+				if(distance <= (particle.radius + other.radius)) {
+					Vector3D velocityDirection = particle.velocity.direction(other.velocity);
+					float velocity_relation = 2.f * other.mass / (particle.mass + other.mass);
+					Vector3D velocityChange =
+					    (velocityDirection * direction) / (distance * distance) * direction;
+
+					particle.velocity -= velocityChange * 0.1f * velocity_relation;
+
+				} else {
+					particle.force += direction.normalize() * force;
+				}
+>>>>>>> da2d493 (ff)
 			}
 		});
 	});
@@ -74,7 +86,8 @@ void NBody::exportToFile(const std::string& filename) {
 	std::ofstream file(filename, std::ios_base::app);
 
 	std::for_each(particles.begin(), particles.end(), [&](Particle& particle) {
-		file << particle.position.x << " " << particle.position.y << " " << particle.position.z << std::endl;
+		file << particle.position.x << " " << particle.position.y << " " << particle.position.z
+		     << std::endl;
 	});
 
 	file << std::endl;
