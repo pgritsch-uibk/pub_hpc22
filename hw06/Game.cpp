@@ -6,7 +6,7 @@
 constexpr int GLSL_VERSION = 330;
 
 Game::Game(int width, int height, const std::string& title, int capFPS)
-    : window(width, height, title), nBody(100),
+    : window(width, height, title), nBody(5000),
       shader("./shader/lighting.vs", "./shader/lighting.fs"),
       light(LightType::LIGHT_POINT, true, { 20, 20, 20 }, raylib::Vector3::Zero(), WHITE, 0.0f) {
 	camera = raylib::Camera3D(position, target, up, 45.0f, CAMERA_PERSPECTIVE);

@@ -1,22 +1,25 @@
 #include "NBody.hpp"
 
 #include "Octree/Octree.h"
+#include "Octree/OctreeNode.h"
 #include <algorithm>
 #include <fstream>
+#include <limits>
 #include <random>
 
-NBody::NBody(int maxBodies) : particles(maxBodies) {
+NBody::NBody(int maxBodies)
+    : octree({ -500.f, -500.f, -500.f }, { 500.f, 500.f, 500.f }), particles(maxBodies) {
 	std::default_random_engine rng(std::random_device{}());
 	std::uniform_real_distribution<float> radius(0.0001f, 0.001f);
 	std::uniform_real_distribution<float> mass(0.0001f, 0.001f);
 
 	std::for_each(particles.begin(), particles.end(), [&](Particle& particle) {
 		auto rrnd = radius(rng);
-//	  	auto mrnd = mass(rng);
+		//	  	auto mrnd = mass(rng);
 		particle = Particle(Vector3D::random(-20, 20), rrnd, rrnd);
 	});
 
-//	particles[0] = Particle(Vector3D(0, 0, 0), 100, 0.01f);
+	//	particles[0] = Particle(Vector3D(0, 0, 0), 100, 0.01f);
 }
 
 NBody::~NBody() = default;
@@ -38,18 +41,8 @@ void NBody::updateVelocities() {
 }
 
 void NBody::updateForces() {
-	Vector3D domainFrom = { -500.f, -500.f, -500.f };
-	Vector3D domainTo = { 500.f, 500.f, 500.f };
-	std::remove_if(particles.begin(), particles.end(), [domainFrom, domainTo](Particle& p) {
-		return !((domainFrom < p.position) && (domainTo > p.position));
-	});
-	OctreeNode::resetNodePool();
-	OctreeNode root;
-	root.initialize(domainFrom, domainTo);
 
-	for(auto& p : particles) {
-		root.insert(&p);
-	}
+	octree.fill(particles);
 
 	std::for_each(particles.begin(), particles.end(),
 	              [](Particle& particle) { particle.force = {}; });
@@ -58,25 +51,20 @@ void NBody::updateForces() {
 		std::for_each(particles.begin(), particles.end(), [&](Particle& other) {
 			if(!(particle == other)) {
 				Vector3D direction = other.position.direction(particle.position);
+				float distanceSquared = direction.lengthSquared();
 
-				float lengthNSqrt = direction.lengthNSqrt();
-				float force = (particle.mass * other.mass) / (direction.lengthNSqrt());
-
-<<<<<<< HEAD
-				particle.force += direction / std::sqrt(lengthNSqrt) * force;
-=======
-				if(distance <= (particle.radius + other.radius)) {
+				if(distanceSquared <=
+				   (particle.radius * particle.radius + other.radius * other.radius)) {
 					Vector3D velocityDirection = particle.velocity.direction(other.velocity);
 					float velocity_relation = 2.f * other.mass / (particle.mass + other.mass);
 					Vector3D velocityChange =
-					    (velocityDirection * direction) / (distance * distance) * direction;
+					    (velocityDirection * direction) / distanceSquared * direction;
 
-					particle.velocity -= velocityChange * 0.1f * velocity_relation;
-
+					particle.velocity -= velocityChange * velocity_relation;
 				} else {
-					particle.force += direction.normalize() * force;
+					float force = (particle.mass * other.mass) / distanceSquared;
+					particle.force += direction / std::sqrt(distanceSquared) * force;
 				}
->>>>>>> da2d493 (ff)
 			}
 		});
 	});

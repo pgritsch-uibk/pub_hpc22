@@ -159,7 +159,7 @@ struct Vector3D {
 
 	// calculate length
 	float length() const { return std::sqrt((x * x) + (y * y) + (z * z)); }
-	float lengthNSqrt() const { return (x * x) + (y * y) + (z * z); }
+	float lengthSquared() const { return (x * x) + (y * y) + (z * z); }
 
 	// calculate distance
 	float distance(const Vector3D& position) const {

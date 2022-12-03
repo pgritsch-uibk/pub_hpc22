@@ -1,5 +1,5 @@
-set(SRC_HEADER NBody.hpp Vector3D.hpp Particle.hpp Octree/Octree.h Octree/OctreeNodePool.h)
-set(SRC_SOURCE NBody.cpp Octree/Octree.cpp Octree/OctreeNodePool.h)
+set(SRC_HEADER NBody.hpp Vector3D.hpp Particle.hpp Octree/Octree.h Octree/VectorPool.h Octree/OctreeNode.h)
+set(SRC_SOURCE NBody.cpp Octree/Octree.cpp Octree/VectorPool.h Octree/OctreeNode.cpp)
 
 option(COMPILE_WITH_GRAPHICS "Compiles the graphical User Interface" ON)
 option(PERFORMANCE_TEST "Compiles for performance test" OFF)
@@ -37,13 +37,13 @@ if (COMPILE_WITH_GRAPHICS)
     set(SRC_SOURCE ${SRC_SOURCE} main_graphic.cpp Game.cpp Sphere.cpp Light.cpp)
 else()
     set(SRC_HEADER ${SRC_HEADER})
-    set(SRC_SOURCE ${SRC_SOURCE} main_no_graphic.cpp Octree/OctreeNodePool.cpp Octree/OctreeNodePool.h)
+    set(SRC_SOURCE ${SRC_SOURCE} main_no_graphic.cpp Octree/VectorPool.h)
 endif ()
 
 if (APPLE)
     add_compile_options(-O2)
 else()
-    add_compile_options(-O0 -g -march=native -mtune=native)
+    add_compile_options(-O2 -g -march=native -mtune=native)
 endif()
 
 # link_directories(../../boost/lib)
