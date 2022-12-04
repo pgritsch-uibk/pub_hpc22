@@ -177,15 +177,15 @@ struct Vector3D {
 	}
 
 	// calculate direction vector
-	Vector3D direction(const Vector3D& position) const {
-		return *this - position;
-	}
+	Vector3D direction(const Vector3D& position) const { return *this - position; }
 
 	// generate random vector between min and max
 	static Vector3D random(float min, float max) {
 		std::default_random_engine rng(std::random_device{}());
 		std::uniform_real_distribution<float> dist(min, max);
 
-		return {dist(rng), dist(rng), dist(rng)};
+		return { dist(rng), dist(rng), dist(rng) };
 	}
+
+	static Vector3D zeroVector() { return { 0.f, 0.f, 0.f }; }
 };

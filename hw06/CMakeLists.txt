@@ -1,4 +1,4 @@
-set(SRC_HEADER NBody.hpp Vector3D.hpp Particle.hpp Octree/Octree.h Octree/VectorPool.h Octree/OctreeNode.h)
+set(SRC_HEADER NBody.hpp Vector3D.hpp Particle.hpp Octree/Octree.h Octree/VectorPool.h Octree/OctreeNode.h constants.h)
 set(SRC_SOURCE NBody.cpp Octree/Octree.cpp Octree/VectorPool.h Octree/OctreeNode.cpp)
 
 option(COMPILE_WITH_GRAPHICS "Compiles the graphical User Interface" ON)

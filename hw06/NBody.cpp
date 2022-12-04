@@ -4,7 +4,6 @@
 #include "Octree/OctreeNode.h"
 #include <algorithm>
 #include <fstream>
-#include <limits>
 #include <random>
 
 NBody::NBody(int maxBodies)
@@ -43,33 +42,11 @@ void NBody::updateVelocities() {
 }
 
 void NBody::updateForces() {
-
+	treeOrderedParticles.clear();
 	octree.fill(particles, treeOrderedParticles);
-
-	std::for_each(particles.begin(), particles.end(),
-	              [](Particle& particle) { particle.force = {}; });
-
-	std::for_each(particles.begin(), particles.end(), [&](Particle& particle) {
-		std::for_each(particles.begin(), particles.end(), [&](Particle& other) {
-			if(!(particle == other)) {
-				Vector3D direction = other.position.direction(particle.position);
-				float distanceSquared = direction.lengthSquared();
-
-				if(distanceSquared <=
-				   (particle.radius * particle.radius + other.radius * other.radius)) {
-					Vector3D velocityDirection = particle.velocity.direction(other.velocity);
-					float velocity_relation = 2.f * other.mass / (particle.mass + other.mass);
-					Vector3D velocityChange =
-					    (velocityDirection * direction) / distanceSquared * direction;
-
-					particle.velocity -= velocityChange * velocity_relation;
-				} else {
-					float force = (particle.mass * other.mass) / distanceSquared;
-					particle.force += direction / std::sqrt(distanceSquared) * force;
-				}
-			}
-		});
-	});
+	for(Particle* p : treeOrderedParticles) {
+		octree.updateForce(p);
+	}
 }
 
 void NBody::exportToFile(const std::string& filename) {
