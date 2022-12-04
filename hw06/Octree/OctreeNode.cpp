@@ -1,19 +1,18 @@
 #include "OctreeNode.h"
 
-#define MAX_DEPTH 100
-
 void OctreeNode::insert(Particle* _particle, int maxDepth, int depth) {
-	mass += _particle->mass;
-	children++;
 
 	if(particle == nullptr) {
 		particle = _particle;
 		return;
 	}
 
+	children++;
+
 	if(depth >= MAX_DEPTH) {
 		if(buffer == nullptr) {
 			buffer = bufferProvider->getNext();
+			buffer->clear();
 		}
 		buffer->push_back(particle);
 		buffer->push_back(_particle);
@@ -127,4 +126,76 @@ OctreeNode* OctreeNode::getQuadrant(Particle* _particle) {
 	}
 
 	return quadrant;
+}
+
+void OctreeNode::computeMassDistributionAndTraverse(std::vector<Particle*>& depthFirstTraversalOrderedVector) {
+
+	if(!isVirtual) {
+		com = particle->position;
+		mass = particle->mass;
+		depthFirstTraversalOrderedVector.push_back(particle);
+		return;
+	}
+
+	if (buffer != nullptr) {
+		for (Particle* p : *buffer) {
+			com += p->position;
+			mass += p->mass;
+			depthFirstTraversalOrderedVector.push_back(particle);
+		}
+	}
+
+	if(p000 != nullptr) {
+		p000->computeMassDistributionAndTraverse(depthFirstTraversalOrderedVector);
+		com += p000->com;
+		mass += p000->mass;
+	}
+	if (p001 != nullptr) {
+		p001->computeMassDistributionAndTraverse(depthFirstTraversalOrderedVector);
+		com += p001->com;
+		mass += p001->mass;
+	}
+	if (p010 != nullptr) {
+		p010->computeMassDistributionAndTraverse(depthFirstTraversalOrderedVector);
+		com += p010->com;
+		mass += p010->mass;
+	}
+	if (p011 != nullptr) {
+		p011->computeMassDistributionAndTraverse(depthFirstTraversalOrderedVector);
+		com += p011->com;
+		mass += p011->mass;
+	}
+	if(p100 != nullptr) {
+		p100->computeMassDistributionAndTraverse(depthFirstTraversalOrderedVector);
+		com += p100->com;
+		mass += p100->mass;
+	}
+	if (p101 != nullptr) {
+		p101->computeMassDistributionAndTraverse(depthFirstTraversalOrderedVector);
+		com += p101->com;
+		mass += p101->mass;
+	}
+	if (p110 != nullptr) {
+		p110->computeMassDistributionAndTraverse(depthFirstTraversalOrderedVector);
+		com += p110->com;
+		mass += p110->mass;
+	}
+	if (p111 != nullptr) {
+		p111->computeMassDistributionAndTraverse(depthFirstTraversalOrderedVector);
+		com += p111->com;
+		mass += p111->mass;
+	}
+
+
+	com /= mass;
+}
+
+void OctreeNode::updateForce(Particle& _particle) {
+
+
+	if (!isVirtual) {
+		particle->force
+	}
+
+
 }

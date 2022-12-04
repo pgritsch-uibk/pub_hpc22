@@ -68,6 +68,10 @@ class OctreeNode {
 
 	void insert(Particle* _particle, int maxDepth, int depth = 0);
 	OctreeNode* getQuadrant(Particle* _particle);
+
+	void computeMassDistributionAndTraverse(std::vector<Particle*>& depthFirstTraversalOrderedVector);
+
+	void updateForce(Particle& _particle);
 };
 
 #endif // HPC22_OCTREENODE_H

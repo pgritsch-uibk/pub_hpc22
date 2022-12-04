@@ -29,7 +29,8 @@ class Octree {
 		subNodePool.for_each([&](OctreeNode& node) { node.newNodesProvider = &subNodePool; });
 	}
 
-	void fill(std::vector<Particle>& particles) {
+	void fill(std::vector<Particle>& particles,
+	          std::vector<Particle*>& orderedParticles) {
 		reset();
 
 		initializeRoot(particles);
@@ -37,6 +38,9 @@ class Octree {
 		for(auto& p : particles) {
 			root.insert(&p, 100);
 		}
+
+		orderedParticles.clear();
+		root.computeMassDistributionAndTraverse(orderedParticles);
 	}
 
 	void initializeRoot(std::vector<Particle>& particles) {
@@ -66,6 +70,8 @@ class Octree {
 		particleBuffPool.reset();
 		subNodePool.reset();
 	}
+
+
 };
 
 #endif // HPC22_OCTREE_H

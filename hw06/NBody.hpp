@@ -8,6 +8,7 @@
 class NBody {
   private:
 	Octree octree;
+	std::vector<Particle*> treeOrderedParticles;
 	Vector3D domainFrom{};
 	Vector3D domainTo{};
 

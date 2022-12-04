@@ -8,7 +8,9 @@
 #include <random>
 
 NBody::NBody(int maxBodies)
-    : octree({ -500.f, -500.f, -500.f }, { 500.f, 500.f, 500.f }), particles(maxBodies) {
+    : octree({ -500.f, -500.f, -500.f }, { 500.f, 500.f, 500.f }),
+      treeOrderedParticles(maxBodies),
+      particles(maxBodies) {
 	std::default_random_engine rng(std::random_device{}());
 	std::uniform_real_distribution<float> radius(0.0001f, 0.001f);
 	std::uniform_real_distribution<float> mass(0.0001f, 0.001f);
@@ -42,7 +44,7 @@ void NBody::updateVelocities() {
 
 void NBody::updateForces() {
 
-	octree.fill(particles);
+	octree.fill(particles, treeOrderedParticles);
 
 	std::for_each(particles.begin(), particles.end(),
 	              [](Particle& particle) { particle.force = {}; });
