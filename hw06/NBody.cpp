@@ -46,7 +46,10 @@ void NBody::updateForces() {
 				Vector3D direction = other.position.direction(particle.position);
 
 				float lengthNSqrt = direction.lengthNSqrt();
-				float force = (particle.mass * other.mass) / (direction.lengthNSqrt());
+				if (lengthNSqrt < 0.01f) {
+					lengthNSqrt = 0.01f;
+				}
+				float force = (particle.mass * other.mass) / (lengthNSqrt);
 
 				particle.force += direction / std::sqrt(lengthNSqrt) * force;
 			}
