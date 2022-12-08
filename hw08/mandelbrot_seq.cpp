@@ -1,43 +1,47 @@
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/time.h>
+#include <iostream>
+#include <cmath>
+#include <cstdlib>
+#include <vector>
+#include <cstdint>
+
+#include <boost/mpi.hpp>
 
 // Include that allows to print result as an image
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-#define DEFAULT_SIZE_X 1280
-#define DEFAULT_SIZE_Y 720
+constexpr int default_size_x = 1280;
+constexpr int default_size_y = 720;
 
 // RGB image will hold 3 color channels
-#define NUM_CHANNELS 3
+constexpr int num_channels = 3;
 // max iterations cutoff
-#define MAX_ITER 10000
+constexpr int max_iterations = 10000;
 
-#define IND(Y, X, SIZE_Y, SIZE_X, CHANNEL) (Y * SIZE_X * NUM_CHANNELS + X * NUM_CHANNELS + CHANNEL)
+constexpr int ind(int y, int x, int size_y, int size_x, int channel) {
+	return y * size_x * num_channels + x * num_channels + channel;
+}
 
 void HSVToRGB(double H, double S, double V, double* R, double* G, double* B);
 
-void calcMandelbrot(uint8_t* image, int sizeX, int sizeY) {
-	struct timeval start, end;
-	gettimeofday(&start, NULL);
+void calcMandelbrot(std::vector<uint8_t> image, int sizeX, int sizeY) {
+	boost::mpi::timer timer;
 	const float left = -2.5, right = 1;
 	const float bottom = -1, top = 1;
 
 	for(int pixelY = 0; pixelY < sizeY; pixelY++) {
 		// scale y pixel into mandelbrot coordinate system
-		const float cy = (pixelY / (float)sizeY) * (top - bottom) + bottom;
+		const float cy = (static_cast<float>(pixelY) / static_cast<float>(sizeY)) * (top - bottom) + bottom;
 		for(int pixelX = 0; pixelX < sizeX; pixelX++) {
 			// scale x pixel into mandelbrot coordinate system
-			const float cx = (pixelX / (float)sizeX) * (right - left) + left;
+			const float cx = (static_cast<float>(pixelX) / static_cast<float>(sizeX)) * (right - left) + left;
 			float x = 0;
 			float y = 0;
 			int numIterations = 0;
 
 			// Check if the distance from the origin becomes
 			// greater than 2 within the max number of iterations.
-			while((x * x + y * y <= 2 * 2) && (numIterations < MAX_ITER)) {
+			while((x * x + y * y <= 2 * 2) && (numIterations < max_iterations)) {
 				float x_tmp = x * x - y * y + cx;
 				y = 2 * x * y + cy;
 				x = x_tmp;
@@ -45,7 +49,7 @@ void calcMandelbrot(uint8_t* image, int sizeX, int sizeY) {
 			}
 
 			// Normalize iteration and write it to pixel position
-			double value = fabs((numIterations / (float)MAX_ITER)) * 200;
+			double value = std::fabs((static_cast<float>(numIterations) / static_cast<float>(max_iterations))) * 200;
 
 			double red = 0;
 			double green = 0;
@@ -54,36 +58,32 @@ void calcMandelbrot(uint8_t* image, int sizeX, int sizeY) {
 			HSVToRGB(value, 1.0, 1.0, &red, &green, &blue);
 
 			int channel = 0;
-			image[IND(pixelY, pixelX, sizeY, sizeX, channel++)] = (uint8_t)(red * UINT8_MAX);
-			image[IND(pixelY, pixelX, sizeY, sizeX, channel++)] = (uint8_t)(green * UINT8_MAX);
-			image[IND(pixelY, pixelX, sizeY, sizeX, channel++)] = (uint8_t)(blue * UINT8_MAX);
+			image[ind(pixelY, pixelX, sizeY, sizeX, channel++)] = (uint8_t)(red * UINT8_MAX);
+			image[ind(pixelY, pixelX, sizeY, sizeX, channel++)] = (uint8_t)(green * UINT8_MAX);
+			image[ind(pixelY, pixelX, sizeY, sizeX, channel++)] = (uint8_t)(blue * UINT8_MAX);
 		}
 	}
-	gettimeofday(&end, NULL);
-	double timeElapsed = (end.tv_sec + end.tv_usec * 1e-6) - (start.tv_sec + start.tv_usec * 1e-6);
-	printf("Mandelbrot set calculation for %dx%d took: %f seconds.\n", sizeX, sizeY, timeElapsed);
+	std::cout << "Mandelbrot set calculation for " << sizeX << "x" << sizeY << " took: " << timer.elapsed() << " seconds." << std::endl;
 }
 
 int main(int argc, char** argv) {
-
-	int sizeX = DEFAULT_SIZE_X;
-	int sizeY = DEFAULT_SIZE_Y;
+	int sizeX = default_size_x;
+	int sizeY = default_size_y;
 
 	if(argc == 3) {
-		sizeX = atoi(argv[1]);
-		sizeY = atoi(argv[2]);
+		sizeX = std::atoi(argv[1]);
+		sizeY = std::atoi(argv[2]);
 	} else {
-		printf("No arguments given, using default size\n");
+		std::cout << "No arguments given, using default size" << std::endl;
 	}
 
-	uint8_t* image = static_cast<uint8_t*>(malloc(NUM_CHANNELS * sizeX * sizeY * sizeof(uint8_t)));
+	std::vector<uint8_t> image = std::vector<uint8_t>(num_channels * sizeX * sizeY);
 
 	calcMandelbrot(image, sizeX, sizeY);
 
 	const int stride_bytes = 0;
-	stbi_write_png("mandelbrot_seq.png", sizeX, sizeY, NUM_CHANNELS, image, stride_bytes);
+	stbi_write_png("mandelbrot_seq.png", sizeX, sizeY, num_channels, image.data(), stride_bytes);
 
-	free(image);
 
 	return EXIT_SUCCESS;
 }
