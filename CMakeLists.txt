@@ -22,5 +22,7 @@ add_compile_options(-Wall -Wextra -pedantic)
 # add_subdirectory(hw03/parallel)
 # add_subdirectory(hw05/1D_heatstencil)
 # add_subdirectory(hw05/2D_heatstencil)
-add_subdirectory(hw07)
+#add_subdirectory(hw07)
+#add_subdirectory(hw06)
 
+add_subdirectory(hw08)
