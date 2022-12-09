@@ -1,5 +1,5 @@
 if (APPLE)
-    add_compile_options(-O3 -ffast-math)
+    add_compile_options(-O3 -ffast-math -g3 -march=armv8-a+fp+simd+crypto+crc)
 else ()
     #add_compile_options(-g3 -g -msse4.1 -march=native -mtune=native)
     add_compile_options(-O3 -ffast-math -g3 -msse4.1 -march=native -mtune=native)
