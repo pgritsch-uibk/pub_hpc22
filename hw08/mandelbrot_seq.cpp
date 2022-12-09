@@ -1,10 +1,9 @@
-#include <iostream>
-#include <cmath>
-#include <cstdlib>
-#include <vector>
-#include <cstdint>
-
+#include "hsv2rgbSSE.h"
+#include <array>
 #include <boost/mpi.hpp>
+#include <cstdint>
+#include <cstdlib>
+#include <iostream>
 
 // Include that allows to print result as an image
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -22,47 +21,71 @@ constexpr int ind(int y, int x, int size_y, int size_x, int channel) {
 	return y * size_x * num_channels + x * num_channels + channel;
 }
 
-void HSVToRGB(double H, double S, double V, double* R, double* G, double* B);
-
-void calcMandelbrot(std::vector<uint8_t> image, int sizeX, int sizeY) {
+void calcMandelbrot(std::vector<uint8_t>& image, int sizeX, int sizeY) {
 	boost::mpi::timer timer;
 	const float left = -2.5, right = 1;
 	const float bottom = -1, top = 1;
 
+	const __m128 _inverse_sizeX = _mm_set_ps1(1.f / static_cast<float>(sizeX));
+	const __m128 _inverse_max_iter = _mm_set_ps1(1.f / max_iterations);
+	const __m128 _left = _mm_set_ps1(static_cast<float>(left));
+	const __m128 _right_minus_left = _mm_set_ps1(static_cast<float>(right - left));
+	const __m128 _1 = _mm_set_ps1(1.f);
+	const __m128 _2 = _mm_set_ps1(2.f);
+	const __m128 _4 = _mm_set_ps1(4.f);
+	const __m128 _200 = _mm_set_ps1(200.f);
+
 	for(int pixelY = 0; pixelY < sizeY; pixelY++) {
 		// scale y pixel into mandelbrot coordinate system
-		const float cy = (static_cast<float>(pixelY) / static_cast<float>(sizeY)) * (top - bottom) + bottom;
-		for(int pixelX = 0; pixelX < sizeX; pixelX++) {
-			// scale x pixel into mandelbrot coordinate system
-			const float cx = (static_cast<float>(pixelX) / static_cast<float>(sizeX)) * (right - left) + left;
-			float x = 0;
-			float y = 0;
+		const __m128 _cy = _mm_set_ps1(
+		    (static_cast<float>(pixelY) / static_cast<float>(sizeY)) * (top - bottom) + bottom);
+		for(int pixelX = 0; pixelX < sizeX; pixelX += 4) {
+			// scale _x pixel into mandelbrot coordinate system
+			const auto pixelXFloat = static_cast<float>(pixelX);
+			__m128 _cx =
+			    _mm_set_ps(pixelXFloat + 3.f, pixelXFloat + 2.f, pixelXFloat + 1.f, pixelXFloat);
+			_cx = _mm_add_ps(_mm_mul_ps(_mm_mul_ps(_cx, _inverse_sizeX), _right_minus_left), _left);
+			__m128 _x = _mm_set_ps1(0.f);
+			__m128 _y = _mm_set_ps1(0.f);
+
 			int numIterations = 0;
+
+			__m128 _numIterations = _mm_set_ps1(0.f);
 
 			// Check if the distance from the origin becomes
 			// greater than 2 within the max number of iterations.
-			while((x * x + y * y <= 2 * 2) && (numIterations < max_iterations)) {
-				float x_tmp = x * x - y * y + cx;
-				y = 2 * x * y + cy;
-				x = x_tmp;
-				numIterations += 1;
+			while(numIterations++ < max_iterations) {
+				const __m128 _x_sqrd = _mm_mul_ps(_x, _x);
+				const __m128 _y_sqrd = _mm_mul_ps(_y, _y);
+				const __m128 _x_dot_y = _mm_mul_ps(_x, _y);
+
+				__m128 mask = _mm_cmple_ps(_mm_add_ps(_x_sqrd, _y_sqrd), _4);
+
+				if(_mm_movemask_ps(mask) == 0) {
+					break;
+				}
+
+				_numIterations = _mm_add_ps(_mm_and_ps(mask, _1), _numIterations);
+
+				_x = _mm_add_ps(_mm_sub_ps(_x_sqrd, _y_sqrd), _cx);
+				_y = _mm_add_ps(_mm_mul_ps(_2, _x_dot_y), _cy);
 			}
 
 			// Normalize iteration and write it to pixel position
-			double value = std::fabs((static_cast<float>(numIterations) / static_cast<float>(max_iterations))) * 200;
+			__m128 _value = _mm_mul_ps(_mm_mul_ps(_numIterations, _inverse_max_iter), _200);
 
-			double red = 0;
-			double green = 0;
-			double blue = 0;
+			std::array<__m128, 4> rgbs = hsvToRgb(_value);
 
-			HSVToRGB(value, 1.0, 1.0, &red, &green, &blue);
-
-			int channel = 0;
-			image[ind(pixelY, pixelX, sizeY, sizeX, channel++)] = (uint8_t)(red * UINT8_MAX);
-			image[ind(pixelY, pixelX, sizeY, sizeX, channel++)] = (uint8_t)(green * UINT8_MAX);
-			image[ind(pixelY, pixelX, sizeY, sizeX, channel++)] = (uint8_t)(blue * UINT8_MAX);
+			for(int i = 0; i < 4; i++) {
+				std::array<float, 4> rgb0;
+				_mm_store_ps(rgb0.begin(), rgbs[i]);
+				image[ind(pixelY, (pixelX + i), sizeY, sizeX, 0)] = (uint8_t)(rgb0[0]);
+				image[ind(pixelY, (pixelX + i), sizeY, sizeX, 1)] = (uint8_t)(rgb0[1]);
+				image[ind(pixelY, (pixelX + i), sizeY, sizeX, 2)] = (uint8_t)(rgb0[2]);
+			}
 		}
 	}
+
 	std::cout << "Mandelbrot set calculation for " << sizeX << "x" << sizeY << " took: " << timer.elapsed() << " seconds." << std::endl;
 }
 
@@ -77,6 +100,11 @@ int main(int argc, char** argv) {
 		std::cout << "No arguments given, using default size" << std::endl;
 	}
 
+	if(sizeX % 4 != 0) {
+		std::cerr << "Vectorization requires X parameter to be multiple of 4" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
 	std::vector<uint8_t> image = std::vector<uint8_t>(num_channels * sizeX * sizeY);
 
 	calcMandelbrot(image, sizeX, sizeY);
@@ -84,68 +112,5 @@ int main(int argc, char** argv) {
 	const int stride_bytes = 0;
 	stbi_write_png("mandelbrot_seq.png", sizeX, sizeY, num_channels, image.data(), stride_bytes);
 
-
 	return EXIT_SUCCESS;
-}
-
-void HSVToRGB(double H, double S, double V, double* R, double* G, double* B) {
-	if (H >= 1.00) {
-		V = 0.0;
-		H = 0.0;
-	}
-
-	double step = 1.0/6.0;
-	double vh = H/step;
-
-	int i = (int)floor(vh);
-
-	double f = vh - i;
-	double p = V*(1.0 - S);
-	double q = V*(1.0 - (S*f));
-	double t = V*(1.0 - (S*(1.0 - f)));
-
-	switch (i) {
-		case 0:
-		{
-			*R = V;
-			*G = t;
-			*B = p;
-			break;
-		}
-		case 1:
-		{
-			*R = q;
-			*G = V;
-			*B = p;
-			break;
-		}
-		case 2:
-		{
-			*R = p;
-			*G = V;
-			*B = t;
-			break;
-		}
-		case 3:
-		{
-			*R = p;
-			*G = q;
-			*B = V;
-			break;
-		}
-		case 4:
-		{
-			*R = t;
-			*G = p;
-			*B = V;
-			break;
-		}
-		case 5:
-		{
-			*R = V;
-			*G = p;
-			*B = q;
-			break;
-		}
-	}
 }
