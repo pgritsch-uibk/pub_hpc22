@@ -3,8 +3,14 @@
 
 #include <array>
 #include <cstdint>
+
+#if defined(__aarch64__)
+#include "sse2neon/sse2neon.h"
+#else
 #include <emmintrin.h>
 #include <smmintrin.h>
+//#include "sse2neon/sse2neon.h"
+#endif
 
 std::array<__m128, 4> hsvToRgb(__m128 h) {
 	// numbers needed for "switch" statement
