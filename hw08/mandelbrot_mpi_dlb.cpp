@@ -16,9 +16,9 @@
 
 constexpr int rootRank = 0;
 
-constexpr int default_size_x = 1280;
-constexpr int default_size_y = 720;
-constexpr int default_lb_chunk_size = 4;
+constexpr int default_size_x = 200;
+constexpr int default_size_y = 800;
+constexpr int default_lb_chunk_size = 6;
 
 // RGB image will hold 3 color numChannels
 constexpr int num_channels = 3;
@@ -161,7 +161,7 @@ int main(int argc, char** argv) {
 		while(true) {
 			int nextY = lb.getNext();
 
-			if(nextY + lb.chunkSize > sizeY) {
+			if(nextY >= sizeY) {
 				break;
 			}
 
