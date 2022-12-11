@@ -153,8 +153,10 @@ int main(int argc, char** argv) {
 
 		int yProcessed = 0;
 		int nextY = 0;
-		while((nextY = lb.getNextY()) < sizeY) {
+		while((nextY = lb.getNextTwoY()) < sizeY - 1) {
 			localResult.setY(nextY, yProcessed);
+			calcMandelbrot(localResult, sizeX, sizeY, nextY, yProcessed++);
+			localResult.setY(nextY + 1, yProcessed);
 			calcMandelbrot(localResult, sizeX, sizeY, nextY, yProcessed++);
 		}
 
@@ -206,6 +208,7 @@ int main(int argc, char** argv) {
 	}
 
 	MPI_Type_free(&sendLines);
+	MPI_Type_free(&receiveLines);
 	MPI_Finalize();
 	return EXIT_SUCCESS;
 }

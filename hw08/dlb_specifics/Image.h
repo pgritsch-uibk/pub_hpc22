@@ -14,7 +14,7 @@ struct Image {
 
 	Image(int _sizeY, int _sizeX, int _numChannels)
 	    : sizeY(_sizeY), sizeX(_sizeX), numChannels(_numChannels),
-	      imageLine(sizeX * sizeY * numChannels + 1, 0) {}
+	      imageLine(sizeY * (sizeX * numChannels + 1), 0) {}
 
 	inline void setY(int y, int yInArray) { operator()(yInArray, 0, -1) = static_cast<float>(y); }
 
