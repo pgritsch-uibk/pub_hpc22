@@ -40,7 +40,7 @@ void calcMandelbrot(std::vector<uint8_t>& image, int sizeX, int sizeY) {
 	const __m128 _4 = _mm_set_ps1(4.f);
 	const __m128 _200 = _mm_set_ps1(200.f);
 
-	for(int pixelY = myRank; pixelY < sizeY; pixelY += numProcs) {
+	for(int pixelY = myRank; pixelY < sizeY / 2; pixelY += numProcs) {
 		// scale y pixel into mandelbrot coordinate system
 		const __m128 _cy = _mm_set_ps1(
 		    (static_cast<float>(pixelY) / static_cast<float>(sizeY)) * (top - bottom) + bottom);
@@ -90,6 +90,20 @@ void calcMandelbrot(std::vector<uint8_t>& image, int sizeX, int sizeY) {
 			}
 		}
 	}
+
+	for(int pixelY = myRank; pixelY < sizeY / 2; pixelY += numProcs) {
+		for(int pixelX = 0; pixelX < sizeX; pixelX++) {
+			int pixelYMirror = sizeY - pixelY - 1;
+			int pixelXMirror = sizeX - pixelX - 1;
+
+			image[ind(pixelYMirror, pixelXMirror, sizeY, sizeX, 0)] =
+			    image[ind(pixelY, pixelX, sizeY, sizeX, 0)];
+			image[ind(pixelYMirror, pixelXMirror, sizeY, sizeX, 1)] =
+			    image[ind(pixelY, pixelX, sizeY, sizeX, 1)];
+			image[ind(pixelYMirror, pixelXMirror, sizeY, sizeX, 2)] =
+			    image[ind(pixelY, pixelX, sizeY, sizeX, 2)];
+		}
+	}
 }
 
 int main(int argc, char** argv) {
@@ -114,8 +128,8 @@ int main(int argc, char** argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	if(sizeY % numProcs != 0) {
-		std::cerr << "Size Y must be multiple of processor number" << std::endl;
+	if(sizeY % numProcs != 0 || sizeY % 2 != 0) {
+		std::cerr << "Size Y must be multiple of processor number and even!" << std::endl;
 		MPI_Finalize();
 		exit(EXIT_FAILURE);
 	}
