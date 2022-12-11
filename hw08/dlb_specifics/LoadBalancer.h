@@ -8,12 +8,12 @@ class LoadBalancer {
 	MPI_Win sharedNextYWindow{};
 	int sharedNextY{};
 	int myRank{};
-	int onRank{};
-	const int two = 2;
+	const int onRank{};
 
   public:
-	LoadBalancer(int onRank) {
-		this->onRank = onRank;
+	const int chunkSize{};
+
+	LoadBalancer(int _onRank, int _chunkSize) : onRank(onRank), chunkSize(_chunkSize) {
 		MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
 		if(myRank == onRank) {
 			MPI_Win_create(&sharedNextY, sizeof(int), sizeof(int), MPI_INFO_NULL, MPI_COMM_WORLD,
@@ -25,11 +25,11 @@ class LoadBalancer {
 
 	~LoadBalancer() { MPI_Win_free(&sharedNextYWindow); }
 
-	int getNextTwoY() {
+	int getNext() {
 		int nextY;
 
 		MPI_Win_lock(MPI_LOCK_SHARED, onRank, 0, sharedNextYWindow);
-		MPI_Fetch_and_op(&two, &nextY, MPI_INT, onRank, 0, MPI_SUM, sharedNextYWindow);
+		MPI_Fetch_and_op(&chunkSize, &nextY, MPI_INT, onRank, 0, MPI_SUM, sharedNextYWindow);
 		MPI_Win_unlock(onRank, sharedNextYWindow);
 
 		return nextY;
