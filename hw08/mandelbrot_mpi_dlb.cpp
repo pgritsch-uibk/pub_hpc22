@@ -147,17 +147,24 @@ int main(int argc, char** argv) {
 	MPI_Type_commit(&receiveLines);
 
 	{
-		LoadBalancer lb(rootRank);
+		LoadBalancer lb(rootRank, 4);
 
 		boost::mpi::timer timer;
 
 		int yProcessed = 0;
-		int nextY = 0;
-		while((nextY = lb.getNextTwoY()) < sizeY - 1) {
-			localResult.setY(nextY, yProcessed);
-			calcMandelbrot(localResult, sizeX, sizeY, nextY, yProcessed++);
-			localResult.setY(nextY + 1, yProcessed);
-			calcMandelbrot(localResult, sizeX, sizeY, nextY, yProcessed++);
+
+		while(true) {
+			int nextY = lb.getNext();
+
+			if(nextY + lb.chunkSize > sizeY) {
+				break;
+			}
+
+			int remainingChunks = lb.chunkSize < sizeY - nextY ? lb.chunkSize : sizeY - nextY;
+			while(remainingChunks--) {
+				localResult.setY(nextY, yProcessed);
+				calcMandelbrot(localResult, sizeX, sizeY, nextY++, yProcessed++);
+			}
 		}
 
 		std::vector<int> counts(numProcs, 0);
