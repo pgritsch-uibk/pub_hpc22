@@ -18,6 +18,7 @@ constexpr int rootRank = 0;
 
 constexpr int default_size_x = 1280;
 constexpr int default_size_y = 720;
+constexpr int default_lb_chunk_size = 4;
 
 // RGB image will hold 3 color numChannels
 constexpr int num_channels = 3;
@@ -111,17 +112,21 @@ void calcMandelbrot(Image& imageLine, int sizeX, int sizeY, int yStart, int yInA
 int main(int argc, char** argv) {
 	int sizeX = default_size_x;
 	int sizeY = default_size_y;
-
+	int lbChunkSize = default_lb_chunk_size;
 	int numProcs, myRank;
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
 	MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
 
-	if(argc == 3) {
+	if(argc >= 3) {
 		sizeX = std::atoi(argv[1]);
 		sizeY = std::atoi(argv[2]);
 	} else if(myRank == 0) {
 		std::cout << "No arguments given, using default size" << std::endl;
+	}
+
+	if(argc == 4) {
+		lbChunkSize = std::atoi(argv[3]);
 	}
 
 	if(sizeX % 4 != 0) {
@@ -147,7 +152,7 @@ int main(int argc, char** argv) {
 	MPI_Type_commit(&receiveLines);
 
 	{
-		LoadBalancer lb(rootRank, 4);
+		LoadBalancer lb(rootRank, lbChunkSize);
 
 		boost::mpi::timer timer;
 
