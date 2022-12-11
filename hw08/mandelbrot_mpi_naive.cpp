@@ -90,20 +90,6 @@ void calcMandelbrot(std::vector<uint8_t>& image, int sizeX, int sizeY) {
 			}
 		}
 	}
-
-	for(int pixelY = myRank; pixelY < sizeY / 2; pixelY += numProcs) {
-		for(int pixelX = 0; pixelX < sizeX; pixelX++) {
-			int pixelYMirror = sizeY - pixelY - 1;
-			int pixelXMirror = sizeX - pixelX - 1;
-
-			image[ind(pixelYMirror, pixelXMirror, sizeY, sizeX, 0)] =
-			    image[ind(pixelY, pixelX, sizeY, sizeX, 0)];
-			image[ind(pixelYMirror, pixelXMirror, sizeY, sizeX, 1)] =
-			    image[ind(pixelY, pixelX, sizeY, sizeX, 1)];
-			image[ind(pixelYMirror, pixelXMirror, sizeY, sizeX, 2)] =
-			    image[ind(pixelY, pixelX, sizeY, sizeX, 2)];
-		}
-	}
 }
 
 int main(int argc, char** argv) {
@@ -134,7 +120,7 @@ int main(int argc, char** argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	int yPerProc = sizeY / numProcs;
+	int yPerProc = sizeY / numProcs / 2;
 	int blockCount = yPerProc;
 	int blockSize = num_channels * sizeX;
 	int stride = blockSize * numProcs;
@@ -165,6 +151,19 @@ int main(int argc, char** argv) {
 
 	MPI_Gatherv(startOfData, 1, sendLines, result.data(), counts.data(), displacements.data(),
 	            receiveOneLineBlock, 0, MPI_COMM_WORLD);
+
+	for(int pixelY = 0; pixelY < sizeY / 2; pixelY++) {
+		for(int pixelX = 0; pixelX < sizeX; pixelX++) {
+			int pixelYMirror = sizeY - pixelY - 1;
+
+			result[ind(pixelYMirror, pixelX, sizeY, sizeX, 0)] =
+			    result[ind(pixelY, pixelX, sizeY, sizeX, 0)];
+			result[ind(pixelYMirror, pixelX, sizeY, sizeX, 1)] =
+			    result[ind(pixelY, pixelX, sizeY, sizeX, 1)];
+			result[ind(pixelYMirror, pixelX, sizeY, sizeX, 2)] =
+			    result[ind(pixelY, pixelX, sizeY, sizeX, 2)];
+		}
+	}
 
 	if(myRank == 0) {
 		std::cout << "Mandelbrot set calculation for " << sizeX << "x" << sizeY
