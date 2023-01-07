@@ -5,7 +5,10 @@
 #include <cstdlib>
 #include <iostream>
 #include <mpi.h>
+#include <thread>
 #include <vector>
+
+#define YIELD
 
 // Include that allows to print result as an image
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -149,8 +152,23 @@ int main(int argc, char** argv) {
 
 	calcMandelbrot(image, sizeX, sizeY);
 
-	MPI_Gatherv(startOfData, 1, sendLines, result.data(), counts.data(), displacements.data(),
-	            receiveOneLineBlock, 0, MPI_COMM_WORLD);
+	MPI_Request request;
+	MPI_Igatherv(startOfData, 1, sendLines, result.data(), counts.data(), displacements.data(),
+	             receiveOneLineBlock, 0, MPI_COMM_WORLD, &request);
+
+#ifdef YIELD
+	int complete = 0;
+	while(true) {
+		MPI_Test(&request, &complete, MPI_STATUS_IGNORE);
+		if(!complete) {
+			std::this_thread::yield();
+		} else {
+			break;
+		}
+	}
+#else
+	MPI_Wait(&request, MPI_STATUS_IGNORE);
+#endif
 
 	if(myRank == 0) {
 		std::cout << "Mandelbrot set calculation for " << sizeX << "x" << sizeY
@@ -158,9 +176,9 @@ int main(int argc, char** argv) {
 
 		const int stride_bytes = 0;
 
-		stbi_write_png("mandelbrot_par.png", sizeX, sizeY, num_channels, result.data(),
-		               stride_bytes);
-
+		/*	stbi_write_png("mandelbrot_par.png", sizeX, sizeY, num_channels, result.data(),
+		                   stride_bytes);
+	*/
 		MPI_Type_free(&receiveOneLineBlock);
 	}
 
