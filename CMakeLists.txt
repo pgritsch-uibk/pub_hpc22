@@ -25,4 +25,4 @@ add_compile_options(-Wall -Wextra -pedantic)
 #add_subdirectory(hw07)
 #add_subdirectory(hw06)
 
-add_subdirectory(hw08)
+add_subdirectory(hw10)
