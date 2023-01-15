@@ -14,6 +14,7 @@ add_executable(multiple_files_individual 1_mf_ip.cpp)
 add_executable(single_file_individual 1_sf_ip.cpp)
 add_executable(single_file_shared_nonc 1_sf_sp_nc.cpp)
 add_executable(single_file_shared_c 1_sf_sp_c.cpp)
+add_executable(rank_0_communicator 2_rank_0_f.cpp)
 #add_executable(8-mandel-par mandelbrot_par.c stb_image_write.h)
 
 
