@@ -47,6 +47,7 @@ int main(int argc, char** argv) {
 	readContent[readContent.size() - 1] = 0;
 	double start = MPI_Wtime();
 	MPI_File_write(file, writeContent.data(), megaByteSize, MPI_CHAR, MPI_STATUS_IGNORE);
+	MPI_File_sync(file);
 
 	for(int i = 0; i < readWriteOpNum; i++) {
 		MPI_File_seek(file, 0, MPI_SEEK_SET);
@@ -61,6 +62,7 @@ int main(int argc, char** argv) {
 
 		MPI_File_seek(file, 0, MPI_SEEK_SET);
 		MPI_File_write(file, writeContent.data(), megaByteSize, MPI_CHAR, MPI_STATUS_IGNORE);
+		MPI_File_sync(file);
 	}
 
 	MPI_Barrier(MPI_COMM_WORLD);

@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
 
 	std::string filename = "temp_sf_nc";
 	MPI_File file;
-	MPI_Offset offset = myRank * megaByteSize;
+	MPI_Offset offset = (long)myRank * megaByteSize;
 
 	MPI_File_open(MPI_COMM_SELF, filename.c_str(),
 	              MPI_MODE_RDWR | MPI_MODE_CREATE | MPI_MODE_DELETE_ON_CLOSE, MPI_INFO_NULL, &file);
@@ -55,6 +55,7 @@ int main(int argc, char** argv) {
 
 	MPI_File_seek_shared(file, offset, MPI_SEEK_SET);
 	MPI_File_write_shared(file, writeContent.data(), 1, fileType, MPI_STATUS_IGNORE);
+	MPI_File_sync(file);
 
 	for(int i = 0; i < readWriteOpNum; i++) {
 		MPI_File_seek_shared(file, offset, MPI_SEEK_SET);
@@ -70,6 +71,7 @@ int main(int argc, char** argv) {
 
 		MPI_File_seek_shared(file, offset, MPI_SEEK_SET);
 		MPI_File_write_shared(file, writeContent.data(), 1, fileType, MPI_STATUS_IGNORE);
+		MPI_File_sync(file);
 	}
 
 	MPI_Barrier(MPI_COMM_WORLD);

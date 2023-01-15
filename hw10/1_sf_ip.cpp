@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 	MPI_File file;
 	MPI_File_open(MPI_COMM_SELF, filename.c_str(),
 	              MPI_MODE_RDWR | MPI_MODE_CREATE | MPI_MODE_DELETE_ON_CLOSE, MPI_INFO_NULL, &file);
-	MPI_Offset offset = myRank * megaByteSize;
+	MPI_Offset offset = (long)myRank * megaByteSize;
 
 	std::vector<char> writeContent;
 	writeContent.resize(megaByteSize + 1, (static_cast<char>(myRank) + 'A'));
@@ -53,6 +53,7 @@ int main(int argc, char** argv) {
 
 	double start = MPI_Wtime();
 	MPI_File_write_at(file, offset, writeContent.data(), 1, fileType, MPI_STATUS_IGNORE);
+	MPI_File_sync(file);
 
 	for(int i = 0; i < readWriteOpNum; i++) {
 		MPI_File_seek(file, offset, MPI_SEEK_SET);
@@ -68,6 +69,7 @@ int main(int argc, char** argv) {
 
 		MPI_File_seek(file, offset, MPI_SEEK_SET);
 		MPI_File_write_at(file, offset, writeContent.data(), 1, fileType, MPI_STATUS_IGNORE);
+		MPI_File_sync(file);
 	}
 
 	MPI_Barrier(MPI_COMM_WORLD);
