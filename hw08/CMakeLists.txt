@@ -12,6 +12,8 @@ include_directories(../../../boost/include)
 
 add_executable(main_seq mandelbrot_seq.cpp stb_image_write.h hsv2rgbSSE.h)
 add_executable(main_par mandelbrot_mpi_naive.cpp stb_image_write.h hsv2rgbSSE.h)
+add_executable(main_par_nb mandelbrot_mpi_nonblocking.cpp stb_image_write.h hsv2rgbSSE.h)
+add_executable(main_par_symetry mandelbrot_mpi_naive_symetry.cpp stb_image_write.h hsv2rgbSSE.h)
 add_executable(main_par_dlb mandelbrot_mpi_dlb.cpp stb_image_write.h hsv2rgbSSE.h dlb_specifics/Image.h dlb_specifics/LoadBalancer.h)
 #add_executable(8-mandel-par mandelbrot_par.c stb_image_write.h)
 

@@ -1,0 +1,210 @@
+Mandelbrot set calculation for 1920x1080 took: 3.60543 seconds.
+Mandelbrot set calculation for 1920x1080 took: 3.59752 seconds.
+Mandelbrot set calculation for 1920x1080 took: 3.59623 seconds.
+Mandelbrot set calculation for 1920x1080 took: 3.59428 seconds.
+Mandelbrot set calculation for 1920x1080 took: 3.60125 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+             73,61 Joules power/energy-pkg/                                                    ( +-  3,41% )
+             60,41 Joules power/energy-cores/                                                  ( +-  4,22% )
+              3,43 Joules power/energy-ram/                                                    ( +-  1,44% )
+
+            3,7859 +- 0,0289 seconds time elapsed  ( +-  0,76% )
+
+Mandelbrot set calculation for 3840x2176 took: 14.3793 seconds.
+Mandelbrot set calculation for 3840x2176 took: 14.3739 seconds.
+Mandelbrot set calculation for 3840x2176 took: 14.3714 seconds.
+Mandelbrot set calculation for 3840x2176 took: 14.3714 seconds.
+Mandelbrot set calculation for 3840x2176 took: 14.3732 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+            291,33 Joules power/energy-pkg/                                                    ( +-  1,19% )
+            240,31 Joules power/energy-cores/                                                  ( +-  1,44% )
+             13,17 Joules power/energy-ram/                                                    ( +-  0,35% )
+
+           14,5755 +- 0,0126 seconds time elapsed  ( +-  0,09% )
+
+Mandelbrot set calculation for 7680x4352 took: 57.2527 seconds.
+Mandelbrot set calculation for 7680x4352 took: 57.2517 seconds.
+Mandelbrot set calculation for 7680x4352 took: 57.2554 seconds.
+Mandelbrot set calculation for 7680x4352 took: 57.2587 seconds.
+Mandelbrot set calculation for 7680x4352 took: 57.2664 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+          1.181,07 Joules power/energy-pkg/                                                    ( +-  0,38% )
+            979,85 Joules power/energy-cores/                                                  ( +-  0,46% )
+             52,23 Joules power/energy-ram/                                                    ( +-  0,13% )
+
+           57,5126 +- 0,0105 seconds time elapsed  ( +-  0,02% )
+
+Mandelbrot set calculation for 1920x1080 took: 1.81024 seconds.
+Mandelbrot set calculation for 1920x1080 took: 1.80533 seconds.
+Mandelbrot set calculation for 1920x1080 took: 1.80872 seconds.
+Mandelbrot set calculation for 1920x1080 took: 1.80875 seconds.
+Mandelbrot set calculation for 1920x1080 took: 1.81121 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+             54,91 Joules power/energy-pkg/                                                    ( +-  0,16% )
+             47,99 Joules power/energy-cores/                                                  ( +-  0,18% )
+              1,81 Joules power/energy-ram/                                                    ( +-  0,39% )
+
+           1,96855 +- 0,00729 seconds time elapsed  ( +-  0,37% )
+
+Mandelbrot set calculation for 3840x2176 took: 7.22285 seconds.
+Mandelbrot set calculation for 3840x2176 took: 7.21357 seconds.
+Mandelbrot set calculation for 3840x2176 took: 7.23111 seconds.
+Mandelbrot set calculation for 3840x2176 took: 7.23064 seconds.
+Mandelbrot set calculation for 3840x2176 took: 7.22119 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+            216,18 Joules power/energy-pkg/                                                    ( +-  0,05% )
+            190,33 Joules power/energy-cores/                                                  ( +-  0,05% )
+              6,71 Joules power/energy-ram/                                                    ( +-  0,09% )
+
+           7,40504 +- 0,00526 seconds time elapsed  ( +-  0,07% )
+
+Mandelbrot set calculation for 7680x4352 took: 28.7608 seconds.
+Mandelbrot set calculation for 7680x4352 took: 28.7596 seconds.
+Mandelbrot set calculation for 7680x4352 took: 28.7583 seconds.
+Mandelbrot set calculation for 7680x4352 took: 28.743 seconds.
+Mandelbrot set calculation for 7680x4352 took: 28.7484 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+            862,00 Joules power/energy-pkg/                                                    ( +-  0,15% )
+            760,59 Joules power/energy-cores/                                                  ( +-  0,16% )
+             26,27 Joules power/energy-ram/                                                    ( +-  0,04% )
+
+          28,99629 +- 0,00446 seconds time elapsed  ( +-  0,02% )
+
+Mandelbrot set calculation for 1920x1080 took: 0.904669 seconds.
+Mandelbrot set calculation for 1920x1080 took: 0.909301 seconds.
+Mandelbrot set calculation for 1920x1080 took: 0.926652 seconds.
+Mandelbrot set calculation for 1920x1080 took: 0.933714 seconds.
+Mandelbrot set calculation for 1920x1080 took: 0.94901 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+             47,48 Joules power/energy-pkg/                                                    ( +-  0,60% )
+             43,21 Joules power/energy-cores/                                                  ( +-  0,87% )
+              1,14 Joules power/energy-ram/                                                    ( +-  2,45% )
+
+            1,1784 +- 0,0286 seconds time elapsed  ( +-  2,43% )
+
+Mandelbrot set calculation for 3840x2176 took: 3.60797 seconds.
+Mandelbrot set calculation for 3840x2176 took: 3.60749 seconds.
+Mandelbrot set calculation for 3840x2176 took: 3.61657 seconds.
+Mandelbrot set calculation for 3840x2176 took: 3.62598 seconds.
+Mandelbrot set calculation for 3840x2176 took: 3.65387 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+            191,94 Joules power/energy-pkg/                                                    ( +-  0,32% )
+            178,15 Joules power/energy-cores/                                                  ( +-  0,34% )
+              3,74 Joules power/energy-ram/                                                    ( +-  0,76% )
+
+            3,9113 +- 0,0140 seconds time elapsed  ( +-  0,36% )
+
+Mandelbrot set calculation for 7680x4352 took: 14.3653 seconds.
+Mandelbrot set calculation for 7680x4352 took: 14.3831 seconds.
+Mandelbrot set calculation for 7680x4352 took: 14.3819 seconds.
+Mandelbrot set calculation for 7680x4352 took: 14.3419 seconds.
+Mandelbrot set calculation for 7680x4352 took: 14.3818 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+            751,44 Joules power/energy-pkg/                                                    ( +-  0,05% )
+            699,86 Joules power/energy-cores/                                                  ( +-  0,05% )
+             13,50 Joules power/energy-ram/                                                    ( +-  0,20% )
+
+           14,7504 +- 0,0240 seconds time elapsed  ( +-  0,16% )
+
+Mandelbrot set calculation for 1920x1080 took: 0.485625 seconds.
+Mandelbrot set calculation for 1920x1080 took: 0.483409 seconds.
+Mandelbrot set calculation for 1920x1080 took: 0.481988 seconds.
+Mandelbrot set calculation for 1920x1080 took: 0.482849 seconds.
+Mandelbrot set calculation for 1920x1080 took: 0.487978 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+             34,43 Joules power/energy-pkg/                                                    ( +-  0,71% )
+             32,02 Joules power/energy-cores/                                                  ( +-  1,02% )
+              0,70 Joules power/energy-ram/                                                    ( +-  3,71% )
+
+            0,7025 +- 0,0282 seconds time elapsed  ( +-  4,01% )
+
+Mandelbrot set calculation for 3840x2176 took: 1.9372 seconds.
+Mandelbrot set calculation for 3840x2176 took: 1.93354 seconds.
+Mandelbrot set calculation for 3840x2176 took: 1.93181 seconds.
+Mandelbrot set calculation for 3840x2176 took: 2.20363 seconds.
+Mandelbrot set calculation for 3840x2176 took: 2.12091 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+            139,08 Joules power/energy-pkg/                                                    ( +-  3,99% )
+            130,68 Joules power/energy-cores/                                                  ( +-  4,04% )
+              2,43 Joules power/energy-ram/                                                    ( +-  4,26% )
+
+            2,3197 +- 0,0775 seconds time elapsed  ( +-  3,34% )
+
+Mandelbrot set calculation for 7680x4352 took: 7.81065 seconds.
+Mandelbrot set calculation for 7680x4352 took: 7.81094 seconds.
+Mandelbrot set calculation for 7680x4352 took: 7.74999 seconds.
+Mandelbrot set calculation for 7680x4352 took: 7.70743 seconds.
+Mandelbrot set calculation for 7680x4352 took: 7.71282 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+            475,70 Joules power/energy-pkg/                                                    ( +-  0,46% )
+            447,20 Joules power/energy-cores/                                                  ( +-  0,48% )
+              7,75 Joules power/energy-ram/                                                    ( +-  0,53% )
+
+            8,1674 +- 0,0320 seconds time elapsed  ( +-  0,39% )
+
+Mandelbrot set calculation for 1920x1088 took: 0.59037 seconds.
+Mandelbrot set calculation for 1920x1088 took: 0.631995 seconds.
+Mandelbrot set calculation for 1920x1088 took: 0.559597 seconds.
+Mandelbrot set calculation for 1920x1088 took: 0.521429 seconds.
+Mandelbrot set calculation for 1920x1088 took: 0.570759 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+             45,17 Joules power/energy-pkg/                                                    ( +-  3,67% )
+             41,83 Joules power/energy-cores/                                                  ( +-  3,70% )
+              1,03 Joules power/energy-ram/                                                    ( +-  3,46% )
+
+            0,9942 +- 0,0372 seconds time elapsed  ( +-  3,74% )
+
+Mandelbrot set calculation for 3840x2176 took: 2.1677 seconds.
+Mandelbrot set calculation for 3840x2176 took: 1.99839 seconds.
+Mandelbrot set calculation for 3840x2176 took: 2.07598 seconds.
+Mandelbrot set calculation for 3840x2176 took: 2.01727 seconds.
+Mandelbrot set calculation for 3840x2176 took: 2.10115 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+            142,62 Joules power/energy-pkg/                                                    ( +-  2,04% )
+            133,52 Joules power/energy-cores/                                                  ( +-  2,12% )
+              2,63 Joules power/energy-ram/                                                    ( +-  0,95% )
+
+            2,5259 +- 0,0279 seconds time elapsed  ( +-  1,10% )
+
+Mandelbrot set calculation for 7680x4352 took: 7.96105 seconds.
+Mandelbrot set calculation for 7680x4352 took: 8.10763 seconds.
+Mandelbrot set calculation for 7680x4352 took: 7.76417 seconds.
+Mandelbrot set calculation for 7680x4352 took: 8.14522 seconds.
+Mandelbrot set calculation for 7680x4352 took: 7.87609 seconds.
+
+ Performance counter stats for 'system wide' (5 runs):
+
+            496,41 Joules power/energy-pkg/                                                    ( +-  1,23% )
+            466,89 Joules power/energy-cores/                                                  ( +-  1,24% )
+              8,29 Joules power/energy-ram/                                                    ( +-  0,89% )
+
+            8,5977 +- 0,0837 seconds time elapsed  ( +-  0,97% )
+
