@@ -5,7 +5,7 @@
 #include <mpi.h>
 #include <vector>
 
-constexpr int default_megabyte_nums = 15;
+constexpr int default_megabyte_nums = 64;
 constexpr int readWriteOpNum = 9;
 
 int main(int argc, char** argv) {
@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 	int megaByteSize = default_megabyte_nums;
 	if(argc == 2) {
 		megaByteSize = std::atoi(argv[1]);
-		if(megaByteSize * 1000000 > INT32_MAX) {
+		if((long)megaByteSize * 1000000 > INT32_MAX) {
 			if(myRank == 0) {
 				std::cerr << "can just write int32 maximum elements" << std::endl;
 			}
@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
 
 	std::string filename = "temp_" + std::to_string(myRank);
 	MPI_File file;
-	MPI_File_open(MPI_COMM_SELF, filename.c_str(), MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL,
-	              &file);
+	MPI_File_open(MPI_COMM_SELF, filename.c_str(),
+	              MPI_MODE_RDWR | MPI_MODE_CREATE | MPI_MODE_DELETE_ON_CLOSE, MPI_INFO_NULL, &file);
 
 	std::vector<char> writeContent;
 
@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
 
 	MPI_Barrier(MPI_COMM_WORLD);
 	double elapsed = MPI_Wtime() - start;
-	double memoryUsed = 19 * megaByteSize * numProcs;
+	double memoryUsed = 19 * ((double)megaByteSize / (double)1000000) * numProcs;
 
 	if(myRank == 0) {
 		std::cout << "Elapsed: " << elapsed << " , Bandwidth: " << memoryUsed / elapsed
