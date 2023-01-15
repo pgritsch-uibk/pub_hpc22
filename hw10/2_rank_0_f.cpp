@@ -4,13 +4,15 @@
 
 #include <cstdint>
 #include <cstdlib>
-#include <cstring>
 #include <iostream>
 #include <mpi.h>
 #include <vector>
+#include <chrono>
+#include <thread>
 
-constexpr int default_megabyte_nums = 15;
+constexpr int default_megabyte_nums = 64;
 constexpr int readWriteOpNum = 9;
+constexpr int megabyte = 1000000;
 
 int main(int argc, char** argv) {
 	int numProcs, myRank;
@@ -21,7 +23,7 @@ int main(int argc, char** argv) {
 	int megaByteSize = default_megabyte_nums;
 	if(argc == 2) {
 		megaByteSize = std::atoi(argv[1]);
-		if(megaByteSize * 1000000 > INT32_MAX) {
+		if(megaByteSize * numProcs > INT32_MAX) {
 			if(myRank == 0) {
 				std::cerr << "can just write int32 maximum elements" << std::endl;
 			}
@@ -30,10 +32,14 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	megaByteSize *= 1000000;
+	megaByteSize *= megabyte;
+
+	// make custom contiguous type for sending more than int32 max elements
+	MPI_Datatype customType;
+	MPI_Type_contiguous(megaByteSize, MPI_CHAR, &customType);
+	MPI_Type_commit(&customType);
 
 	std::vector<char> gatherContent;
-	std::vector<char> scatterContent;
 	MPI_File file;
 
 	if (myRank == 0) {
@@ -41,56 +47,53 @@ int main(int argc, char** argv) {
 		// values is possible
 		MPI_File_set_errhandler(MPI_FILE_NULL, MPI_ERRORS_ARE_FATAL);
 
-		std::string filename = "temp_" + std::to_string(myRank);
+		std::string filename = "temp_" + std::to_string(myRank) + ".txt";
 		MPI_File_open(MPI_COMM_SELF, filename.c_str(), MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL,
 					  &file);
 		std::cout << "rank 0" << std::endl;
 
 		gatherContent.resize((megaByteSize + 1) * numProcs, 0);
-		scatterContent.resize((megaByteSize + 1) * numProcs, 0);
 	}
 
 	std::vector<char> writeContent;
+	writeContent.resize(megaByteSize, (static_cast<char>(myRank) + 'A'));
 
-	writeContent.resize(megaByteSize + 1, (static_cast<char>(myRank) + 'A'));
-	writeContent[writeContent.size() - 1] = 0;
 	std::vector<char> readContent;
+	readContent.resize(megaByteSize, 0);
 
-	readContent.resize(megaByteSize + 1, 1);
-	readContent[readContent.size() - 1] = 0;
 	double start = MPI_Wtime();
 
-	MPI_Gather(writeContent.data(), megaByteSize, MPI_CHAR, gatherContent.data(), megaByteSize, MPI_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Gather(writeContent.data(), 1, customType, gatherContent.data(), 1, customType, 0, MPI_COMM_WORLD);
 	if (myRank == 0) {
-		MPI_File_write(file, gatherContent.data(), megaByteSize * numProcs, MPI_CHAR, MPI_STATUS_IGNORE);
+		MPI_File_write(file, gatherContent.data(), 1 * numProcs, customType, MPI_STATUS_IGNORE);
 	}
 
 	for(int i = 0; i < readWriteOpNum; i++) {
 		if (myRank == 0) {
 			MPI_File_seek(file, 0, MPI_SEEK_SET);
-			MPI_File_read(file, scatterContent.data(), megaByteSize * numProcs, MPI_CHAR, MPI_STATUS_IGNORE);
+			MPI_File_read(file, gatherContent.data(), 1 * numProcs, customType, MPI_STATUS_IGNORE);
 		}
 
-		MPI_Scatter(scatterContent.data(), megaByteSize, MPI_CHAR, readContent.data(), megaByteSize, MPI_CHAR, 0, MPI_COMM_WORLD);
+		MPI_Scatter(gatherContent.data(), 1, customType, readContent.data(), 1, customType, 0, MPI_COMM_WORLD);
 
-		if(std::strcmp(readContent.data(), writeContent.data())) {
+		if(!std::equal(writeContent.begin(), writeContent.end(), readContent.begin())) {
 			std::cerr << "error contents were not equal" << std::endl;
 			MPI_File_close(&file);
 			MPI_Finalize();
 			return EXIT_FAILURE;
 		}
 
-		MPI_Gather(writeContent.data(), megaByteSize, MPI_CHAR, gatherContent.data(), megaByteSize, MPI_CHAR, 0, MPI_COMM_WORLD);
+		MPI_Gather(writeContent.data(), 1, customType, gatherContent.data(), 1, customType, 0, MPI_COMM_WORLD);
 
 		if (myRank == 0) {
 			MPI_File_seek(file, 0, MPI_SEEK_SET);
-			MPI_File_write(file, gatherContent.data(), megaByteSize * numProcs, MPI_CHAR, MPI_STATUS_IGNORE);
+			MPI_File_write(file, gatherContent.data(), 1 * numProcs, customType, MPI_STATUS_IGNORE);
 		}
 	}
 
 	MPI_Barrier(MPI_COMM_WORLD);
 	double elapsed = MPI_Wtime() - start;
-	double memoryUsed = 19 * megaByteSize * numProcs;
+	double memoryUsed = (readWriteOpNum * 2 + 1) * megaByteSize * numProcs;
 
 	if(myRank == 0) {
 		std::cout << "Elapsed: " << elapsed << " , Bandwidth: " << memoryUsed / elapsed
@@ -99,6 +102,7 @@ int main(int argc, char** argv) {
 		MPI_File_close(&file);
 	}
 
+	MPI_Type_free(&customType);
 	MPI_Finalize();
 
 	return EXIT_SUCCESS;
