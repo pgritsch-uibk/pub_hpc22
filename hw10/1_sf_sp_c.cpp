@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 	MPI_Type_contiguous(megaByteSize, MPI_CHAR, &fileType);
 	MPI_Type_commit(&fileType);
 
-	MPI_Offset offset = megaByteSize * myRank;
+	MPI_Offset offset = (long)megaByteSize * myRank;
 	std::string filename = "temp_sf_sp_c";
 	MPI_File file;
 	MPI_File_open(MPI_COMM_SELF, filename.c_str(),
@@ -54,6 +54,7 @@ int main(int argc, char** argv) {
 	double start = MPI_Wtime();
 	MPI_File_seek_shared(file, offset, MPI_SEEK_SET);
 	MPI_File_write_ordered(file, writeContent.data(), 1, fileType, MPI_STATUS_IGNORE);
+	MPI_File_sync(file);
 
 	for(int i = 0; i < readWriteOpNum; i++) {
 		MPI_File_seek_shared(file, offset, MPI_SEEK_SET);
@@ -69,11 +70,12 @@ int main(int argc, char** argv) {
 
 		MPI_File_seek_shared(file, offset, MPI_SEEK_SET);
 		MPI_File_write_ordered(file, writeContent.data(), 1, fileType, MPI_STATUS_IGNORE);
+		MPI_File_sync(file);
 	}
 
 	MPI_Barrier(MPI_COMM_WORLD);
 	double elapsed = MPI_Wtime() - start;
-	double memoryUsed = 19 * megaByteSize * numProcs;
+	double memoryUsed = 19 * ((double)megaByteSize / (double)1000000) * numProcs;
 
 	if(myRank == 0) {
 		std::cout << "Elapsed: " << elapsed << " , Bandwidth: " << memoryUsed / elapsed
