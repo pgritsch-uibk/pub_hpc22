@@ -1,10 +1,11 @@
+#include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <mpi.h>
 #include <vector>
 
-constexpr int default_byte_nums = 4;
+constexpr int default_megabyte_nums = 15;
 constexpr int readWriteOpNum = 9;
 
 int main(int argc, char** argv) {
@@ -14,9 +15,16 @@ int main(int argc, char** argv) {
 	MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
 	MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
 
-	int megaByteSize = default_byte_nums;
+	int megaByteSize = default_megabyte_nums;
 	if(argc == 2) {
 		megaByteSize = std::atoi(argv[1]);
+		if(megaByteSize * 1000000 > INT32_MAX) {
+			if(myRank == 0) {
+				std::cerr << "can just write int32 maximum elements" << std::endl;
+			}
+			MPI_Finalize();
+			return EXIT_FAILURE;
+		}
 	}
 
 	megaByteSize *= 1000000;
@@ -37,7 +45,6 @@ int main(int argc, char** argv) {
 	std::vector<char> readContent;
 	readContent.resize(megaByteSize + 1, 1);
 	readContent[readContent.size() - 1] = 0;
-	std::cout << writeContent.max_size() << std::endl;
 	double start = MPI_Wtime();
 	MPI_File_write(file, writeContent.data(), megaByteSize, MPI_CHAR, MPI_STATUS_IGNORE);
 
