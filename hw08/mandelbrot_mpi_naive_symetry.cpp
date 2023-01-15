@@ -5,10 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <mpi.h>
-#include <thread>
 #include <vector>
-
-#define YIELD
 
 // Include that allows to print result as an image
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -43,7 +40,7 @@ void calcMandelbrot(std::vector<uint8_t>& image, int sizeX, int sizeY) {
 	const __m128 _4 = _mm_set_ps1(4.f);
 	const __m128 _200 = _mm_set_ps1(200.f);
 
-	for(int pixelY = myRank; pixelY < sizeY; pixelY += numProcs) {
+	for(int pixelY = myRank; pixelY < sizeY / 2 + numProcs + 1; pixelY += numProcs) {
 		// scale y pixel into mandelbrot coordinate system
 		const __m128 _cy = _mm_set_ps1(
 		    (static_cast<float>(pixelY) / static_cast<float>(sizeY)) * (top - bottom) + bottom);
@@ -123,7 +120,7 @@ int main(int argc, char** argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	int yPerProc = sizeY / numProcs;
+	int yPerProc = sizeY / numProcs / 2 + 1;
 	int blockCount = yPerProc;
 	int blockSize = num_channels * sizeX;
 	int stride = blockSize * numProcs;
@@ -156,6 +153,18 @@ int main(int argc, char** argv) {
 	            receiveOneLineBlock, 0, MPI_COMM_WORLD);
 
 	if(myRank == 0) {
+		for(int pixelY = 1; pixelY < sizeY / 2; pixelY++) {
+			for(int pixelX = 0; pixelX < sizeX; pixelX++) {
+				int pixelYMirrored = sizeY - pixelY;
+				result[ind(pixelYMirrored, pixelX, sizeY, sizeX, 0)] =
+				    result[ind(pixelY, pixelX, sizeY, sizeX, 0)];
+				result[ind(pixelYMirrored, pixelX, sizeY, sizeX, 1)] =
+				    result[ind(pixelY, pixelX, sizeY, sizeX, 1)];
+				result[ind(pixelYMirrored, pixelX, sizeY, sizeX, 2)] =
+				    result[ind(pixelY, pixelX, sizeY, sizeX, 2)];
+			}
+		}
+
 		std::cout << "Mandelbrot set calculation for " << sizeX << "x" << sizeY
 		          << " took: " << timer.elapsed() << " seconds." << std::endl;
 
